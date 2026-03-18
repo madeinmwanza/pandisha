@@ -477,225 +477,24 @@
       </div>
 
       <div class="panel">
-        <h3>New Release</h3>
+        <h3>Artist Dashboard</h3>
         <div class="panel-sub">Track releases, submissions, and performance</div>
 
         <div class="mini-grid">
           <div class="mini-card">
-           <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Release Dashboard Preview</title>
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background:
-        radial-gradient(circle at top right, rgba(249, 115, 22, 0.22), transparent 32%),
-        linear-gradient(135deg, #08101f, #0b1220 55%, #111827);
-      color: #ffffff;
-      min-height: 100vh;
-      padding: 32px;
-      display: flex;
-      align-items: flex-start;
-      justify-content: center;
-    }
-
-    .dashboard {
-      width: 100%;
-      max-width: 860px;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 26px;
-      padding: 24px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-    }
-
-    .title {
-      font-size: 22px;
-      font-weight: 700;
-      margin: 0 0 8px;
-    }
-
-    .subtitle {
-      margin: 0 0 22px;
-      color: rgba(255, 255, 255, 0.72);
-      font-size: 14px;
-    }
-
-    .grid-top {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 16px;
-      margin-bottom: 16px;
-    }
-
-    .card,
-    .wide-card {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 18px;
-      padding: 18px;
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
-    }
-
-    .label {
-      font-size: 14px;
-      color: rgba(255, 255, 255, 0.72);
-      margin-bottom: 12px;
-    }
-
-    .value {
-      font-size: 28px;
-      font-weight: 800;
-      line-height: 1;
-      margin-bottom: 8px;
-    }
-
-    .muted {
-      color: rgba(255, 255, 255, 0.74);
-      font-size: 13px;
-    }
-
-    .wide-card .big-title {
-      font-size: 18px;
-      font-weight: 800;
-      margin: 0 0 14px;
-    }
-
-    .track-list {
-      display: grid;
-      gap: 10px;
-      margin: 0;
-      padding: 0;
-      list-style: none;
-    }
-
-    .track-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 10px 12px;
-      border-radius: 12px;
-      background: rgba(255, 255, 255, 0.025);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    .track-name {
-      font-size: 14px;
-      font-weight: 600;
-    }
-
-    .track-meta {
-      font-size: 12px;
-      color: rgba(255, 255, 255, 0.7);
-      margin-top: 3px;
-    }
-
-    .badge {
-      font-size: 11px;
-      font-weight: 700;
-      padding: 6px 9px;
-      border-radius: 999px;
-      white-space: nowrap;
-      letter-spacing: 0.02em;
-    }
-
-    .live {
-      background: rgba(34, 197, 94, 0.15);
-      color: #86efac;
-      border: 1px solid rgba(34, 197, 94, 0.22);
-    }
-
-    .month {
-      background: rgba(96, 165, 250, 0.14);
-      color: #93c5fd;
-      border: 1px solid rgba(96, 165, 250, 0.2);
-    }
-
-    .tonight {
-      background: rgba(250, 204, 21, 0.14);
-      color: #fde68a;
-      border: 1px solid rgba(250, 204, 21, 0.22);
-    }
-
-    @media (max-width: 700px) {
-      body {
-        padding: 18px;
-      }
-
-      .grid-top {
-        grid-template-columns: 1fr;
-      }
-
-      .value {
-        font-size: 24px;
-      }
-    }
-  </style>
-</head>
-<body>
-  <section class="dashboard">
-    <h1 class="title">Release Dashboard</h1>
-    <p class="subtitle">Track today’s uploads, monthly uploads, and midnight releases</p>
-
-    <div class="grid-top">
-      <div class="card">
-        <div class="label">Today’s Uploads</div>
-        <div class="value">12</div>
-        <div class="muted">Songs uploaded in the last 24 hours</div>
-      </div>
-
-      <div class="card">
-        <div class="label">This Month Uploads</div>
-        <div class="value">148</div>
-        <div class="muted">Total releases uploaded this month</div>
-      </div>
-    </div>
-
-    <div class="wide-card">
-      <div class="label">Midnight Releases</div>
-      <h2 class="big-title">Songs Going Live Tonight</h2>
-
-      <ul class="track-list">
-        <li class="track-item">
-          <div>
-            <div class="track-name">Imenibamba — Hesabu Kali</div>
-            <div class="track-meta">Scheduled for 12:00 AM</div>
+            <span>Total Releases</span>
+            <strong>28</strong>
           </div>
-          <span class="badge tonight">TONIGHT</span>
-        </li>
-
-        <li class="track-item">
-          <div>
-            <div class="track-name">Night Vibes — Artist X</div>
-            <div class="track-meta">Queued and approved</div>
+          <div class="mini-card">
+            <span>This Month Streams</span>
+            <strong>184K</strong>
           </div>
-          <span class="badge live">READY</span>
-        </li>
+        </div>
 
-        <li class="track-item">
-          <div>
-            <div class="track-name">Street Flow — Artist Y</div>
-            <div class="track-meta">Monthly catalog release</div>
-          </div>
-          <span class="badge month">THIS MONTH</span>
-        </li>
-      </ul>
-    </div>
-  </section>
-</body>
-</html>
-
+        <div class="release-box">
+          <div class="label">Upcoming Release</div>
+          <div class="title">Midnight Fire</div>
+          <div class="meta">Release Date: 28 April · Status: Approved</div>
         </div>
       </div>
     </div>
@@ -787,8 +586,7 @@
             <li>Submit release (manual review)</li>
             <li>Standard release time</li>
             <li>Basic support</li>
-            <li>You keep 85% of royalities</li>
-        
+          </ul>
           <a href="#signup" class="btn btn-secondary" style="margin-top:16px;">Get Started</a>
         </div>
 
@@ -798,7 +596,6 @@
           <ul class="list">
             <li>Unlimited releases</li>
             <li>Faster approval</li>
-            <li>You keep 100% of royalities</li>
             <li>Priority support</li>
             <li>Artist dashboard access</li>
           </ul>
@@ -807,7 +604,7 @@
 
         <div class="price-card">
           <h3>Label / Premium</h3>
-          <div class="price">$100<span> / year</span></div>
+          <div class="price">$100<span></span></div>
           <ul class="list">
             <li>Multiple artists</li>
             <li>Unlimited releases</li>
