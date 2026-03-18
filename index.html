@@ -325,6 +325,51 @@
       line-height: 1.75;
     }
 
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .price-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 22px;
+      padding: 24px;
+    }
+
+    .price-card.featured {
+      border: 1px solid rgba(255,122,24,0.35);
+      box-shadow: 0 16px 40px rgba(123,47,247,0.15);
+    }
+
+    .price {
+      font-size: 36px;
+      font-weight: 900;
+      margin: 10px 0;
+    }
+
+    .price span {
+      font-size: 16px;
+      color: rgba(255,255,255,0.65);
+      font-weight: 400;
+    }
+
+    .portal-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .input-fake {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      padding: 14px 16px;
+      color: rgba(255,255,255,0.72);
+      margin-bottom: 12px;
+    }
+
     .footer {
       border-top: 1px solid rgba(255,255,255,0.08);
       padding: 26px 0;
@@ -342,7 +387,9 @@
     @media (max-width: 920px) {
       .hero-grid,
       .cards-3,
-      .distribute-grid {
+      .distribute-grid,
+      .pricing-grid,
+      .portal-grid {
         grid-template-columns: 1fr;
       }
 
@@ -391,7 +438,7 @@
         <a href="#home">Home</a>
         <a href="#distribute">Distribute</a>
         <a href="#features">Features</a>
-        <a href="#contact">Contact</a>
+        <a href="#pricing">Pricing</a>
         <a href="#login" class="btn btn-secondary" style="padding:10px 16px;">Log in</a>
         <a href="#signup" class="btn btn-primary" style="padding:10px 16px;">Sign Up</a>
       </div>
@@ -519,6 +566,77 @@
           <h3>Artist Dashboard</h3>
           <p>Track your releases, monitor updates, and manage your catalog in one place.</p>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="pricing">
+    <div class="container">
+      <h2 class="section-title">Pricing</h2>
+      <p class="section-text">
+        Flexible annual pricing built for artists at every stage.
+      </p>
+
+      <div class="pricing-grid">
+        <div class="price-card">
+          <h3>Starter</h3>
+          <div class="price">Free</div>
+          <ul class="list">
+            <li>1 artist account</li>
+            <li>Submit release (manual review)</li>
+            <li>Standard release time</li>
+            <li>Basic support</li>
+          </ul>
+          <a href="#signup" class="btn btn-secondary" style="margin-top:16px;">Get Started</a>
+        </div>
+
+        <div class="price-card featured">
+          <h3>Pro Artist</h3>
+          <div class="price">$12 <span>/ year</span></div>
+          <ul class="list">
+            <li>Unlimited releases</li>
+            <li>Faster approval</li>
+            <li>Priority support</li>
+            <li>Artist dashboard access</li>
+          </ul>
+          <a href="#signup" class="btn btn-primary" style="margin-top:16px;">Choose Pro</a>
+        </div>
+
+        <div class="price-card">
+          <h3>Label / Premium</h3>
+          <div class="price">$42 <span>/ year</span></div>
+          <ul class="list">
+            <li>Multiple artists</li>
+            <li>Unlimited releases</li>
+            <li>Priority support</li>
+            <li>Catalog management</li>
+          </ul>
+          <a href="#contact" class="btn btn-secondary" style="margin-top:16px;">Contact Us</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="login">
+    <div class="container portal-grid">
+      <div class="panel">
+        <h3>Artist Log in</h3>
+        <div class="panel-sub">Access your dashboard and releases</div>
+
+        <div class="input-fake">artist@email.com</div>
+        <div class="input-fake">••••••••••</div>
+        <a href="#" class="btn btn-primary" style="width: 100%; text-align: center;">Sign In</a>
+      </div>
+
+      <div class="panel" id="signup">
+        <h3>Sign Up</h3>
+        <div class="panel-sub">Create your Pandisha artist account</div>
+
+        <div class="input-fake">Full Name</div>
+        <div class="input-fake">Email Address</div>
+        <div class="input-fake">Artist Name</div>
+        <div class="input-fake">Password</div>
+        <a href="#" class="btn btn-primary" style="width: 100%; text-align: center;">Create Account</a>
       </div>
     </div>
   </section>
