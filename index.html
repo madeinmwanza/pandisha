@@ -625,20 +625,30 @@
         <h3>Artist Log in</h3>
         <div class="panel-sub">Access your dashboard and releases</div>
 
-        <div class="input-fake">artist@email.com</div>
-        <div class="input-fake">••••••••••</div>
-        <a href="#" class="btn btn-primary" style="width: 100%; text-align: center;">Sign In</a>
+        <div class="input-fake">
+  <input id="login-email" placeholder="Email" style="width:100%; background:none; border:none; color:white;">
+</div>
+
+<div class="input-fake">
+  <input id="login-password" type="password" placeholder="Password" style="width:100%; background:none; border:none; color:white;">
+</div>
+
+<a onclick="login()" class="btn btn-primary" style="width: 100%; text-align: center;">Sign In</a>
       </div>
 
       <div class="panel" id="signup">
         <h3>Sign Up</h3>
         <div class="panel-sub">Create your Pandisha artist account</div>
 
-        <div class="input-fake">Full Name</div>
-        <div class="input-fake">Email Address</div>
-        <div class="input-fake">Artist Name</div>
-        <div class="input-fake">Password</div>
-        <a href="#" class="btn btn-primary" style="width: 100%; text-align: center;">Create Account</a>
+        <div class="input-fake">
+  <input id="signup-email" placeholder="Email" style="width:100%; background:none; border:none; color:white;">
+</div>
+
+<div class="input-fake">
+  <input id="signup-password" type="password" placeholder="Password" style="width:100%; background:none; border:none; color:white;">
+</div>
+
+<a onclick="signUp()" class="btn btn-primary" style="width: 100%; text-align: center;">Create Account</a>
       </div>
     </div>
   </section>
@@ -663,6 +673,50 @@
       <div>Email: hello@pandisha.com</div>
     </div>
   </div>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } 
+from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
 
+const firebaseConfig = {
+  apiKey: "AIzaSyB7zfgQ3GqdPL2o1tyFt2RmW3Obqb1nKPk",
+  authDomain: "pandisha1.firebaseapp.com",
+  projectId: "pandisha1",
+  storageBucket: "pandisha1.firebasestorage.app",
+  messagingSenderId: "914457078679",
+  appId: "1:914457078679:web:f11bf8ccc4fd824459f2d2",
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+// SIGN UP
+window.signUp = function() {
+  const email = document.getElementById("signup-email").value;
+  const password = document.getElementById("signup-password").value;
+
+  createUserWithEmailAndPassword(auth, email, password)
+    .then(() => {
+      alert("Account created successfully 🔥");
+    })
+    .catch((error) => {
+      alert(error.message);
+    });
+};
+
+// LOGIN
+window.login = function() {
+  const email = document.getElementById("login-email").value;
+  const password = document.getElementById("login-password").value;
+
+  signInWithEmailAndPassword(auth, email, password)
+    .then(() => {
+      alert("Login successful 🔥");
+    })
+    .catch((error) => {
+      alert(error.message);
+    });
+};
+</script>
 </body>
 </html>
