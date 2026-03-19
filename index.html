@@ -710,9 +710,12 @@ window.login = function() {
   const password = document.getElementById("login-password").value;
 
   signInWithEmailAndPassword(auth, email, password)
-    .then(() => {
-      alert("Login successful 🔥");
-    })
+  .then(() => {
+    window.location.href = "dashboard.html";
+  })
+  .catch((error) => {
+    alert(error.message);
+  });
     .catch((error) => {
       alert(error.message);
     });
