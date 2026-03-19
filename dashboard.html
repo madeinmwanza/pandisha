@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pandisha Artist Dashboard</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0b0f1a;
+      color: white;
+    }
+    a { text-decoration: none; color: inherit; }
+    .layout {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      min-height: 100vh;
+    }
+    .sidebar {
+      background: rgba(255,255,255,0.04);
+      border-right: 1px solid rgba(255,255,255,0.08);
+      padding: 24px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 30px;
+    }
+    .brand img {
+      height: 54px;
+      object-fit: contain;
+    }
+    .brand-text h2 {
+      margin: 0;
+      font-size: 18px;
+      letter-spacing: 3px;
+    }
+    .brand-text span {
+      font-size: 11px;
+      color: rgba(255,255,255,0.6);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+    .menu a {
+      display: block;
+      padding: 12px 14px;
+      border-radius: 12px;
+      margin-bottom: 10px;
+      background: rgba(255,255,255,0.04);
+      color: rgba(255,255,255,0.8);
+    }
+    .menu a:hover {
+      background: rgba(255,255,255,0.08);
+      color: white;
+    }
+    .main {
+      padding: 28px;
+    }
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 26px;
+    }
+    .topbar h1 {
+      margin: 0;
+      font-size: 34px;
+    }
+    .topbar p {
+      margin: 6px 0 0;
+      color: rgba(255,255,255,0.65);
+    }
+    .btn {
+      border: none;
+      border-radius: 12px;
+      padding: 12px 18px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .btn-primary {
+      background: linear-gradient(90deg, #7B2FF7, #FF7A18);
+      color: white;
+    }
+    .btn-secondary {
+      background: rgba(255,255,255,0.06);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px;
+      padding: 20px;
+    }
+    .card small {
+      color: rgba(255,255,255,0.6);
+      display: block;
+      margin-bottom: 10px;
+    }
+    .card strong {
+      font-size: 30px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 18px;
+    }
+    .release-item {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+    .release-item h3 {
+      margin: 0 0 8px;
+      font-size: 20px;
+    }
+    .release-item p {
+      margin: 0;
+      color: rgba(255,255,255,0.68);
+    }
+    .status {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      background: rgba(255,255,255,0.08);
+    }
+    .input-box {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      padding: 14px 16px;
+      margin-bottom: 12px;
+    }
+    .input-box input {
+      width: 100%;
+      background: none;
+      border: none;
+      color: white;
+      outline: none;
+      font-size: 14px;
+    }
+    @media (max-width: 950px) {
+      .layout { grid-template-columns: 1fr; }
+      .stats { grid-template-columns: repeat(2, 1fr); }
+      .grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 640px) {
+      .stats { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">
+        <img src="./logo.png" alt="Pandisha Logo">
+        <div class="brand-text">
+          <h2>PANDISHA</h2>
+          <span>Artist Dashboard</span>
+        </div>
+      </div>
+
+      <div class="menu">
+        <a href="#">Dashboard</a>
+        <a href="#">My Releases</a>
+        <a href="#">Upload Music</a>
+        <a href="#">Profile</a>
+        <a href="#" onclick="logout()">Log Out</a>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <div>
+          <h1>Welcome back</h1>
+          <p id="user-email">Artist account</p>
+        </div>
+        <button class="btn btn-primary">Upload New Release</button>
+      </div>
+
+      <section class="stats">
+        <div class="card">
+          <small>Total Releases</small>
+          <strong>12</strong>
+        </div>
+        <div class="card">
+          <small>Pending Review</small>
+          <strong>2</strong>
+        </div>
+        <div class="card">
+          <small>Live Tracks</small>
+          <strong>10</strong>
+        </div>
+        <div class="card">
+          <small>Plan</small>
+          <strong>Pro</strong>
+        </div>
+      </section>
+
+      <section class="grid">
+        <div class="card">
+          <h2 style="margin-top:0;">My Releases</h2>
+
+          <div class="release-item">
+            <h3>Midnight Fire</h3>
+            <p>Release Date: 28 April</p>
+            <span class="status">Approved</span>
+          </div>
+
+          <div class="release-item">
+            <h3>City Lights</h3>
+            <p>Release Date: 15 May</p>
+            <span class="status">Pending Review</span>
+          </div>
+
+          <div class="release-item">
+            <h3>Hold Me Close</h3>
+            <p>Release Date: 02 June</p>
+            <span class="status">Live</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2 style="margin-top:0;">Quick Upload</h2>
+
+          <div class="input-box">
+            <input type="text" placeholder="Song Title">
+          </div>
+
+          <div class="input-box">
+            <input type="text" placeholder="Artist Name">
+          </div>
+
+          <div class="input-box">
+            <input type="text" placeholder="Release Date">
+          </div>
+
+          <button class="btn btn-primary" style="width:100%;">Submit Release</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyB7zfgQ3GqdPL2o1tyFt2RmW3Obqb1nKPk",
+      authDomain: "pandisha1.firebaseapp.com",
+      projectId: "pandisha1",
+      storageBucket: "pandisha1.firebasestorage.app",
+      messagingSenderId: "914457078679",
+      appId: "1:914457078679:web:f11bf8ccc4fd824459f2d2"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        document.getElementById("user-email").textContent = user.email;
+      } else {
+        window.location.href = "index.html";
+      }
+    });
+
+    window.logout = function () {
+      signOut(auth).then(() => {
+        window.location.href = "index.html";
+      });
+    };
+  </script>
+</body>
+</html>
