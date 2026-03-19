@@ -697,8 +697,8 @@ window.signUp = function() {
 
   createUserWithEmailAndPassword(auth, email, password)
     .then(() => {
-      alert("Account created successfully 🔥");
-    })
+  window.location.href = "dashboard.html";
+})
     .catch((error) => {
       alert(error.message);
     });
