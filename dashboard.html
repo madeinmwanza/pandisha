@@ -279,6 +279,12 @@
       font-size: 14px;
     }
 
+    #message {
+      margin-top: 12px;
+      font-size: 14px;
+      color: #9ae6b4;
+    }
+
     @media (max-width: 980px) {
       .layout {
         grid-template-columns: 1fr;
@@ -347,11 +353,11 @@
       <section class="stats">
         <div class="card">
           <small>Total Releases</small>
-          <strong>0</strong>
+          <strong id="total-releases">0</strong>
         </div>
         <div class="card">
           <small>Pending Review</small>
-          <strong>0</strong>
+          <strong id="pending-releases">0</strong>
         </div>
         <div class="card">
           <small>Live Tracks</small>
@@ -366,25 +372,25 @@
       <div class="content-panel">
         <div id="create-release" class="section-block active">
           <h2>Create a Release</h2>
-          <p class="lead">Hapa msanii anaweza kupandisha wimbo wake mpya, cover art, metadata na release details.</p>
+          <p class="lead">Hapa msanii anaweza kupandisha taarifa za wimbo wake mpya.</p>
 
           <div class="grid-2">
             <div>
               <div class="input-box">
-                <input type="text" placeholder="Song Title">
+                <input id="song-title" type="text" placeholder="Song Title">
               </div>
 
               <div class="input-box">
-                <input type="text" placeholder="Artist Name">
+                <input id="artist-name" type="text" placeholder="Artist Name">
               </div>
 
               <div class="input-box">
-                <input type="date">
+                <input id="release-date" type="date">
               </div>
 
               <div class="input-box">
-                <select>
-                  <option>Choose Genre</option>
+                <select id="genre">
+                  <option value="">Choose Genre</option>
                   <option>Bongo Flava</option>
                   <option>Hip Hop</option>
                   <option>Afropop</option>
@@ -396,20 +402,14 @@
 
             <div>
               <div class="input-box">
-                <input type="file" accept=".mp3,.wav">
+                <textarea id="release-notes" placeholder="Release notes or description"></textarea>
               </div>
 
-              <div class="input-box">
-                <input type="file" accept="image/*">
-              </div>
+              <button class="btn btn-primary" style="width:100%;" onclick="submitRelease()">Submit Release</button>
+              <div id="message"></div>
 
-              <div class="input-box">
-                <textarea placeholder="Release notes or description"></textarea>
-              </div>
-
-              <button class="btn btn-primary" style="width:100%;">Submit Release</button>
               <p class="upload-note">
-                Hatua inayofuata tunaweza kuunganisha hapa na Firebase Storage ili audio na cover art zihifadhiwe kweli.
+                Kwa sasa tunahifadhi taarifa za release kwenye Firestore. Audio na cover art tunaunganisha next step.
               </p>
             </div>
           </div>
@@ -417,12 +417,14 @@
 
         <div id="discography" class="section-block">
           <h2>Discography</h2>
-          <p class="lead">Hapa msanii ataona nyimbo zilizopandishwa tayari na historia ya releases zake.</p>
+          <p class="lead">Hapa utaona nyimbo zilizopandishwa tayari na historia ya releases zako.</p>
 
-          <div class="release-item">
-            <h3>No releases yet</h3>
-            <p>Ukishapandisha wimbo, utaonekana hapa pamoja na status yake.</p>
-            <span class="status">Waiting</span>
+          <div id="discography-list">
+            <div class="release-item">
+              <h3>No releases yet</h3>
+              <p>Ukishapandisha wimbo, utaonekana hapa.</p>
+              <span class="status">Waiting</span>
+            </div>
           </div>
         </div>
 
@@ -444,7 +446,7 @@
 
         <div id="statistics" class="section-block">
           <h2>Statistics</h2>
-          <p class="lead">Hapa utaona numbers muhimu kama total streams, active releases, na audience activity.</p>
+          <p class="lead">Hapa utaona total streams, active releases, na audience activity.</p>
 
           <div class="mini-list">
             <div class="item">
@@ -460,7 +462,7 @@
 
         <div id="reports" class="section-block">
           <h2>Reports</h2>
-          <p class="lead">Hapa msanii ataweza kuona ripoti za performance na status za releases.</p>
+          <p class="lead">Hapa msanii ataona ripoti za performance na status za releases.</p>
 
           <div class="mini-list">
             <div class="item">
@@ -496,6 +498,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+    import { getFirestore, collection, addDoc, getDocs, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyB7zfgQ3GqdPL2o1tyFt2RmW3Obqb1nKPk",
@@ -508,10 +511,15 @@
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
+    const db = getFirestore(app);
 
-    onAuthStateChanged(auth, (user) => {
+    let currentUser = null;
+
+    onAuthStateChanged(auth, async (user) => {
       if (user) {
+        currentUser = user;
         document.getElementById("user-email").textContent = user.email;
+        await loadDiscography();
       } else {
         window.location.href = "index.html";
       }
@@ -541,6 +549,105 @@
         clickedItem.classList.add("active");
       }
     };
+
+    window.submitRelease = async function() {
+      const title = document.getElementById("song-title").value.trim();
+      const artist = document.getElementById("artist-name").value.trim();
+      const releaseDate = document.getElementById("release-date").value;
+      const genre = document.getElementById("genre").value;
+      const notes = document.getElementById("release-notes").value.trim();
+      const message = document.getElementById("message");
+
+      if (!title || !artist || !releaseDate || !genre) {
+        message.style.color = "#fca5a5";
+        message.textContent = "Jaza title, artist, date na genre kwanza.";
+        return;
+      }
+
+      if (!currentUser) {
+        message.style.color = "#fca5a5";
+        message.textContent = "User hajalogin vizuri.";
+        return;
+      }
+
+      try {
+        await addDoc(collection(db, "releases"), {
+          userId: currentUser.uid,
+          userEmail: currentUser.email,
+          title,
+          artist,
+          releaseDate,
+          genre,
+          notes,
+          status: "Pending Review",
+          createdAt: serverTimestamp()
+        });
+
+        message.style.color = "#9ae6b4";
+        message.textContent = "Release saved successfully 🔥";
+
+        document.getElementById("song-title").value = "";
+        document.getElementById("artist-name").value = "";
+        document.getElementById("release-date").value = "";
+        document.getElementById("genre").value = "";
+        document.getElementById("release-notes").value = "";
+
+        await loadDiscography();
+      } catch (error) {
+        message.style.color = "#fca5a5";
+        message.textContent = error.message;
+      }
+    };
+
+    async function loadDiscography() {
+      if (!currentUser) return;
+
+      const discographyList = document.getElementById("discography-list");
+      const totalReleases = document.getElementById("total-releases");
+      const pendingReleases = document.getElementById("pending-releases");
+
+      const q = query(
+        collection(db, "releases"),
+        where("userId", "==", currentUser.uid)
+      );
+
+      const snapshot = await getDocs(q);
+
+      totalReleases.textContent = snapshot.size;
+
+      let pendingCount = 0;
+      discographyList.innerHTML = "";
+
+      if (snapshot.empty) {
+        discographyList.innerHTML = `
+          <div class="release-item">
+            <h3>No releases yet</h3>
+            <p>Ukishapandisha wimbo, utaonekana hapa.</p>
+            <span class="status">Waiting</span>
+          </div>
+        `;
+        pendingReleases.textContent = "0";
+        return;
+      }
+
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+        if (data.status === "Pending Review") pendingCount++;
+
+        const item = document.createElement("div");
+        item.className = "release-item";
+        item.innerHTML = `
+          <h3>${data.title}</h3>
+          <p>Artist: ${data.artist}</p>
+          <p>Release Date: ${data.releaseDate}</p>
+          <p>Genre: ${data.genre}</p>
+          <span class="status">${data.status}</span>
+        `;
+        discographyList.appendChild(item);
+      });
+
+      pendingReleases.textContent = pendingCount;
+    }
   </script>
 </body>
 </html>
