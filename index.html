@@ -5,51 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Pandisha — Your Music. Everywhere.</title>
   <style>
-    * {
-      box-sizing: border-box;
-      scroll-behavior: smooth;
-    }
-
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #0b0f1a;
-      color: white;
-    }
-
-    a {
-      text-decoration: none;
-      color: inherit;
-    }
-
-    .container {
-      width: min(1140px, 92%);
-      margin: 0 auto;
-    }
+    * { box-sizing: border-box; scroll-behavior: smooth; }
+    body { margin: 0; font-family: Arial, sans-serif; background: #0b0f1a; color: white; }
+    a { text-decoration: none; color: inherit; }
+    .container { width: min(1140px, 92%); margin: 0 auto; }
 
     .navbar {
-      position: sticky;
-      top: 0;
-      z-index: 100;
+      position: sticky; top: 0; z-index: 100;
       background: rgba(11, 15, 26, 0.92);
       backdrop-filter: blur(10px);
       border-bottom: 1px solid rgba(255,255,255,0.08);
     }
 
     .nav-inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 20px;
-      padding: 18px 0;
-      flex-wrap: wrap;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 20px; padding: 18px 0; flex-wrap: wrap;
     }
 
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
+    .brand { display: flex; align-items: center; gap: 12px; }
 
     .brand-text h2 {
       margin: 0;
@@ -76,9 +49,7 @@
       color: rgba(255,255,255,0.82);
     }
 
-    .nav-links a:hover {
-      color: white;
-    }
+    .nav-links a:hover { color: white; }
 
     .btn {
       display: inline-block;
@@ -88,11 +59,6 @@
       font-size: 15px;
       font-weight: 700;
       cursor: pointer;
-      transition: 0.2s ease;
-    }
-
-    .btn:hover {
-      transform: translateY(-1px);
     }
 
     .btn-primary {
@@ -191,168 +157,8 @@
       margin-bottom: 18px;
     }
 
-    .mini-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 14px;
-    }
-
-    .mini-card {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 18px;
-      padding: 18px;
-    }
-
-    .mini-card span {
-      font-size: 13px;
-      color: rgba(255,255,255,0.62);
-    }
-
-    .mini-card strong {
-      display: block;
-      margin-top: 8px;
-      font-size: 30px;
-    }
-
-    .release-box {
-      margin-top: 14px;
-      padding: 18px;
-      border-radius: 18px;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .release-box .label {
-      color: rgba(255,255,255,0.6);
-      font-size: 13px;
-    }
-
-    .release-box .title {
-      margin-top: 8px;
-      font-size: 24px;
-      font-weight: 800;
-    }
-
-    .release-box .meta {
-      margin-top: 8px;
-      color: rgba(255,255,255,0.72);
-      font-size: 14px;
-    }
-
     .section {
       padding: 72px 0;
-    }
-
-    .section-title {
-      margin: 0 0 12px;
-      font-size: 40px;
-    }
-
-    .section-text {
-      max-width: 720px;
-      margin: 0 0 32px;
-      color: rgba(255,255,255,0.7);
-      line-height: 1.8;
-    }
-
-    .cards-3 {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
-    }
-
-    .card {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 22px;
-      padding: 24px;
-    }
-
-    .card h3 {
-      margin: 0 0 10px;
-      font-size: 22px;
-    }
-
-    .card p {
-      margin: 0;
-      color: rgba(255,255,255,0.7);
-      line-height: 1.75;
-    }
-
-    .icon {
-      width: 52px;
-      height: 52px;
-      border-radius: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 22px;
-      margin-bottom: 16px;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .distribute-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 18px;
-    }
-
-    .list {
-      margin: 0;
-      padding-left: 18px;
-      color: rgba(255,255,255,0.74);
-      line-height: 1.9;
-    }
-
-    .cta-box {
-      margin-top: 24px;
-      padding: 22px;
-      border-radius: 22px;
-      background: linear-gradient(135deg, rgba(123,47,247,0.18), rgba(255,122,24,0.18));
-      border: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .cta-box h3 {
-      margin: 0 0 10px;
-      font-size: 24px;
-    }
-
-    .cta-box p {
-      margin: 0 0 16px;
-      color: rgba(255,255,255,0.74);
-      line-height: 1.75;
-    }
-
-    .pricing-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
-    }
-
-    .price-card {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 22px;
-      padding: 24px;
-    }
-
-    .price-card.featured {
-      border: 1px solid rgba(255,122,24,0.35);
-      box-shadow: 0 16px 40px rgba(123,47,247,0.15);
-    }
-
-    .price {
-      font-size: 36px;
-      font-weight: 900;
-      margin: 10px 0;
-    }
-
-    .price span {
-      font-size: 16px;
-      color: rgba(255,255,255,0.65);
-      font-weight: 400;
     }
 
     .portal-grid {
@@ -370,6 +176,19 @@
       margin-bottom: 12px;
     }
 
+    .input-fake input {
+      width: 100%;
+      background: none;
+      border: none;
+      color: white;
+      outline: none;
+      font-size: 14px;
+    }
+
+    .input-fake input::placeholder {
+      color: rgba(255,255,255,0.6);
+    }
+
     .footer {
       border-top: 1px solid rgba(255,255,255,0.08);
       padding: 26px 0;
@@ -385,14 +204,9 @@
     }
 
     @media (max-width: 920px) {
-      .hero-grid,
-      .cards-3,
-      .distribute-grid,
-      .pricing-grid,
-      .portal-grid {
+      .hero-grid, .portal-grid {
         grid-template-columns: 1fr;
       }
-
       .hero h1 {
         font-size: 42px;
       }
@@ -403,21 +217,11 @@
         flex-direction: column;
         align-items: flex-start;
       }
-
       .hero {
         padding-top: 60px;
       }
-
       .hero h1 {
         font-size: 34px;
-      }
-
-      .mini-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .section-title {
-        font-size: 30px;
       }
     }
   </style>
@@ -436,9 +240,6 @@
 
       <div class="nav-links">
         <a href="#home">Home</a>
-        <a href="#distribute">Distribute</a>
-        <a href="#features">Features</a>
-        <a href="#pricing">Pricing</a>
         <a href="#login" class="btn btn-secondary" style="padding:10px 16px;">Log in</a>
         <a href="#signup" class="btn btn-primary" style="padding:10px 16px;">Sign Up</a>
       </div>
@@ -457,7 +258,7 @@
 
         <div class="hero-actions">
           <a href="#signup" class="btn btn-primary">Start Distributing</a>
-          <a href="#distribute" class="btn btn-secondary">How It Works</a>
+          <a href="#login" class="btn btn-secondary">Artist Log in</a>
         </div>
 
         <div class="stats">
@@ -477,144 +278,11 @@
       </div>
 
       <div class="panel">
-        <h3>Artist Dashboard</h3>
-        <div class="panel-sub">Track releases, submissions, and performance</div>
-
-        <div class="mini-grid">
-          <div class="mini-card">
-            <span>Total Releases</span>
-            <strong>28</strong>
-          </div>
-          <div class="mini-card">
-            <span>This Month Streams</span>
-            <strong>184K</strong>
-          </div>
-        </div>
-
-        <div class="release-box">
-          <div class="label">Upcoming Release</div>
-          <div class="title">Midnight Fire</div>
-          <div class="meta">Release Date: 28 April · Status: Approved</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="section" id="distribute">
-    <div class="container">
-      <h2 class="section-title">Distribute with confidence</h2>
-      <p class="section-text">
-        Pandisha is designed to make the release journey simple for artists and labels.
-        From submission to delivery, every step is built to feel clean, premium, and easy to manage.
-      </p>
-
-      <div class="distribute-grid">
-        <div class="card">
-          <h3>What you do</h3>
-          <ul class="list">
-            <li>Prepare your audio files</li>
-            <li>Upload your cover artwork</li>
-            <li>Add track title and artist details</li>
-            <li>Choose your release date</li>
-          </ul>
-        </div>
-
-        <div class="card">
-          <h3>What Pandisha does</h3>
-          <ul class="list">
-            <li>Review your release information</li>
-            <li>Prepare your delivery package</li>
-            <li>Support your release workflow</li>
-            <li>Help your music reach the world</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="cta-box">
-        <h3>Built for artists who are ready to grow</h3>
-        <p>
-          Whether you are starting your first single or managing a bigger catalog,
-          Pandisha gives you a modern platform with strong branding and simple release management.
+        <h3>Artist Access</h3>
+        <div class="panel-sub">Sign up or log in to manage releases</div>
+        <p style="color: rgba(255,255,255,0.72); line-height:1.8; margin:0;">
+          Artists can create accounts, sign in, and enter their dashboard to prepare new releases.
         </p>
-        <a href="#signup" class="btn btn-primary">Create Artist Account</a>
-      </div>
-    </div>
-  </section>
-
-  <section class="section" id="features">
-    <div class="container">
-      <h2 class="section-title">Why artists choose Pandisha</h2>
-      <p class="section-text">
-        We focus on simplicity, presentation, and growth — the things that make a platform feel trustworthy and professional.
-      </p>
-
-      <div class="cards-3">
-        <div class="card">
-          <div class="icon">🌍</div>
-          <h3>Global Reach</h3>
-          <p>Your music is prepared for a wider audience and a stronger digital presence.</p>
-        </div>
-
-        <div class="card">
-          <div class="icon">⚡</div>
-          <h3>Fast Workflow</h3>
-          <p>Clear submission steps, quick reviews, and a smooth path from upload to release.</p>
-        </div>
-
-        <div class="card">
-          <div class="icon">📊</div>
-          <h3>Artist Dashboard</h3>
-          <p>Track your releases, monitor updates, and manage your catalog in one place.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="section" id="pricing">
-    <div class="container">
-      <h2 class="section-title">Pricing</h2>
-      <p class="section-text">
-        Flexible annual pricing built for artists at every stage.
-      </p>
-
-      <div class="pricing-grid">
-        <div class="price-card">
-          <h3>Starter</h3>
-          <div class="price">Free</div>
-          <ul class="list">
-            <li>1 artist account</li>
-            <li>Submit release (manual review)</li>
-            <li>Standard release time</li>
-            <li>Basic support</li>
-          </ul>
-          <a href="#signup" class="btn btn-secondary" style="margin-top:16px;">Get Started</a>
-        </div>
-
-        <div class="price-card featured">
-          <h3>Pro Artist</h3>
-          <div class="price">$25 <span>/ year</span></div>
-          <ul class="list">
-            <li>Unlimited releases</li>
-            <li>Faster approval</li>
-            <li>Priority support</li>
-            <li>Artist dashboard access</li>
-          </ul>
-          <a href="#signup" class="btn btn-primary" style="margin-top:16px;">Choose Pro</a>
-        </div>
-
-        <div class="price-card">
-          <h3>Label / Premium</h3>
-          <div class="price">$100<span></span></div>
-          <ul class="list">
-            <li>Multiple artists</li>
-            <li>Unlimited releases</li>
-            <li>Radio Promotion</li>
-            <li>Social Media Promotion</li>
-            <li>Priority support</li>
-            <li>Catalog management</li>
-          </ul>
-          <a href="#contact" class="btn btn-secondary" style="margin-top:16px;">Contact Us</a>
-        </div>
       </div>
     </div>
   </section>
@@ -626,14 +294,14 @@
         <div class="panel-sub">Access your dashboard and releases</div>
 
         <div class="input-fake">
-  <input id="login-email" placeholder="Email" style="width:100%; background:none; border:none; color:white;">
-</div>
+          <input id="login-email" type="email" placeholder="Email">
+        </div>
 
-<div class="input-fake">
-  <input id="login-password" type="password" placeholder="Password" style="width:100%; background:none; border:none; color:white;">
-</div>
+        <div class="input-fake">
+          <input id="login-password" type="password" placeholder="Password">
+        </div>
 
-<a onclick="login()" class="btn btn-primary" style="width: 100%; text-align: center;">Sign In</a>
+        <button onclick="login()" class="btn btn-primary" style="width:100%; text-align:center;">Sign In</button>
       </div>
 
       <div class="panel" id="signup">
@@ -641,28 +309,18 @@
         <div class="panel-sub">Create your Pandisha artist account</div>
 
         <div class="input-fake">
-  <input id="signup-email" placeholder="Email" style="width:100%; background:none; border:none; color:white;">
-</div>
+          <input id="signup-username" type="text" placeholder="Username">
+        </div>
 
-<div class="input-fake">
-  <input id="signup-password" type="password" placeholder="Password" style="width:100%; background:none; border:none; color:white;">
-</div>
+        <div class="input-fake">
+          <input id="signup-email" type="email" placeholder="Email">
+        </div>
 
-<a onclick="signUp()" class="btn btn-primary" style="width: 100%; text-align: center;">Create Account</a>
-      </div>
-    </div>
-  </section>
+        <div class="input-fake">
+          <input id="signup-password" type="password" placeholder="Password">
+        </div>
 
-  <section class="section" id="contact">
-    <div class="container">
-      <h2 class="section-title">Ready to release?</h2>
-      <p class="section-text">
-        Join Pandisha and take your music from studio to the world with a brand built for modern artists.
-      </p>
-
-      <div class="hero-actions">
-        <a href="#signup" class="btn btn-primary">Sign Up</a>
-        <a href="#login" class="btn btn-secondary">Artist Log in</a>
+        <button onclick="signUp()" class="btn btn-primary" style="width:100%; text-align:center;">Create Account</button>
       </div>
     </div>
   </section>
@@ -673,230 +331,83 @@
       <div>Email: hello@pandisha.com</div>
     </div>
   </div>
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } 
-from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyB7zfgQ3GqdPL2o1tyFt2RmW3Obqb1nKPk",
-  authDomain: "pandisha1.firebaseapp.com",
-  projectId: "pandisha1",
-  storageBucket: "pandisha1.firebasestorage.app",
-  messagingSenderId: "914457078679",
-  appId: "1:914457078679:web:f11bf8ccc4fd824459f2d2",
-};
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword }
+      from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+    import { getFirestore, collection, addDoc, query, where, getDocs }
+      from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+    const firebaseConfig = {
+      apiKey: "AIzaSyB7zfgQ3GqdPL2o1tyFt2RmW3Obqb1nKPk",
+      authDomain: "pandisha1.firebaseapp.com",
+      projectId: "pandisha1",
+      storageBucket: "pandisha1.firebasestorage.app",
+      messagingSenderId: "914457078679",
+      appId: "1:914457078679:web:f11bf8ccc4fd824459f2d2",
+    };
 
-// SIGN UP
-window.signUp = function() {
-  const email = document.getElementById("signup-email").value;
-  const password = document.getElementById("signup-password").value;
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
-  createUserWithEmailAndPassword(auth, email, password)
-    .then(() => {
-      alert("Account created successfully 🔥");
-    })
-    .catch((error) => {
-      alert(error.message);
-    });
-};
+    window.signUp = async function() {
+      const username = document.getElementById("signup-username").value.trim();
+      const email = document.getElementById("signup-email").value.trim();
+      const password = document.getElementById("signup-password").value.trim();
 
-// LOGIN
-window.login = function() {
-  const email = document.getElementById("login-email").value;
-  const password = document.getElementById("login-password").value;
+      if (!username || !email || !password) {
+        alert("Jaza username, email na password");
+        return;
+      }
 
-  signInWithEmailAndPassword(auth, email, password)
-    .then(() => {
-      alert("Login successful 🔥");
-    })
-    .catch((error) => {
-      alert(error.message);
-    });
-};
-</script>
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } 
-from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+      try {
+        const existingUsernameQuery = query(
+          collection(db, "users"),
+          where("username", "==", username)
+        );
+        const existingUsernameSnapshot = await getDocs(existingUsernameQuery);
 
-const firebaseConfig = {
-  apiKey: "AIzaSyB7zfgQ3GqdPL2o1tyFt2RmW3Obqb1nKPk",
-  authDomain: "pandisha1.firebaseapp.com",
-  projectId: "pandisha1",
-  storageBucket: "pandisha1.firebasestorage.app",
-  messagingSenderId: "914457078679",
-  appId: "1:914457078679:web:f11bf8ccc4fd824459f2d2",
-};
+        if (!existingUsernameSnapshot.empty) {
+          alert("Username tayari imetumika. Chagua nyingine.");
+          return;
+        }
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
 
-// SIGN UP
-window.signUp = function() {
-  const email = document.getElementById("signup-email").value.trim();
-  const password = document.getElementById("signup-password").value.trim();
+        await addDoc(collection(db, "users"), {
+          userId: user.uid,
+          username: username,
+          email: email
+        });
 
-  if (!email || !password) {
-    alert("Jaza email na password kwanza");
-    return;
-  }
+        alert("Account created successfully");
+        window.location.href = "dashboard.html";
+      } catch (error) {
+        alert(error.message);
+      }
+    };
 
-  createUserWithEmailAndPassword(auth, email, password)
-    .then(() => {
-      alert("Account created successfully");
-      window.location.href = "dashboard.html";
-    })
-    .catch((error) => {
-      alert(error.message);
-    });
-};
+    window.login = function() {
+      const email = document.getElementById("login-email").value.trim();
+      const password = document.getElementById("login-password").value.trim();
 
-// LOGIN
-window.login = function() {
-  const email = document.getElementById("login-email").value.trim();
-  const password = document.getElementById("login-password").value.trim();
+      if (!email || !password) {
+        alert("Jaza email na password kwanza");
+        return;
+      }
 
-  if (!email || !password) {
-    alert("Jaza email na password kwanza");
-    return;
-  }
+      signInWithEmailAndPassword(auth, email, password)
+        .then(() => {
+          window.location.href = "dashboard.html";
+        })
+        .catch((error) => {
+          alert(error.message);
+        });
+    };
+  </script>
 
-  signInWithEmailAndPassword(auth, email, password)
-    .then(() => {
-      alert("Login successful");
-      window.location.href = "dashboard.html";
-    })
-    .catch((error) => {
-      alert(error.message);
-    });
-};
-</script><script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } 
-from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyB7zfgQ3GqdPL2o1tyFt2RmW3Obqb1nKPk",
-  authDomain: "pandisha1.firebaseapp.com",
-  projectId: "pandisha1",
-  storageBucket: "pandisha1.firebasestorage.app",
-  messagingSenderId: "914457078679",
-  appId: "1:914457078679:web:f11bf8ccc4fd824459f2d2",
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-
-window.signUp = function() {
-  const email = document.getElementById("signup-email").value.trim();
-  const password = document.getElementById("signup-password").value.trim();
-
-  if (!email || !password) {
-    alert("Jaza email na password kwanza");
-    return;
-  }
-
-  createUserWithEmailAndPassword(auth, email, password)
-    .then(() => {
-      alert("Account created successfully");
-      window.location.href = "dashboard.html";
-    })
-    .catch((error) => {
-      alert(error.message);
-    });
-};
-
-window.login = function() {
-  const email = document.getElementById("login-email").value.trim();
-  const password = document.getElementById("login-password").value.trim();
-
-  if (!email || !password) {
-    alert("Jaza email na password kwanza");
-    return;
-  }
-
-  signInWithEmailAndPassword(auth, email, password)
-    .then(() => {
-      alert("Login successful");
-      window.location.href = "dashboard.html";
-    })
-    .catch((error) => {
-      alert(error.message);
-    });
-};
-</script></body>
+</body>
 </html>
-<script type="module">
-window.login = function() {
-  alert("");
-};
-</script>
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } 
-from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyB7zfgQ3GqdPL2o1tyFt2RmW3Obqb1nKPk",
-  authDomain: "pandisha1.firebaseapp.com",
-  projectId: "pandisha1",
-  storageBucket: "pandisha1.firebasestorage.app",
-  messagingSenderId: "914457078679",
-  appId: "1:914457078679:web:f11bf8ccc4fd824459f2d2",
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-
-window.signUp = function() {
-  const email = document.getElementById("signup-email").value.trim();
-  const password = document.getElementById("signup-password").value.trim();
-
-  if (!email || !password) {
-    alert("Jaza email na password kwanza");
-    return;
-  }
-
-  createUserWithEmailAndPassword(auth, email, password)
-    .then(() => {
-      alert("Account created successfully");
-      window.location.href = "dashboard.html";
-    })
-    .catch((error) => {
-      alert(error.message);
-    });
-};
-
-window.login = function() {
-  const emailInput = document.getElementById("login-email");
-  const passwordInput = document.getElementById("login-password");
-
-  if (!emailInput || !passwordInput) {
-    alert("Login inputs hazijaonekana vizuri kwenye page");
-    return;
-  }
-
-  const email = emailInput.value.trim();
-  const password = passwordInput.value.trim();
-
-  if (!email || !password) {
-    alert("Jaza email na password kwanza");
-    return;
-  }
-
-  signInWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      console.log("Login success:", userCredential.user.email);
-      alert("Login successful");
-      window.location.href = "dashboard.html";
-    })
-    .catch((error) => {
-      console.log("Login error:", error.code, error.message);
-      alert(error.message);
-    });
-};
-</script>
