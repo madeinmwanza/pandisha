@@ -133,12 +133,6 @@
       color: white;
     }
 
-    .btn-secondary {
-      background: rgba(255,255,255,0.06);
-      color: white;
-      border: 1px solid rgba(255,255,255,0.1);
-    }
-
     .stats {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -286,27 +280,15 @@
     }
 
     @media (max-width: 980px) {
-      .layout {
-        grid-template-columns: 1fr;
-      }
-      .stats {
-        grid-template-columns: repeat(2, 1fr);
-      }
-      .grid-2 {
-        grid-template-columns: 1fr;
-      }
+      .layout { grid-template-columns: 1fr; }
+      .stats { grid-template-columns: repeat(2, 1fr); }
+      .grid-2 { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 640px) {
-      .stats {
-        grid-template-columns: 1fr;
-      }
-      .main {
-        padding: 18px;
-      }
-      .topbar h1 {
-        font-size: 28px;
-      }
+      .stats { grid-template-columns: 1fr; }
+      .main { padding: 18px; }
+      .topbar h1 { font-size: 28px; }
     }
   </style>
 </head>
@@ -345,7 +327,7 @@
       <div class="topbar">
         <div>
           <h1>Artist Dashboard</h1>
-          <p id="user-email">Artist account</p>
+          <p id="user-name">Loading username...</p>
         </div>
         <button class="btn btn-primary" onclick="showSection('create-release')">New Release</button>
       </div>
@@ -431,7 +413,6 @@
         <div id="trends" class="section-block">
           <h2>Trends</h2>
           <p class="lead">Hapa utaona mwenendo wa plays, reach, na growth ya releases zako.</p>
-
           <div class="mini-list">
             <div class="item">
               <strong>Weekly Listener Trend</strong>
@@ -447,7 +428,6 @@
         <div id="statistics" class="section-block">
           <h2>Statistics</h2>
           <p class="lead">Hapa utaona total streams, active releases, na audience activity.</p>
-
           <div class="mini-list">
             <div class="item">
               <strong>Total Streams</strong>
@@ -463,7 +443,6 @@
         <div id="reports" class="section-block">
           <h2>Reports</h2>
           <p class="lead">Hapa msanii ataona ripoti za performance na status za releases.</p>
-
           <div class="mini-list">
             <div class="item">
               <strong>Monthly Report</strong>
@@ -479,7 +458,6 @@
         <div id="earnings" class="section-block">
           <h2>Earnings</h2>
           <p class="lead">Hapa utaona mapato ya msanii kutoka kwenye releases zake.</p>
-
           <div class="mini-list">
             <div class="item">
               <strong>Available Balance</strong>
@@ -518,7 +496,20 @@
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         currentUser = user;
-        document.getElementById("user-email").textContent = user.email;
+
+        const userQuery = query(
+          collection(db, "users"),
+          where("userId", "==", user.uid)
+        );
+        const userSnapshot = await getDocs(userQuery);
+
+        if (!userSnapshot.empty) {
+          const userData = userSnapshot.docs[0].data();
+          document.getElementById("user-name").textContent = userData.username;
+        } else {
+          document.getElementById("user-name").textContent = user.email;
+        }
+
         await loadDiscography();
       } else {
         window.location.href = "index.html";
@@ -537,17 +528,13 @@
       });
 
       const target = document.getElementById(sectionId);
-      if (target) {
-        target.classList.add("active");
-      }
+      if (target) target.classList.add("active");
 
       document.querySelectorAll(".submenu-item").forEach(item => {
         item.classList.remove("active");
       });
 
-      if (clickedItem) {
-        clickedItem.classList.add("active");
-      }
+      if (clickedItem) clickedItem.classList.add("active");
     };
 
     window.submitRelease = async function() {
@@ -573,7 +560,6 @@
       try {
         await addDoc(collection(db, "releases"), {
           userId: currentUser.uid,
-          userEmail: currentUser.email,
           title,
           artist,
           releaseDate,
