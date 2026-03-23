@@ -2,112 +2,545 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Pandisha Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pandisha Artist Dashboard</title>
   <style>
+    * { box-sizing: border-box; }
     body {
       margin: 0;
       font-family: Arial, sans-serif;
       background: #0b0f1a;
       color: white;
     }
+    a { text-decoration: none; color: inherit; }
 
-    .container {
-      padding: 30px;
+    .layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      background: rgba(255,255,255,0.04);
+      border-right: 1px solid rgba(255,255,255,0.08);
+      padding: 24px 18px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 30px;
+      padding: 0 8px;
+    }
+
+    .brand img {
+      height: 54px;
+      object-fit: contain;
+    }
+
+    .brand-text h2 {
+      margin: 0;
+      font-size: 18px;
+      letter-spacing: 3px;
+    }
+
+    .brand-text span {
+      font-size: 11px;
+      color: rgba(255,255,255,0.6);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .menu-title {
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin: 18px 8px 10px;
+    }
+
+    .menu-item {
+      display: block;
+      padding: 12px 14px;
+      border-radius: 12px;
+      margin-bottom: 8px;
+      background: rgba(255,255,255,0.04);
+      color: rgba(255,255,255,0.82);
+      cursor: pointer;
+    }
+
+    .menu-item:hover,
+    .menu-item.active {
+      background: linear-gradient(90deg, rgba(123,47,247,0.25), rgba(255,122,24,0.20));
+      color: white;
+    }
+
+    .submenu {
+      margin: 0 0 14px 14px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .submenu-item {
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.03);
+      color: rgba(255,255,255,0.72);
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .submenu-item:hover,
+    .submenu-item.active {
+      background: rgba(255,255,255,0.09);
+      color: white;
+    }
+
+    .main {
+      padding: 28px;
     }
 
     .topbar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 20px;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 26px;
+    }
+
+    .topbar h1 {
+      margin: 0;
+      font-size: 34px;
+    }
+
+    .topbar p {
+      margin: 6px 0 0;
+      color: rgba(255,255,255,0.65);
     }
 
     .btn {
-      padding: 10px 15px;
-      border-radius: 8px;
       border: none;
+      border-radius: 12px;
+      padding: 12px 18px;
+      font-weight: 700;
       cursor: pointer;
     }
 
     .btn-primary {
-      background: #7B2FF7;
+      background: linear-gradient(90deg, #7B2FF7, #FF7A18);
       color: white;
+    }
+
+    .btn-secondary {
+      background: rgba(255,255,255,0.06);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
     }
 
     .card {
       background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px;
       padding: 20px;
-      border-radius: 10px;
+    }
+
+    .card small {
+      color: rgba(255,255,255,0.6);
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .card strong {
+      font-size: 30px;
+    }
+
+    .content-panel {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px;
+      padding: 22px;
+    }
+
+    .section-block {
+      display: none;
+    }
+
+    .section-block.active {
+      display: block;
+    }
+
+    .section-block h2 {
+      margin-top: 0;
+      margin-bottom: 8px;
+      font-size: 28px;
+    }
+
+    .section-block p.lead {
+      margin-top: 0;
+      color: rgba(255,255,255,0.68);
+      line-height: 1.7;
       margin-bottom: 20px;
     }
 
-    input {
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .release-item {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+
+    .release-item h3 {
+      margin: 0 0 8px;
+      font-size: 20px;
+    }
+
+    .release-item p {
+      margin: 0;
+      color: rgba(255,255,255,0.68);
+    }
+
+    .status {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      background: rgba(255,255,255,0.08);
+    }
+
+    .input-box {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      padding: 14px 16px;
+      margin-bottom: 12px;
+    }
+
+    .input-box input,
+    .input-box select,
+    .input-box textarea {
       width: 100%;
-      padding: 10px;
-      margin-bottom: 10px;
-      border-radius: 8px;
+      background: none;
       border: none;
+      color: white;
+      outline: none;
+      font-size: 14px;
+      font-family: Arial, sans-serif;
+    }
+
+    .input-box textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .upload-note {
+      color: rgba(255,255,255,0.65);
+      line-height: 1.7;
+      font-size: 14px;
+      margin-top: 12px;
+    }
+
+    .mini-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .mini-list .item {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      padding: 16px;
+    }
+
+    .mini-list .item strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 18px;
+    }
+
+    .mini-list .item span {
+      color: rgba(255,255,255,0.65);
+      font-size: 14px;
+    }
+
+    @media (max-width: 980px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .stats {
+        grid-template-columns: 1fr;
+      }
+      .main {
+        padding: 18px;
+      }
+      .topbar h1 {
+        font-size: 28px;
+      }
     }
   </style>
 </head>
 <body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">
+        <img src="./PandishaaLogo.png" alt="Pandisha Logo">
+        <div class="brand-text">
+          <h2>PANDISHA</h2>
+          <span>Artist Dashboard</span>
+        </div>
+      </div>
 
-<div class="container">
-  <div class="topbar">
-    <h2>Artist Dashboard</h2>
-    <button class="btn btn-primary" onclick="logout()">Logout</button>
+      <div class="menu-title">Distribution</div>
+      <div class="menu-item active">Distribution</div>
+      <div class="submenu">
+        <div class="submenu-item active" onclick="showSection('create-release', this)">Create a Release</div>
+        <div class="submenu-item" onclick="showSection('discography', this)">Discography</div>
+      </div>
+
+      <div class="menu-title">Performance</div>
+      <div class="menu-item">Performance</div>
+      <div class="submenu">
+        <div class="submenu-item" onclick="showSection('trends', this)">Trends</div>
+        <div class="submenu-item" onclick="showSection('statistics', this)">Statistics</div>
+        <div class="submenu-item" onclick="showSection('reports', this)">Reports</div>
+        <div class="submenu-item" onclick="showSection('earnings', this)">Earnings</div>
+      </div>
+
+      <div class="menu-title">Account</div>
+      <div class="menu-item" onclick="logout()">Log Out</div>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <div>
+          <h1>Artist Dashboard</h1>
+          <p id="user-email">Artist account</p>
+        </div>
+        <button class="btn btn-primary" onclick="showSection('create-release')">New Release</button>
+      </div>
+
+      <section class="stats">
+        <div class="card">
+          <small>Total Releases</small>
+          <strong>0</strong>
+        </div>
+        <div class="card">
+          <small>Pending Review</small>
+          <strong>0</strong>
+        </div>
+        <div class="card">
+          <small>Live Tracks</small>
+          <strong>0</strong>
+        </div>
+        <div class="card">
+          <small>Plan</small>
+          <strong>Starter</strong>
+        </div>
+      </section>
+
+      <div class="content-panel">
+        <div id="create-release" class="section-block active">
+          <h2>Create a Release</h2>
+          <p class="lead">Hapa msanii anaweza kupandisha wimbo wake mpya, cover art, metadata na release details.</p>
+
+          <div class="grid-2">
+            <div>
+              <div class="input-box">
+                <input type="text" placeholder="Song Title">
+              </div>
+
+              <div class="input-box">
+                <input type="text" placeholder="Artist Name">
+              </div>
+
+              <div class="input-box">
+                <input type="date">
+              </div>
+
+              <div class="input-box">
+                <select>
+                  <option>Choose Genre</option>
+                  <option>Bongo Flava</option>
+                  <option>Hip Hop</option>
+                  <option>Afropop</option>
+                  <option>Gospel</option>
+                  <option>Amapiano</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <div class="input-box">
+                <input type="file" accept=".mp3,.wav">
+              </div>
+
+              <div class="input-box">
+                <input type="file" accept="image/*">
+              </div>
+
+              <div class="input-box">
+                <textarea placeholder="Release notes or description"></textarea>
+              </div>
+
+              <button class="btn btn-primary" style="width:100%;">Submit Release</button>
+              <p class="upload-note">
+                Hatua inayofuata tunaweza kuunganisha hapa na Firebase Storage ili audio na cover art zihifadhiwe kweli.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div id="discography" class="section-block">
+          <h2>Discography</h2>
+          <p class="lead">Hapa msanii ataona nyimbo zilizopandishwa tayari na historia ya releases zake.</p>
+
+          <div class="release-item">
+            <h3>No releases yet</h3>
+            <p>Ukishapandisha wimbo, utaonekana hapa pamoja na status yake.</p>
+            <span class="status">Waiting</span>
+          </div>
+        </div>
+
+        <div id="trends" class="section-block">
+          <h2>Trends</h2>
+          <p class="lead">Hapa utaona mwenendo wa plays, reach, na growth ya releases zako.</p>
+
+          <div class="mini-list">
+            <div class="item">
+              <strong>Weekly Listener Trend</strong>
+              <span>No trend data yet.</span>
+            </div>
+            <div class="item">
+              <strong>Top Performing Release</strong>
+              <span>Data itaonekana baada ya releases kuwa live.</span>
+            </div>
+          </div>
+        </div>
+
+        <div id="statistics" class="section-block">
+          <h2>Statistics</h2>
+          <p class="lead">Hapa utaona numbers muhimu kama total streams, active releases, na audience activity.</p>
+
+          <div class="mini-list">
+            <div class="item">
+              <strong>Total Streams</strong>
+              <span>0</span>
+            </div>
+            <div class="item">
+              <strong>Active Releases</strong>
+              <span>0</span>
+            </div>
+          </div>
+        </div>
+
+        <div id="reports" class="section-block">
+          <h2>Reports</h2>
+          <p class="lead">Hapa msanii ataweza kuona ripoti za performance na status za releases.</p>
+
+          <div class="mini-list">
+            <div class="item">
+              <strong>Monthly Report</strong>
+              <span>No reports available yet.</span>
+            </div>
+            <div class="item">
+              <strong>Release Status Report</strong>
+              <span>Approved, pending, and live releases will appear here.</span>
+            </div>
+          </div>
+        </div>
+
+        <div id="earnings" class="section-block">
+          <h2>Earnings</h2>
+          <p class="lead">Hapa utaona mapato ya msanii kutoka kwenye releases zake.</p>
+
+          <div class="mini-list">
+            <div class="item">
+              <strong>Available Balance</strong>
+              <span>$0.00</span>
+            </div>
+            <div class="item">
+              <strong>Last Payout</strong>
+              <span>No payout yet.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
   </div>
 
-  <div class="card">
-    <h3>Account</h3>
-    <p id="user-email">Loading...</p>
-  </div>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
 
-  <div class="card">
-    <h3>Upload Song</h3>
+    const firebaseConfig = {
+      apiKey: "AIzaSyB7zfgQ3GqdPL2o1tyFt2RmW3Obqb1nKPk",
+      authDomain: "pandisha1.firebaseapp.com",
+      projectId: "pandisha1",
+      storageBucket: "pandisha1.firebasestorage.app",
+      messagingSenderId: "914457078679",
+      appId: "1:914457078679:web:f11bf8ccc4fd824459f2d2",
+    };
 
-    <input type="text" placeholder="Song Title">
-    <input type="text" placeholder="Artist Name">
-    <input type="date">
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
 
-    <input type="file" accept=".mp3,.wav">
-    <input type="file" accept="image/*">
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        document.getElementById("user-email").textContent = user.email;
+      } else {
+        window.location.href = "index.html";
+      }
+    });
 
-    <button class="btn btn-primary">Submit</button>
-  </div>
-</div>
+    window.logout = function() {
+      signOut(auth).then(() => {
+        window.location.href = "index.html";
+      });
+    };
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+    window.showSection = function(sectionId, clickedItem) {
+      document.querySelectorAll(".section-block").forEach(section => {
+        section.classList.remove("active");
+      });
 
-const firebaseConfig = {
-  apiKey: "AIzaSyB7zfgQ3GqdPL2o1tyFt2RmW3Obqb1nKPk",
-  authDomain: "pandisha1.firebaseapp.com",
-  projectId: "pandisha1",
-  storageBucket: "pandisha1.firebasestorage.app",
-  messagingSenderId: "914457078679",
-  appId: "1:914457078679:web:f11bf8ccc4fd824459f2d2",
-};
+      const target = document.getElementById(sectionId);
+      if (target) {
+        target.classList.add("active");
+      }
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+      document.querySelectorAll(".submenu-item").forEach(item => {
+        item.classList.remove("active");
+      });
 
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    document.getElementById("user-email").textContent = user.email;
-  } else {
-    window.location.href = "index.html";
-  }
-});
-
-window.logout = function () {
-  signOut(auth).then(() => {
-    window.location.href = "index.html";
-  });
-};
-</script>
-
+      if (clickedItem) {
+        clickedItem.classList.add("active");
+      }
+    };
+  </script>
 </body>
 </html>
