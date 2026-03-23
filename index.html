@@ -370,7 +370,8 @@
       margin-bottom: 12px;
     }
 
-    .input-fake input {
+    .input-fake input,
+    .input-fake select {
       width: 100%;
       background: none;
       border: none;
@@ -604,8 +605,8 @@
         </div>
 
         <div class="price-card featured">
-          <h3>Artist Boost (Most Popular)</h3>
-          <div class="price">$12 <span>/ year</span></div>
+          <h3>Pro Artist</h3>
+          <div class="price">$25 <span>/ year</span></div>
           <ul class="list">
             <li>Unlimited releases</li>
             <li>Faster approval</li>
@@ -616,12 +617,12 @@
         </div>
 
         <div class="price-card">
-          <h3>Full Promotion</h3>
-          <div class="price">$35 <span>/ year</span></div>
+          <h3>Label / Premium</h3>
+          <div class="price">$100 <span>/ year</span></div>
           <ul class="list">
             <li>Multiple artists</li>
             <li>Unlimited releases</li>
-            <li>Radio rotation (2 weeks guaranteed)</li>
+            <li>Radio Promotion</li>
             <li>Social Media Promotion</li>
             <li>Priority support</li>
             <li>Catalog management</li>
@@ -639,7 +640,7 @@
         <div class="panel-sub">Access your dashboard and releases</div>
 
         <div class="input-fake">
-          <input id="login-email" type="email" placeholder="Email">
+          <input id="login-username" type="text" placeholder="Username">
         </div>
 
         <div class="input-fake">
@@ -658,11 +659,29 @@
         </div>
 
         <div class="input-fake">
-          <input id="signup-email" type="email" placeholder="Email">
+          <input id="signup-email" type="email" placeholder="Email Address">
         </div>
 
         <div class="input-fake">
-          <input id="signup-password" type="password" placeholder="Password">
+          <input id="signup-password" type="password" placeholder="Create Password">
+        </div>
+
+        <div class="input-fake">
+          <input id="signup-confirm-password" type="password" placeholder="Confirm Password">
+        </div>
+
+        <div class="input-fake">
+          <select id="signup-security-question">
+            <option value="">Security Question</option>
+            <option>What is your mother's first name?</option>
+            <option>What was the name of your first school?</option>
+            <option>What is your favorite artist?</option>
+            <option>What city were you born in?</option>
+          </select>
+        </div>
+
+        <div class="input-fake">
+          <input id="signup-security-answer" type="text" placeholder="Answer">
         </div>
 
         <button onclick="signUp()" class="btn btn-primary" style="width:100%; text-align:center;">Create Account</button>
@@ -715,9 +734,17 @@
       const username = document.getElementById("signup-username").value.trim();
       const email = document.getElementById("signup-email").value.trim();
       const password = document.getElementById("signup-password").value.trim();
+      const confirmPassword = document.getElementById("signup-confirm-password").value.trim();
+      const securityQuestion = document.getElementById("signup-security-question").value;
+      const securityAnswer = document.getElementById("signup-security-answer").value.trim();
 
-      if (!username || !email || !password) {
-        alert("Jaza username, email na password");
+      if (!username || !email || !password || !confirmPassword || !securityQuestion || !securityAnswer) {
+        alert("Jaza taarifa zote");
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        alert("Password na confirm password havifanani");
         return;
       }
 
@@ -739,7 +766,9 @@
         await addDoc(collection(db, "users"), {
           userId: user.uid,
           username: username,
-          email: email
+          email: email,
+          securityQuestion: securityQuestion,
+          securityAnswer: securityAnswer
         });
 
         alert("Account created successfully");
@@ -749,22 +778,35 @@
       }
     };
 
-    window.login = function() {
-      const email = document.getElementById("login-email").value.trim();
+    window.login = async function() {
+      const username = document.getElementById("login-username").value.trim();
       const password = document.getElementById("login-password").value.trim();
 
-      if (!email || !password) {
-        alert("Jaza email na password kwanza");
+      if (!username || !password) {
+        alert("Jaza username na password kwanza");
         return;
       }
 
-      signInWithEmailAndPassword(auth, email, password)
-        .then(() => {
-          window.location.href = "dashboard.html";
-        })
-        .catch((error) => {
-          alert(error.message);
-        });
+      try {
+        const userQuery = query(
+          collection(db, "users"),
+          where("username", "==", username)
+        );
+        const userSnapshot = await getDocs(userQuery);
+
+        if (userSnapshot.empty) {
+          alert("Username haipo");
+          return;
+        }
+
+        const userData = userSnapshot.docs[0].data();
+        const email = userData.email;
+
+        await signInWithEmailAndPassword(auth, email, password);
+        window.location.href = "dashboard.html";
+      } catch (error) {
+        alert(error.message);
+      }
     };
   </script>
 
