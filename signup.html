@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sign Up - Pandisha</title>
+<style>
+body {
+  background:#0b0f1a;
+  color:white;
+  font-family:Arial;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+}
+.box {
+  background:rgba(255,255,255,0.05);
+  padding:30px;
+  border-radius:20px;
+  width:320px;
+}
+input,select {
+  width:100%;
+  padding:12px;
+  margin-bottom:10px;
+  border:none;
+  border-radius:10px;
+}
+button {
+  width:100%;
+  padding:12px;
+  background:linear-gradient(90deg,#7B2FF7,#FF7A18);
+  border:none;
+  border-radius:10px;
+  color:white;
+  font-weight:bold;
+}
+</style>
+</head>
+<body>
+
+<div class="box">
+<h2>Sign Up</h2>
+
+<input id="username" placeholder="Username">
+<input id="email" placeholder="Email">
+<input id="password" type="password" placeholder="Password">
+<input id="confirm" type="password" placeholder="Confirm Password">
+
+<select id="question">
+<option>Security Question</option>
+<option>First school?</option>
+<option>Favorite artist?</option>
+</select>
+
+<input id="answer" placeholder="Answer">
+
+<button onclick="signup()">Create Account</button>
+
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSy...",
+  authDomain: "pandisha1.firebaseapp.com",
+  projectId: "pandisha1"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+window.signup = async function(){
+  const username = username.value;
+  const email = email.value;
+  const password = password.value;
+
+  await createUserWithEmailAndPassword(auth,email,password);
+
+  await addDoc(collection(db,"users"),{
+    username,email
+  });
+
+  alert("Account created");
+  window.location.href="login.html";
+}
+</script>
+
+</body>
+</html>
