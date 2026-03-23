@@ -722,6 +722,62 @@ window.login = function() {
 </html>
 <script type="module">
 window.login = function() {
-  alert("login button works");
+  <script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } 
+from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyB7zfgQ3GqdPL2o1tyFt2RmW3Obqb1nKPk",
+  authDomain: "pandisha1.firebaseapp.com",
+  projectId: "pandisha1",
+  storageBucket: "pandisha1.firebasestorage.app",
+  messagingSenderId: "914457078679",
+  appId: "1:914457078679:web:f11bf8ccc4fd824459f2d2",
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+// SIGN UP
+window.signUp = function() {
+  const email = document.getElementById("signup-email").value.trim();
+  const password = document.getElementById("signup-password").value.trim();
+
+  if (!email || !password) {
+    alert("Jaza email na password kwanza");
+    return;
+  }
+
+  createUserWithEmailAndPassword(auth, email, password)
+    .then(() => {
+      alert("Account created successfully");
+      window.location.href = "dashboard.html";
+    })
+    .catch((error) => {
+      alert(error.message);
+    });
+};
+
+// LOGIN
+window.login = function() {
+  const email = document.getElementById("login-email").value.trim();
+  const password = document.getElementById("login-password").value.trim();
+
+  if (!email || !password) {
+    alert("Jaza email na password kwanza");
+    return;
+  }
+
+  signInWithEmailAndPassword(auth, email, password)
+    .then(() => {
+      alert("Login successful");
+      window.location.href = "dashboard.html";
+    })
+    .catch((error) => {
+      alert(error.message);
+    });
+};
+</script>
 };
 </script>
