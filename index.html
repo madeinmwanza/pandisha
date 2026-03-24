@@ -379,7 +379,8 @@
       font-size: 14px;
     }
 
-    .input-fake input::placeholder {
+    .input-fake input::placeholder,
+    .input-fake select {
       color: rgba(255,255,255,0.6);
     }
 
@@ -395,6 +396,27 @@
       font-weight: 700;
       cursor: pointer;
       margin-left: 6px;
+    }
+
+    .forgot-link {
+      text-align: right;
+      margin-top: 6px;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    .forgot-link span {
+      color: #FF7A18;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .note-text {
+      text-align: center;
+      color: rgba(255,255,255,0.72);
+      font-size: 14px;
+      line-height: 1.7;
+      margin-bottom: 16px;
     }
 
     .footer {
@@ -661,6 +683,10 @@
             <input id="login-password" type="password" placeholder="Password">
           </div>
 
+          <div class="forgot-link">
+            <span onclick="showForgotPassword()">Forgot Password?</span>
+          </div>
+
           <button onclick="login()" class="btn btn-primary" style="width:100%; text-align:center;">Sign In</button>
 
           <div class="switch-text">
@@ -711,6 +737,26 @@
           </div>
         </div>
 
+        <div class="panel" id="forgotPanel" style="display:none;">
+          <h3>Forgot Password</h3>
+          <div class="panel-sub">Reset your password</div>
+
+          <div class="note-text">
+            Enter your username or email address and we will send you a password reset link.
+          </div>
+
+          <div class="input-fake">
+            <input id="forgot-identifier" type="text" placeholder="Username or Email">
+          </div>
+
+          <button onclick="forgotPassword()" class="btn btn-primary" style="width:100%; text-align:center;">Send Reset Link</button>
+
+          <div class="switch-text">
+            Remember your password?
+            <span class="switch-link" onclick="showLogin()">Log in</span>
+          </div>
+        </div>
+
       </div>
     </div>
   </section>
@@ -738,7 +784,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword }
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail }
       from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
     import { getFirestore, collection, addDoc, query, where, getDocs }
       from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
@@ -756,14 +802,25 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    window.showLogin = function() {
-      document.getElementById("loginPanel").style.display = "block";
+    function hideAllAuthPanels() {
+      document.getElementById("loginPanel").style.display = "none";
       document.getElementById("signupPanel").style.display = "none";
+      document.getElementById("forgotPanel").style.display = "none";
+    }
+
+    window.showLogin = function() {
+      hideAllAuthPanels();
+      document.getElementById("loginPanel").style.display = "block";
     };
 
     window.showSignup = function() {
-      document.getElementById("loginPanel").style.display = "none";
+      hideAllAuthPanels();
       document.getElementById("signupPanel").style.display = "block";
+    };
+
+    window.showForgotPassword = function() {
+      hideAllAuthPanels();
+      document.getElementById("forgotPanel").style.display = "block";
     };
 
     window.signUp = async function() {
@@ -840,6 +897,40 @@
 
         await signInWithEmailAndPassword(auth, email, password);
         window.location.href = "dashboard.html";
+      } catch (error) {
+        alert(error.message);
+      }
+    };
+
+    window.forgotPassword = async function() {
+      const identifier = document.getElementById("forgot-identifier").value.trim();
+
+      if (!identifier) {
+        alert("Weka username au email");
+        return;
+      }
+
+      try {
+        let emailToReset = identifier;
+
+        if (!identifier.includes("@")) {
+          const userQuery = query(
+            collection(db, "users"),
+            where("username", "==", identifier)
+          );
+          const userSnapshot = await getDocs(userQuery);
+
+          if (userSnapshot.empty) {
+            alert("Username haipo");
+            return;
+          }
+
+          emailToReset = userSnapshot.docs[0].data().email;
+        }
+
+        await sendPasswordResetEmail(auth, emailToReset);
+        alert("Password reset link imetumwa kwenye email yako");
+        showLogin();
       } catch (error) {
         alert(error.message);
       }
