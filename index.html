@@ -419,6 +419,38 @@
       margin-bottom: 16px;
     }
 
+    .store-title {
+      font-size: 28px;
+      line-height: 1.35;
+      margin: 0 0 18px;
+      text-align: center;
+    }
+
+    .store-sub {
+      text-align: center;
+      color: rgba(255,255,255,0.7);
+      font-size: 15px;
+      line-height: 1.8;
+      margin-bottom: 24px;
+    }
+
+    .store-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .store-item {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 14px 10px;
+      text-align: center;
+      font-size: 14px;
+      color: rgba(255,255,255,0.9);
+      font-weight: 600;
+    }
+
     .footer {
       border-top: 1px solid rgba(255,255,255,0.08);
       padding: 26px 0;
@@ -460,8 +492,9 @@
         font-size: 34px;
       }
 
-      .mini-grid {
-        grid-template-columns: 1fr;
+      .mini-grid,
+      .store-grid {
+        grid-template-columns: 1fr 1fr;
       }
 
       .section-title {
@@ -525,24 +558,21 @@
       </div>
 
       <div class="panel">
-        <h3>Artist Dashboard</h3>
-        <div class="panel-sub">Track releases, submissions, and performance</div>
-
-        <div class="mini-grid">
-          <div class="mini-card">
-            <span>Total Releases</span>
-            <strong>28</strong>
-          </div>
-          <div class="mini-card">
-            <span>This Month Streams</span>
-            <strong>184K</strong>
-          </div>
+        <h3 class="store-title">Sell your music,<br>unlimited & everywhere.</h3>
+        <div class="store-sub">
+          Reach major streaming and social platforms with one clean distribution system.
         </div>
 
-        <div class="release-box">
-          <div class="label">Upcoming Release</div>
-          <div class="title">Midnight Fire</div>
-          <div class="meta">Release Date: 28 April · Status: Approved</div>
+        <div class="store-grid">
+          <div class="store-item">Audiomack</div>
+          <div class="store-item">Spotify</div>
+          <div class="store-item">Apple Music</div>
+          <div class="store-item">YouTube Music</div>
+          <div class="store-item">Meta</div>
+          <div class="store-item">TikTok</div>
+          <div class="store-item">Boomplay</div>
+          <div class="store-item">Deezer</div>
+          <div class="store-item">TIDAL</div>
         </div>
       </div>
     </div>
