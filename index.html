@@ -355,10 +355,9 @@
       font-weight: 400;
     }
 
-    .portal-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 18px;
+    .portal-wrap {
+      max-width: 520px;
+      margin: 0 auto;
     }
 
     .input-fake {
@@ -384,6 +383,20 @@
       color: rgba(255,255,255,0.6);
     }
 
+    .switch-text {
+      text-align: center;
+      margin-top: 16px;
+      color: rgba(255,255,255,0.72);
+      font-size: 14px;
+    }
+
+    .switch-link {
+      color: #FF7A18;
+      font-weight: 700;
+      cursor: pointer;
+      margin-left: 6px;
+    }
+
     .footer {
       border-top: 1px solid rgba(255,255,255,0.08);
       padding: 26px 0;
@@ -402,8 +415,7 @@
       .hero-grid,
       .cards-3,
       .distribute-grid,
-      .pricing-grid,
-      .portal-grid {
+      .pricing-grid {
         grid-template-columns: 1fr;
       }
 
@@ -448,14 +460,15 @@
         </div>
       </div>
 
-     <div class="nav-links">
-  <a href="#home">Home</a>
-  <a href="#distribute">Distribute</a>
-  <a href="#features">Features</a>
-  <a href="#pricing">Pricing</a>
-  <a href="login.html" class="btn btn-secondary">Log in</a>
-  <a href="signup.html" class="btn btn-primary">Sign Up</a>
-</div>
+      <div class="nav-links">
+        <a href="#home">Home</a>
+        <a href="#distribute">Distribute</a>
+        <a href="#features">Features</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#auth" onclick="showLogin()" class="btn btn-secondary" style="padding:10px 16px;">Log in</a>
+        <a href="#auth" onclick="showSignup()" class="btn btn-primary" style="padding:10px 16px;">Sign Up</a>
+      </div>
+    </div>
   </div>
 
   <section class="hero" id="home">
@@ -469,7 +482,7 @@
         </p>
 
         <div class="hero-actions">
-          <a href="#signup" class="btn btn-primary">Start Distributing</a>
+          <a href="#auth" onclick="showSignup()" class="btn btn-primary">Start Distributing</a>
           <a href="#distribute" class="btn btn-secondary">How It Works</a>
         </div>
 
@@ -549,7 +562,7 @@
           Whether you are starting your first single or managing a bigger catalog,
           Pandisha gives you a modern platform with strong branding and simple release management.
         </p>
-        <a href="#signup" class="btn btn-primary">Create Artist Account</a>
+        <a href="#auth" onclick="showSignup()" class="btn btn-primary">Create Artist Account</a>
       </div>
     </div>
   </section>
@@ -600,7 +613,7 @@
             <li>Standard release time</li>
             <li>Basic support</li>
           </ul>
-          <a href="#signup" class="btn btn-secondary" style="margin-top:16px;">Get Started</a>
+          <a href="#auth" onclick="showSignup()" class="btn btn-secondary" style="margin-top:16px;">Get Started</a>
         </div>
 
         <div class="price-card featured">
@@ -612,7 +625,7 @@
             <li>Priority support</li>
             <li>Artist dashboard access</li>
           </ul>
-          <a href="#signup" class="btn btn-primary" style="margin-top:16px;">Choose Pro</a>
+          <a href="#auth" onclick="showSignup()" class="btn btn-primary" style="margin-top:16px;">Choose Pro</a>
         </div>
 
         <div class="price-card">
@@ -626,64 +639,78 @@
             <li>Priority support</li>
             <li>Catalog management</li>
           </ul>
-          <a href="#signup" class="btn btn-secondary" style="margin-top:16px;">Contact Us</a>
+          <a href="#auth" onclick="showSignup()" class="btn btn-secondary" style="margin-top:16px;">Contact Us</a>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="section" id="login">
-    <div class="container portal-grid">
-      <div class="panel">
-        <h3>Artist Log in</h3>
-        <div class="panel-sub">Access your dashboard and releases</div>
+  <section class="section" id="auth">
+    <div class="container">
+      <div class="portal-wrap">
 
-        <div class="input-fake">
-          <input id="login-username" type="text" placeholder="Username">
+        <div class="panel" id="loginPanel">
+          <h3>Artist Log in</h3>
+          <div class="panel-sub">Access your dashboard and releases</div>
+
+          <div class="input-fake">
+            <input id="login-username" type="text" placeholder="Username">
+          </div>
+
+          <div class="input-fake">
+            <input id="login-password" type="password" placeholder="Password">
+          </div>
+
+          <button onclick="login()" class="btn btn-primary" style="width:100%; text-align:center;">Sign In</button>
+
+          <div class="switch-text">
+            Don't have an account?
+            <span class="switch-link" onclick="showSignup()">Sign Up</span>
+          </div>
         </div>
 
-        <div class="input-fake">
-          <input id="login-password" type="password" placeholder="Password">
+        <div class="panel" id="signupPanel" style="display:none;">
+          <h3>Sign Up</h3>
+          <div class="panel-sub">Create your Pandisha artist account</div>
+
+          <div class="input-fake">
+            <input id="signup-username" type="text" placeholder="Username">
+          </div>
+
+          <div class="input-fake">
+            <input id="signup-email" type="email" placeholder="Email Address">
+          </div>
+
+          <div class="input-fake">
+            <input id="signup-password" type="password" placeholder="Create Password">
+          </div>
+
+          <div class="input-fake">
+            <input id="signup-confirm-password" type="password" placeholder="Confirm Password">
+          </div>
+
+          <div class="input-fake">
+            <select id="signup-security-question">
+              <option value="">Security Question</option>
+              <option>What is your mother's first name?</option>
+              <option>What was the name of your first school?</option>
+              <option>What is your favorite artist?</option>
+              <option>What city were you born in?</option>
+            </select>
+          </div>
+
+          <div class="input-fake">
+            <input id="signup-security-answer" type="text" placeholder="Answer">
+          </div>
+
+          <button onclick="signUp()" class="btn btn-primary" style="width:100%; text-align:center;">Create Account</button>
+
+          <div class="switch-text">
+            Already have an account?
+            <span class="switch-link" onclick="showLogin()">Log in</span>
+          </div>
         </div>
 
-        <button onclick="login()" class="btn btn-primary" style="width:100%; text-align:center;">Sign In</button>
-      </div>
-
-      <div class="panel" id="signup">
-        <h3>Sign Up</h3>
-        <div class="panel-sub">Create your Pandisha artist account</div>
-
-        <div class="input-fake">
-          <input id="signup-username" type="text" placeholder="Username">
-        </div>
-
-        <div class="input-fake">
-          <input id="signup-email" type="email" placeholder="Email Address">
-        </div>
-
-        <div class="input-fake">
-          <input id="signup-password" type="password" placeholder="Create Password">
-        </div>
-
-        <div class="input-fake">
-          <input id="signup-confirm-password" type="password" placeholder="Confirm Password">
-        </div>
-
-        <div class="input-fake">
-          <select id="signup-security-question">
-            <option value="">Security Question</option>
-            <option>What is your mother's first name?</option>
-            <option>What was the name of your first school?</option>
-            <option>What is your favorite artist?</option>
-            <option>What city were you born in?</option>
-          </select>
-        </div>
-
-        <div class="input-fake">
-          <input id="signup-security-answer" type="text" placeholder="Answer">
-        </div>
-
-        <button onclick="signUp()" class="btn btn-primary" style="width:100%; text-align:center;">Create Account</button>
       </div>
     </div>
   </section>
@@ -696,8 +723,9 @@
       </p>
 
       <div class="hero-actions">
-        <a href="login.html" class="btn btn-secondary">Log in</a>
-<a href="signup.html" class="btn btn-primary">Sign Up</a>
+        <a href="#auth" onclick="showLogin()" class="btn btn-secondary">Log in</a>
+        <a href="#auth" onclick="showSignup()" class="btn btn-primary">Sign Up</a>
+      </div>
     </div>
   </section>
 
@@ -727,6 +755,16 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
+
+    window.showLogin = function() {
+      document.getElementById("loginPanel").style.display = "block";
+      document.getElementById("signupPanel").style.display = "none";
+    };
+
+    window.showSignup = function() {
+      document.getElementById("loginPanel").style.display = "none";
+      document.getElementById("signupPanel").style.display = "block";
+    };
 
     window.signUp = async function() {
       const username = document.getElementById("signup-username").value.trim();
