@@ -128,6 +128,11 @@
       cursor: pointer;
     }
 
+    .btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
     .btn-primary {
       background: linear-gradient(90deg, #7B2FF7, #FF7A18);
       color: white;
@@ -199,13 +204,36 @@
       margin-bottom: 12px;
     }
 
+    .release-top {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+
+    .cover-box {
+      width: 72px;
+      height: 72px;
+      border-radius: 14px;
+      overflow: hidden;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      flex-shrink: 0;
+    }
+
+    .cover-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
     .release-item h3 {
       margin: 0 0 8px;
       font-size: 20px;
     }
 
     .release-item p {
-      margin: 0;
+      margin: 0 0 6px;
       color: rgba(255,255,255,0.68);
     }
 
@@ -218,12 +246,34 @@
       background: rgba(255,255,255,0.08);
     }
 
+    .status.pending {
+      background: rgba(245, 158, 11, 0.16);
+      color: #ffd27a;
+    }
+
+    .status.approved {
+      background: rgba(34, 197, 94, 0.16);
+      color: #a7f3c0;
+    }
+
+    .status.rejected {
+      background: rgba(239, 68, 68, 0.16);
+      color: #fecaca;
+    }
+
     .input-box {
       background: rgba(255,255,255,0.04);
       border: 1px solid rgba(255,255,255,0.08);
       border-radius: 14px;
       padding: 14px 16px;
       margin-bottom: 12px;
+    }
+
+    .input-box label {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 8px;
+      color: rgba(255,255,255,0.7);
     }
 
     .input-box input,
@@ -236,6 +286,11 @@
       outline: none;
       font-size: 14px;
       font-family: Arial, sans-serif;
+    }
+
+    .input-box input::placeholder,
+    .input-box textarea::placeholder {
+      color: rgba(255,255,255,0.45);
     }
 
     .input-box textarea {
@@ -276,7 +331,14 @@
     #message {
       margin-top: 12px;
       font-size: 14px;
-      color: #9ae6b4;
+      line-height: 1.6;
+    }
+
+    .audio-link {
+      display: inline-block;
+      margin-top: 10px;
+      font-size: 13px;
+      color: #f5b26b;
     }
 
     @media (max-width: 980px) {
@@ -343,7 +405,7 @@
         </div>
         <div class="card">
           <small>Live Tracks</small>
-          <strong>0</strong>
+          <strong id="live-releases">0</strong>
         </div>
         <div class="card">
           <small>Plan</small>
@@ -354,23 +416,27 @@
       <div class="content-panel">
         <div id="create-release" class="section-block active">
           <h2>Create a Release</h2>
-          <p class="lead">Hapa msanii anaweza kupandisha taarifa za wimbo wake mpya.</p>
+          <p class="lead">Hapa msanii anaweza kupandisha taarifa za wimbo wake mpya pamoja na cover art na audio file.</p>
 
           <div class="grid-2">
             <div>
               <div class="input-box">
+                <label>Song Title</label>
                 <input id="song-title" type="text" placeholder="Song Title">
               </div>
 
               <div class="input-box">
+                <label>Artist Name</label>
                 <input id="artist-name" type="text" placeholder="Artist Name">
               </div>
 
               <div class="input-box">
+                <label>Release Date</label>
                 <input id="release-date" type="date">
               </div>
 
               <div class="input-box">
+                <label>Genre</label>
                 <select id="genre">
                   <option value="">Choose Genre</option>
                   <option>Bongo Flava</option>
@@ -378,20 +444,34 @@
                   <option>Afropop</option>
                   <option>Gospel</option>
                   <option>Amapiano</option>
+                  <option>R&B</option>
+                  <option>Dancehall</option>
+                  <option>Other</option>
                 </select>
               </div>
             </div>
 
             <div>
               <div class="input-box">
+                <label>Description / Release Notes</label>
                 <textarea id="release-notes" placeholder="Release notes or description"></textarea>
               </div>
 
-              <button class="btn btn-primary" style="width:100%;" onclick="submitRelease()">Submit Release</button>
+              <div class="input-box">
+                <label>Cover Artwork</label>
+                <input id="cover-file" type="file" accept="image/*">
+              </div>
+
+              <div class="input-box">
+                <label>Audio File</label>
+                <input id="audio-file" type="file" accept=".mp3,.wav,.flac,audio/*">
+              </div>
+
+              <button id="submit-btn" class="btn btn-primary" style="width:100%;" onclick="submitRelease()">Submit Release</button>
               <div id="message"></div>
 
               <p class="upload-note">
-                Kwa sasa tunahifadhi taarifa za release kwenye Firestore. Audio na cover art tunaunganisha next step.
+                Cover na audio sasa vitapandishwa kwenye Firebase Storage, halafu details zake zitahifadhiwa kwenye Firestore.
               </p>
             </div>
           </div>
@@ -405,7 +485,7 @@
             <div class="release-item">
               <h3>No releases yet</h3>
               <p>Ukishapandisha wimbo, utaonekana hapa.</p>
-              <span class="status">Waiting</span>
+              <span class="status pending">Waiting</span>
             </div>
           </div>
         </div>
@@ -477,6 +557,7 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
     import { getFirestore, collection, addDoc, getDocs, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-storage.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyB7zfgQ3GqdPL2o1tyFt2RmW3Obqb1nKPk",
@@ -490,8 +571,10 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
+    const storage = getStorage(app);
 
     let currentUser = null;
+    let currentUsername = "";
 
     onAuthStateChanged(auth, async (user) => {
       if (user) {
@@ -505,9 +588,13 @@
 
         if (!userSnapshot.empty) {
           const userData = userSnapshot.docs[0].data();
+          currentUsername = userData.username || "";
           document.getElementById("user-name").textContent = userData.username;
+          document.getElementById("artist-name").value = userData.username;
         } else {
+          currentUsername = user.email || "";
           document.getElementById("user-name").textContent = user.email;
+          document.getElementById("artist-name").value = user.email || "";
         }
 
         await loadDiscography();
@@ -534,8 +621,33 @@
         item.classList.remove("active");
       });
 
-      if (clickedItem) clickedItem.classList.add("active");
+      if (clickedItem) {
+        clickedItem.classList.add("active");
+      } else {
+        const autoItem = document.querySelector(`[onclick*="${sectionId}"]`);
+        if (autoItem) autoItem.classList.add("active");
+      }
     };
+
+    function setMessage(text, type = "success") {
+      const message = document.getElementById("message");
+      message.textContent = text;
+      message.style.color = type === "error" ? "#fca5a5" : "#9ae6b4";
+    }
+
+    function clearForm() {
+      document.getElementById("song-title").value = "";
+      document.getElementById("artist-name").value = currentUsername || "";
+      document.getElementById("release-date").value = "";
+      document.getElementById("genre").value = "";
+      document.getElementById("release-notes").value = "";
+      document.getElementById("cover-file").value = "";
+      document.getElementById("audio-file").value = "";
+    }
+
+    function sanitizeFileName(name) {
+      return name.replace(/[^a-zA-Z0-9._-]/g, "_");
+    }
 
     window.submitRelease = async function() {
       const title = document.getElementById("song-title").value.trim();
@@ -543,45 +655,63 @@
       const releaseDate = document.getElementById("release-date").value;
       const genre = document.getElementById("genre").value;
       const notes = document.getElementById("release-notes").value.trim();
-      const message = document.getElementById("message");
+      const coverFile = document.getElementById("cover-file").files[0];
+      const audioFile = document.getElementById("audio-file").files[0];
+      const submitBtn = document.getElementById("submit-btn");
 
-      if (!title || !artist || !releaseDate || !genre) {
-        message.style.color = "#fca5a5";
-        message.textContent = "Jaza title, artist, date na genre kwanza.";
+      if (!title || !artist || !releaseDate || !genre || !coverFile || !audioFile) {
+        setMessage("Jaza taarifa zote pamoja na cover na audio file.", "error");
         return;
       }
 
       if (!currentUser) {
-        message.style.color = "#fca5a5";
-        message.textContent = "User hajalogin vizuri.";
+        setMessage("User hajalogin vizuri.", "error");
         return;
       }
 
       try {
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Uploading...";
+        setMessage("Ina-upload cover na audio, subiri kidogo...");
+
+        const time = Date.now();
+        const cleanCoverName = sanitizeFileName(coverFile.name);
+        const cleanAudioName = sanitizeFileName(audioFile.name);
+
+        const coverRef = ref(storage, `covers/${currentUser.uid}/${time}_${cleanCoverName}`);
+        const audioRef = ref(storage, `audio/${currentUser.uid}/${time}_${cleanAudioName}`);
+
+        await uploadBytes(coverRef, coverFile);
+        await uploadBytes(audioRef, audioFile);
+
+        const coverUrl = await getDownloadURL(coverRef);
+        const audioUrl = await getDownloadURL(audioRef);
+
         await addDoc(collection(db, "releases"), {
           userId: currentUser.uid,
+          username: currentUsername,
           title,
           artist,
           releaseDate,
           genre,
           notes,
+          coverUrl,
+          audioUrl,
+          coverFileName: coverFile.name,
+          audioFileName: audioFile.name,
           status: "Pending Review",
           createdAt: serverTimestamp()
         });
 
-        message.style.color = "#9ae6b4";
-        message.textContent = "Release saved successfully 🔥";
-
-        document.getElementById("song-title").value = "";
-        document.getElementById("artist-name").value = "";
-        document.getElementById("release-date").value = "";
-        document.getElementById("genre").value = "";
-        document.getElementById("release-notes").value = "";
-
+        setMessage("Release uploaded successfully 🔥");
+        clearForm();
         await loadDiscography();
+        showSection("discography");
       } catch (error) {
-        message.style.color = "#fca5a5";
-        message.textContent = error.message;
+        setMessage(error.message, "error");
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Submit Release";
       }
     };
 
@@ -591,6 +721,7 @@
       const discographyList = document.getElementById("discography-list");
       const totalReleases = document.getElementById("total-releases");
       const pendingReleases = document.getElementById("pending-releases");
+      const liveReleases = document.getElementById("live-releases");
 
       const q = query(
         collection(db, "releases"),
@@ -602,37 +733,60 @@
       totalReleases.textContent = snapshot.size;
 
       let pendingCount = 0;
-      discographyList.innerHTML = "";
+      let liveCount = 0;
+      let html = "";
 
       if (snapshot.empty) {
         discographyList.innerHTML = `
           <div class="release-item">
             <h3>No releases yet</h3>
             <p>Ukishapandisha wimbo, utaonekana hapa.</p>
-            <span class="status">Waiting</span>
+            <span class="status pending">Waiting</span>
           </div>
         `;
         pendingReleases.textContent = "0";
+        liveReleases.textContent = "0";
         return;
       }
 
       snapshot.forEach((doc) => {
         const data = doc.data();
-        if (data.status === "Pending Review") pendingCount++;
+        const statusText = data.status || "Pending Review";
+        const statusLower = statusText.toLowerCase();
 
-        const item = document.createElement("div");
-        item.className = "release-item";
-        item.innerHTML = `
-          <h3>${data.title}</h3>
-          <p>Artist: ${data.artist}</p>
-          <p>Release Date: ${data.releaseDate}</p>
-          <p>Genre: ${data.genre}</p>
-          <span class="status">${data.status}</span>
+        if (statusLower.includes("pending")) pendingCount++;
+        if (statusLower.includes("live") || statusLower.includes("approved")) liveCount++;
+
+        html += `
+          <div class="release-item">
+            <div class="release-top">
+              <div class="cover-box">
+                ${data.coverUrl ? `<img src="${data.coverUrl}" alt="Cover">` : ""}
+              </div>
+              <div>
+                <h3>${data.title || "-"}</h3>
+                <p>Artist: ${data.artist || "-"}</p>
+                <p>Release Date: ${data.releaseDate || "-"}</p>
+                <p>Genre: ${data.genre || "-"}</p>
+                ${data.notes ? `<p>Notes: ${data.notes}</p>` : ""}
+                ${data.audioUrl ? `<a class="audio-link" href="${data.audioUrl}" target="_blank">Open Audio File</a>` : ""}
+                <br>
+                <span class="status ${
+                  statusLower.includes("approved") || statusLower.includes("live")
+                    ? "approved"
+                    : statusLower.includes("rejected")
+                    ? "rejected"
+                    : "pending"
+                }">${statusText}</span>
+              </div>
+            </div>
+          </div>
         `;
-        discographyList.appendChild(item);
       });
 
+      discographyList.innerHTML = html;
       pendingReleases.textContent = pendingCount;
+      liveReleases.textContent = liveCount;
     }
   </script>
 </body>
