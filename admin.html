@@ -225,7 +225,7 @@
     </div>
 
     <div class="controls">
-      <input id="search" placeholder="Search artist or song..." oninput="loadReleases()" />
+      <input id="search" placeholder="Search artist or song..." oninput="renderReleases()" />
 
       <button class="filter-btn" onclick="setFilter('all')">All</button>
       <button class="filter-btn" onclick="setFilter('Pending Review')">Pending</button>
@@ -267,15 +267,13 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    // WEKA EMAIL YAKO YA ADMIN HAPA
+    // WEKA EMAIL YAKO HALISI YA ADMIN HAPA
     const ADMIN_EMAILS = [
-  "admin1@example.com",
-  "admin2@example.com"
+  "madeinmwanza@gmail.com"
 ];
 
     let filter = "all";
     let allReleases = [];
-    let currentAdmin = null;
 
     const loadingScreen = document.getElementById("loadingScreen");
     const deniedScreen = document.getElementById("deniedScreen");
@@ -287,7 +285,9 @@
     }
 
     function isAdminEmail(email) {
-      return ADMIN_EMAILS.map(normalizeEmail).includes(normalizeEmail(email));
+      return ADMIN_EMAILS
+        .map(normalizeEmail)
+        .includes(normalizeEmail(email));
     }
 
     function showLoading() {
@@ -322,12 +322,10 @@
       return "pending";
     }
 
-    function setFilterUI(status) {
+    window.setFilter = function(status) {
       filter = status;
       renderReleases();
-    }
-
-    window.setFilter = setFilterUI;
+    };
 
     function renderReleases() {
       const list = document.getElementById("list");
@@ -339,11 +337,8 @@
         const artist = (d.artist || "").toLowerCase();
         const status = d.status || "";
 
-        const matchesSearch =
-          title.includes(search) || artist.includes(search);
-
-        const matchesFilter =
-          filter === "all" || status === filter;
+        const matchesSearch = title.includes(search) || artist.includes(search);
+        const matchesFilter = filter === "all" || status === filter;
 
         return matchesSearch && matchesFilter;
       });
@@ -361,28 +356,21 @@
       list.innerHTML = filtered.map(item => {
         const id = item.id;
         const d = item.data;
-        const safeTitle = escapeHtml(d.title || "-");
-        const safeArtist = escapeHtml(d.artist || "-");
-        const safeGenre = escapeHtml(d.genre || "-");
-        const safeDate = escapeHtml(d.releaseDate || "-");
-        const safeStatus = escapeHtml(d.status || "Pending Review");
-        const safeCover = d.coverUrl || "";
-        const safeAudio = d.audioUrl || "";
 
         return `
           <div class="release">
             <div class="cover">
-              <img src="${safeCover}" alt="Cover">
+              <img src="${d.coverUrl || ""}" alt="Cover">
             </div>
 
             <div class="info">
-              <h3>${safeTitle}</h3>
-              <p>Artist: ${safeArtist}</p>
-              <p>Genre: ${safeGenre}</p>
-              <p>Release Date: ${safeDate}</p>
-              <span class="status ${statusClass(d.status)}">${safeStatus}</span>
+              <h3>${escapeHtml(d.title || "-")}</h3>
+              <p>Artist: ${escapeHtml(d.artist || "-")}</p>
+              <p>Genre: ${escapeHtml(d.genre || "-")}</p>
+              <p>Release Date: ${escapeHtml(d.releaseDate || "-")}</p>
+              <span class="status ${statusClass(d.status)}">${escapeHtml(d.status || "Pending Review")}</span>
 
-              ${safeAudio ? `<audio controls src="${safeAudio}"></audio>` : ""}
+              ${d.audioUrl ? `<audio controls src="${d.audioUrl}"></audio>` : ""}
 
               <div class="buttons">
                 <button class="approve-btn" onclick="setStatus('${id}','Approved')">Approve</button>
@@ -412,8 +400,6 @@
       renderReleases();
     }
 
-    window.loadReleases = renderReleases;
-
     window.setStatus = async function(id, status) {
       await updateDoc(doc(db, "releases", id), { status });
       await fetchReleases();
@@ -441,7 +427,6 @@
         return;
       }
 
-      currentAdmin = user;
       adminEmailText.textContent = `Logged in as: ${user.email}`;
       showAdmin();
       await fetchReleases();
