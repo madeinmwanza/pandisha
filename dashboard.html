@@ -152,6 +152,17 @@
       color: white;
     }
 
+    .btn-secondary {
+      background: rgba(255,255,255,0.08);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .btn-warning {
+      background: #f59e0b;
+      color: white;
+    }
+
     .stats {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -310,6 +321,13 @@
       white-space: pre-wrap;
     }
 
+    .release-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
     .input-box {
       background: rgba(255,255,255,0.04);
       border: 1px solid rgba(255,255,255,0.08);
@@ -398,6 +416,20 @@
       max-width: 320px;
     }
 
+    .edit-banner {
+      display: none;
+      margin-bottom: 16px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: rgba(245, 158, 11, 0.14);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      color: #ffd27a;
+    }
+
+    .edit-banner.show {
+      display: block;
+    }
+
     @media (max-width: 980px) {
       .layout { grid-template-columns: 1fr; }
       .stats { grid-template-columns: repeat(2, 1fr); }
@@ -450,7 +482,7 @@
         </div>
 
         <div class="topbar-actions">
-          <button class="btn btn-primary" onclick="showSection('create-release')">New Release</button>
+          <button class="btn btn-primary" onclick="startNewRelease()">New Release</button>
           <a id="adminBtn" href="admin.html" class="btn btn-primary" style="display:none;">Admin Panel</a>
         </div>
       </div>
@@ -478,6 +510,10 @@
         <div id="create-release" class="section-block active">
           <h2>Create a Release</h2>
           <p class="lead">Hapa msanii anaweza kupandisha taarifa za wimbo wake mpya pamoja na cover art na audio file.</p>
+
+          <div id="editBanner" class="edit-banner">
+            Unarekebisha release iliyotumwa awali. Ukisubmit, itarudi kuwa <strong>Pending Review</strong>.
+          </div>
 
           <div class="grid-2">
             <div>
@@ -532,7 +568,7 @@
               <div id="message"></div>
 
               <p class="upload-note">
-                Cover na audio vitapandishwa Cloudinary, halafu details zitahifadhiwa Firestore.
+                Kama unafanya correction, unaweza kubadili files au kuacha za zamani kama bado ziko sawa.
               </p>
             </div>
           </div>
@@ -617,7 +653,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
-    import { getFirestore, collection, addDoc, getDocs, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, getDocs, query, where, serverTimestamp, doc, updateDoc } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyB7zfgQ3GqdPL2o1tyFt2RmW3Obqb1nKPk",
@@ -636,11 +672,18 @@
     const CLOUDINARY_UPLOAD_PRESET = "pandisha_upload";
 
     const ADMIN_EMAILS = [
-  "madeinmwanza@gmail.com"
-];
+      "WEKA_EMAIL_YAKO_HAPA"
+    ];
 
     let currentUser = null;
     let currentUsername = "";
+    let editingReleaseId = null;
+    let existingCoverUrl = "";
+    let existingAudioUrl = "";
+    let existingCoverPublicId = "";
+    let existingAudioPublicId = "";
+    let existingCoverFileName = "";
+    let existingAudioFileName = "";
 
     function isAdminEmail(email) {
       return ADMIN_EMAILS.map(item => (item || "").trim().toLowerCase())
@@ -655,6 +698,37 @@
       if (s.includes("correction")) return "needs";
       return "pending";
     }
+
+    function setEditMode(isEditing) {
+      const banner = document.getElementById("editBanner");
+      const submitBtn = document.getElementById("submit-btn");
+
+      if (isEditing) {
+        banner.classList.add("show");
+        submitBtn.textContent = "Resubmit Corrected Release";
+      } else {
+        banner.classList.remove("show");
+        submitBtn.textContent = "Submit Release";
+      }
+    }
+
+    function resetEditState() {
+      editingReleaseId = null;
+      existingCoverUrl = "";
+      existingAudioUrl = "";
+      existingCoverPublicId = "";
+      existingAudioPublicId = "";
+      existingCoverFileName = "";
+      existingAudioFileName = "";
+      setEditMode(false);
+    }
+
+    window.startNewRelease = function() {
+      resetEditState();
+      clearForm();
+      showSection("create-release");
+      setMessage("", "success");
+    };
 
     onAuthStateChanged(auth, async (user) => {
       if (user) {
@@ -751,6 +825,29 @@
       return data;
     }
 
+    window.editRelease = function(releaseId, payload) {
+      editingReleaseId = releaseId;
+      existingCoverUrl = payload.coverUrl || "";
+      existingAudioUrl = payload.audioUrl || "";
+      existingCoverPublicId = payload.coverPublicId || "";
+      existingAudioPublicId = payload.audioPublicId || "";
+      existingCoverFileName = payload.coverFileName || "";
+      existingAudioFileName = payload.audioFileName || "";
+
+      document.getElementById("song-title").value = payload.title || "";
+      document.getElementById("artist-name").value = payload.artist || currentUsername || "";
+      document.getElementById("release-date").value = payload.releaseDate || "";
+      document.getElementById("genre").value = payload.genre || "";
+      document.getElementById("release-notes").value = payload.notes || "";
+      document.getElementById("cover-file").value = "";
+      document.getElementById("audio-file").value = "";
+
+      setEditMode(true);
+      showSection("create-release");
+      setMessage("Fanya marekebisho kisha bonyeza Resubmit Corrected Release.", "success");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+
     window.submitRelease = async function() {
       const title = document.getElementById("song-title").value.trim();
       const artist = document.getElementById("artist-name").value.trim();
@@ -761,8 +858,8 @@
       const audioFile = document.getElementById("audio-file").files[0];
       const submitBtn = document.getElementById("submit-btn");
 
-      if (!title || !artist || !releaseDate || !genre || !coverFile || !audioFile) {
-        setMessage("Jaza taarifa zote pamoja na cover na audio file.", "error");
+      if (!title || !artist || !releaseDate || !genre) {
+        setMessage("Jaza taarifa zote muhimu kwanza.", "error");
         return;
       }
 
@@ -771,34 +868,80 @@
         return;
       }
 
+      if (!editingReleaseId && (!coverFile || !audioFile)) {
+        setMessage("Kwa release mpya, weka cover na audio file.", "error");
+        return;
+      }
+
       try {
         submitBtn.disabled = true;
-        submitBtn.textContent = "Uploading...";
-        setMessage("Ina-upload cover na audio, subiri kidogo...");
+        submitBtn.textContent = editingReleaseId ? "Resubmitting..." : "Uploading...";
+        setMessage("Subiri kidogo, tunahifadhi release yako...", "success");
 
-        const coverUpload = await uploadToCloudinary(coverFile, "pandisha/covers");
-        const audioUpload = await uploadToCloudinary(audioFile, "pandisha/audio");
+        let finalCoverUrl = existingCoverUrl;
+        let finalAudioUrl = existingAudioUrl;
+        let finalCoverPublicId = existingCoverPublicId;
+        let finalAudioPublicId = existingAudioPublicId;
+        let finalCoverFileName = existingCoverFileName;
+        let finalAudioFileName = existingAudioFileName;
 
-        await addDoc(collection(db, "releases"), {
-          userId: currentUser.uid,
-          username: currentUsername,
-          title,
-          artist,
-          releaseDate,
-          genre,
-          notes,
-          coverUrl: coverUpload.secure_url || "",
-          audioUrl: audioUpload.secure_url || "",
-          coverPublicId: coverUpload.public_id || "",
-          audioPublicId: audioUpload.public_id || "",
-          coverFileName: coverFile.name,
-          audioFileName: audioFile.name,
-          status: "Pending Review",
-          reviewReason: "",
-          createdAt: serverTimestamp()
-        });
+        if (coverFile) {
+          const coverUpload = await uploadToCloudinary(coverFile, "pandisha/covers");
+          finalCoverUrl = coverUpload.secure_url || "";
+          finalCoverPublicId = coverUpload.public_id || "";
+          finalCoverFileName = coverFile.name;
+        }
 
-        setMessage("Release uploaded successfully 🔥");
+        if (audioFile) {
+          const audioUpload = await uploadToCloudinary(audioFile, "pandisha/audio");
+          finalAudioUrl = audioUpload.secure_url || "";
+          finalAudioPublicId = audioUpload.public_id || "";
+          finalAudioFileName = audioFile.name;
+        }
+
+        if (editingReleaseId) {
+          await updateDoc(doc(db, "releases", editingReleaseId), {
+            title,
+            artist,
+            releaseDate,
+            genre,
+            notes,
+            coverUrl: finalCoverUrl,
+            audioUrl: finalAudioUrl,
+            coverPublicId: finalCoverPublicId,
+            audioPublicId: finalAudioPublicId,
+            coverFileName: finalCoverFileName,
+            audioFileName: finalAudioFileName,
+            status: "Pending Review",
+            reviewReason: "",
+            updatedAt: serverTimestamp()
+          });
+
+          setMessage("Corrected release has been resubmitted 🔥", "success");
+        } else {
+          await addDoc(collection(db, "releases"), {
+            userId: currentUser.uid,
+            username: currentUsername,
+            title,
+            artist,
+            releaseDate,
+            genre,
+            notes,
+            coverUrl: finalCoverUrl,
+            audioUrl: finalAudioUrl,
+            coverPublicId: finalCoverPublicId,
+            audioPublicId: finalAudioPublicId,
+            coverFileName: finalCoverFileName,
+            audioFileName: finalAudioFileName,
+            status: "Pending Review",
+            reviewReason: "",
+            createdAt: serverTimestamp()
+          });
+
+          setMessage("Release uploaded successfully 🔥", "success");
+        }
+
+        resetEditState();
         clearForm();
         await loadDiscography();
         showSection("discography");
@@ -806,7 +949,7 @@
         setMessage(error.message || "Upload failed", "error");
       } finally {
         submitBtn.disabled = false;
-        submitBtn.textContent = "Submit Release";
+        submitBtn.textContent = editingReleaseId ? "Resubmit Corrected Release" : "Submit Release";
       }
     };
 
@@ -829,9 +972,19 @@
 
       let pendingCount = 0;
       let liveCount = 0;
-      let html = "";
+      let releases = [];
 
-      if (snapshot.empty) {
+      snapshot.forEach((docSnap) => {
+        releases.push({ id: docSnap.id, ...docSnap.data() });
+      });
+
+      releases.sort((a, b) => {
+        const aTime = a?.createdAt?.seconds || a?.updatedAt?.seconds || 0;
+        const bTime = b?.createdAt?.seconds || b?.updatedAt?.seconds || 0;
+        return bTime - aTime;
+      });
+
+      if (!releases.length) {
         discographyList.innerHTML = `
           <div class="release-item">
             <h3>No releases yet</h3>
@@ -844,14 +997,29 @@
         return;
       }
 
-      snapshot.forEach((doc) => {
-        const data = doc.data();
+      let html = "";
+
+      releases.forEach((data) => {
         const statusText = data.status || "Pending Review";
         const statusLower = statusText.toLowerCase();
         const reviewReason = data.reviewReason || "";
 
         if (statusLower.includes("pending") || statusLower.includes("correction")) pendingCount++;
         if (statusLower.includes("live") || statusLower.includes("approved")) liveCount++;
+
+        const safePayload = encodeURIComponent(JSON.stringify({
+          title: data.title || "",
+          artist: data.artist || "",
+          releaseDate: data.releaseDate || "",
+          genre: data.genre || "",
+          notes: data.notes || "",
+          coverUrl: data.coverUrl || "",
+          audioUrl: data.audioUrl || "",
+          coverPublicId: data.coverPublicId || "",
+          audioPublicId: data.audioPublicId || "",
+          coverFileName: data.coverFileName || "",
+          audioFileName: data.audioFileName || ""
+        }));
 
         html += `
           <div class="release-item">
@@ -876,6 +1044,18 @@
                       <div class="reason-box">
                         <div class="reason-title">Admin message</div>
                         <div class="reason-text">${reviewReason}</div>
+                      </div>
+                    `
+                    : ""
+                }
+
+                ${
+                  statusLower.includes("correction") || statusLower.includes("rejected")
+                    ? `
+                      <div class="release-actions">
+                        <button class="btn btn-warning" onclick="editRelease('${data.id}', JSON.parse(decodeURIComponent('${safePayload}')))">
+                          Edit & Resubmit
+                        </button>
                       </div>
                     `
                     : ""
