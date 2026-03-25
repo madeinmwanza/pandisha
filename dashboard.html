@@ -277,6 +277,39 @@
       color: #fecaca;
     }
 
+    .status.live {
+      background: rgba(123, 47, 247, 0.22);
+      color: #d8c4ff;
+    }
+
+    .status.needs {
+      background: rgba(245, 158, 11, 0.22);
+      color: #fcd34d;
+    }
+
+    .reason-box {
+      margin-top: 10px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 12px;
+    }
+
+    .reason-title {
+      font-size: 12px;
+      color: rgba(255,255,255,0.55);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+    }
+
+    .reason-text {
+      color: rgba(255,255,255,0.88);
+      font-size: 14px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+    }
+
     .input-box {
       background: rgba(255,255,255,0.04);
       border: 1px solid rgba(255,255,255,0.08);
@@ -602,10 +635,9 @@
     const CLOUDINARY_CLOUD_NAME = "dfcirrf0j";
     const CLOUDINARY_UPLOAD_PRESET = "pandisha_upload";
 
-    // WEKA EMAIL YAKO YA ADMIN HAPA
-   const ADMIN_EMAILS = [
-  "madeinmwanza@gmail.com"
-];
+    const ADMIN_EMAILS = [
+      "WEKA_EMAIL_YAKO_HAPA"
+    ];
 
     let currentUser = null;
     let currentUsername = "";
@@ -613,6 +645,15 @@
     function isAdminEmail(email) {
       return ADMIN_EMAILS.map(item => (item || "").trim().toLowerCase())
         .includes((email || "").trim().toLowerCase());
+    }
+
+    function statusClass(statusText) {
+      const s = (statusText || "").toLowerCase();
+      if (s.includes("approved")) return "approved";
+      if (s.includes("rejected")) return "rejected";
+      if (s.includes("live")) return "live";
+      if (s.includes("correction")) return "needs";
+      return "pending";
     }
 
     onAuthStateChanged(auth, async (user) => {
@@ -753,6 +794,7 @@
           coverFileName: coverFile.name,
           audioFileName: audioFile.name,
           status: "Pending Review",
+          reviewReason: "",
           createdAt: serverTimestamp()
         });
 
@@ -806,8 +848,9 @@
         const data = doc.data();
         const statusText = data.status || "Pending Review";
         const statusLower = statusText.toLowerCase();
+        const reviewReason = data.reviewReason || "";
 
-        if (statusLower.includes("pending")) pendingCount++;
+        if (statusLower.includes("pending") || statusLower.includes("correction")) pendingCount++;
         if (statusLower.includes("live") || statusLower.includes("approved")) liveCount++;
 
         html += `
@@ -825,13 +868,18 @@
                 ${data.audioUrl ? `<audio class="audio-player" controls src="${data.audioUrl}"></audio>` : ""}
                 ${data.audioUrl ? `<a class="audio-link" href="${data.audioUrl}" target="_blank">Open Audio File</a>` : ""}
                 <br>
-                <span class="status ${
-                  statusLower.includes("approved") || statusLower.includes("live")
-                    ? "approved"
-                    : statusLower.includes("rejected")
-                    ? "rejected"
-                    : "pending"
-                }">${statusText}</span>
+                <span class="status ${statusClass(statusText)}">${statusText}</span>
+
+                ${
+                  reviewReason
+                    ? `
+                      <div class="reason-box">
+                        <div class="reason-title">Admin message</div>
+                        <div class="reason-text">${reviewReason}</div>
+                      </div>
+                    `
+                    : ""
+                }
               </div>
             </div>
           </div>
