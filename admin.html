@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pandisha Admin</title>
+
+<style>
+body {
+  margin:0;
+  font-family: Arial;
+  background:#0b0f1a;
+  color:white;
+}
+
+.header {
+  padding:20px;
+  background: rgba(255,255,255,0.05);
+  border-bottom:1px solid rgba(255,255,255,0.08);
+}
+
+.header h1 {
+  margin:0;
+}
+
+.container {
+  padding:20px;
+}
+
+.release {
+  background: rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:16px;
+  padding:16px;
+  margin-bottom:15px;
+  display:flex;
+  gap:15px;
+}
+
+.cover {
+  width:80px;
+  height:80px;
+  border-radius:10px;
+  overflow:hidden;
+}
+
+.cover img {
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.info {
+  flex:1;
+}
+
+.buttons {
+  display:flex;
+  gap:8px;
+  margin-top:10px;
+}
+
+button {
+  padding:6px 12px;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+.approve { background:#22c55e; color:white; }
+.reject { background:#ef4444; color:white; }
+.live { background:#7B2FF7; color:white; }
+
+audio {
+  margin-top:10px;
+  width:250px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  <h1>Pandisha Admin Panel</h1>
+</div>
+
+<div class="container" id="list"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+import { getFirestore, collection, getDocs, updateDoc, doc } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyB7zfgQ3GqdPL2o1tyFt2RmW3Obqb1nKPk",
+  authDomain: "pandisha1.firebaseapp.com",
+  projectId: "pandisha1",
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+async function load() {
+  const list = document.getElementById("list");
+  const snap = await getDocs(collection(db, "releases"));
+
+  list.innerHTML = "";
+
+  snap.forEach(docSnap => {
+    const d = docSnap.data();
+
+    list.innerHTML += `
+    <div class="release">
+      <div class="cover">
+        <img src="${d.coverUrl}">
+      </div>
+
+      <div class="info">
+        <h3>${d.title}</h3>
+        <p>${d.artist}</p>
+        <p>${d.genre}</p>
+        <p>Status: ${d.status}</p>
+
+        <audio controls src="${d.audioUrl}"></audio>
+
+        <div class="buttons">
+          <button class="approve" onclick="setStatus('${docSnap.id}','Approved')">Approve</button>
+          <button class="reject" onclick="setStatus('${docSnap.id}','Rejected')">Reject</button>
+          <button class="live" onclick="setStatus('${docSnap.id}','Live')">Make Live</button>
+        </div>
+      </div>
+    </div>
+    `;
+  });
+}
+
+window.setStatus = async function(id, status) {
+  await updateDoc(doc(db, "releases", id), {
+    status: status
+  });
+  load();
+};
+
+load();
+</script>
+
+</body>
+</html>
