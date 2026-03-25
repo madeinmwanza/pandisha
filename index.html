@@ -563,17 +563,36 @@
           Reach major streaming and social platforms with one clean distribution system.
         </div>
 
-        <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:20px; align-items:center; margin-top:15px;">
-          <img src="https://cdn.simpleicons.org/spotify/ffffff" style="height:32px;">
-          <img src="https://cdn.simpleicons.org/applemusic/ffffff" style="height:32px;">
-          <img src="https://cdn.simpleicons.org/youtube/ffffff" style="height:32px;">
-          <img src="https://cdn.simpleicons.org/tiktok/ffffff" style="height:32px;">
-          <img src="https://cdn.simpleicons.org/facebook/ffffff" style="height:32px;">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/2/26/Audiomack_logo.svg" style="height:32px; filter:invert(1);">
-          <img src="https://cdn.simpleicons.org/deezer/ffffff" style="height:32px;">
-          <img src="https://cdn.simpleicons.org/tidal/ffffff" style="height:32px;">
-          <img src="https://cdn-icons-png.flaticon.com/512/727/727245.png" style="height:32px; border-radius:6px;">
-        </div>
+<div style="display:flex; flex-wrap:wrap; justify-content:center; gap:20px; align-items:center; margin-top:15px;">
+
+  <!-- Spotify -->
+  <img src="https://cdn.simpleicons.org/spotify/ffffff" style="height:32px;">
+
+  <!-- Apple Music -->
+  <img src="https://cdn.simpleicons.org/applemusic/ffffff" style="height:32px;">
+
+  <!-- YouTube -->
+  <img src="https://cdn.simpleicons.org/youtube/ffffff" style="height:32px;">
+
+  <!-- TikTok -->
+  <img src="https://cdn.simpleicons.org/tiktok/ffffff" style="height:32px;">
+
+  <!-- Meta -->
+  <img src="https://cdn.simpleicons.org/facebook/ffffff" style="height:32px;">
+
+  <!-- Audiomack (FIXED SVG) -->
+  <img src="https://upload.wikimedia.org/wikipedia/commons/2/26/Audiomack_logo.svg" style="height:32px; filter:invert(1);">
+
+  <!-- Deezer -->
+  <img src="https://cdn.simpleicons.org/deezer/ffffff" style="height:32px;">
+
+  <!-- Tidal -->
+  <img src="https://cdn.simpleicons.org/tidal/ffffff" style="height:32px;">
+
+  <!-- Boomplay (SAFE ICON) -->
+  <img src="https://cdn-icons-png.flaticon.com/512/727/727245.png" style="height:32px; border-radius:6px;">
+
+</div>
       </div>
     </div>
   </section>
@@ -887,17 +906,17 @@
         const user = userCredential.user;
 
         await addDoc(collection(db, "users"), {
-          userId: user.uid,
-          username: username,
-          email: email,
-          artistName: "",
-          artistNameChanges: 0,
-          plan: "Starter",
-          role: "artist",
-          isDisabled: false,
-          securityQuestion: securityQuestion,
-          securityAnswer: securityAnswer
-        });
+  userId: user.uid,
+  username: username,
+  email: email,
+  artistName: "",
+  artistNameChanges: 0,
+  plan: "Starter",
+  role: "artist",
+  isDisabled: false,
+  securityQuestion: securityQuestion,
+  securityAnswer: securityAnswer
+});
 
         alert("Account created successfully");
         window.location.href = "dashboard.html";
@@ -928,12 +947,6 @@
         }
 
         const userData = userSnapshot.docs[0].data();
-
-        if (userData.isDisabled === true) {
-          alert("Account yako imezuiwa. Wasiliana na admin.");
-          return;
-        }
-
         const email = userData.email;
 
         await signInWithEmailAndPassword(auth, email, password);
