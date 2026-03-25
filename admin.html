@@ -3,8 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pandisha Admin</title>
+  <title>Pandisha Admin Dashboard</title>
   <style>
+    * { box-sizing: border-box; }
+
     body {
       margin: 0;
       font-family: Arial, sans-serif;
@@ -12,104 +14,271 @@
       color: white;
     }
 
-    .header {
-      padding: 20px;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-      background: rgba(255,255,255,0.03);
+    a {
+      text-decoration: none;
+      color: inherit;
     }
 
-    .header h1 {
+    .layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      background: rgba(255,255,255,0.04);
+      border-right: 1px solid rgba(255,255,255,0.08);
+      padding: 24px 18px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 30px;
+      padding: 0 8px;
+    }
+
+    .brand img {
+      height: 54px;
+      object-fit: contain;
+    }
+
+    .brand-text h2 {
       margin: 0;
-      font-size: 28px;
+      font-size: 18px;
+      letter-spacing: 3px;
     }
 
-    .header p {
-      margin: 8px 0 0;
+    .brand-text span {
+      font-size: 11px;
+      color: rgba(255,255,255,0.6);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .menu-title {
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin: 18px 8px 10px;
+    }
+
+    .menu-item {
+      display: block;
+      padding: 12px 14px;
+      border-radius: 12px;
+      margin-bottom: 8px;
+      background: rgba(255,255,255,0.04);
+      color: rgba(255,255,255,0.82);
+      cursor: pointer;
+    }
+
+    .menu-item:hover,
+    .menu-item.active {
+      background: linear-gradient(90deg, rgba(123,47,247,0.25), rgba(255,122,24,0.20));
+      color: white;
+    }
+
+    .main {
+      padding: 28px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+
+    .topbar h1 {
+      margin: 0;
+      font-size: 34px;
+    }
+
+    .topbar p {
+      margin: 6px 0 0;
       color: rgba(255,255,255,0.65);
-      font-size: 14px;
     }
 
-    .controls {
-      padding: 16px 20px;
+    .top-actions {
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
-      align-items: center;
     }
 
-    input {
-      padding: 11px 12px;
-      border-radius: 10px;
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 22px;
+    }
+
+    .card small {
+      color: rgba(255,255,255,0.6);
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .card strong {
+      font-size: 30px;
+    }
+
+    .section-title {
+      margin: 0 0 10px;
+      font-size: 26px;
+    }
+
+    .section-text {
+      margin: 0 0 16px;
+      color: rgba(255,255,255,0.68);
+      line-height: 1.7;
+    }
+
+    .btn {
+      display: inline-block;
       border: none;
+      border-radius: 12px;
+      padding: 11px 16px;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: center;
+      color: white;
+    }
+
+    .btn-primary {
+      background: linear-gradient(90deg, #7B2FF7, #FF7A18);
+    }
+
+    .btn-secondary {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .btn-success {
+      background: #16a34a;
+    }
+
+    .btn-danger {
+      background: #dc2626;
+    }
+
+    .btn-warning {
+      background: #f59e0b;
+    }
+
+    .btn-info {
+      background: #2563eb;
+    }
+
+    .btn-dark {
+      background: #374151;
+    }
+
+    .input-box {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      padding: 14px 16px;
+      margin-bottom: 12px;
+    }
+
+    .input-box label {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 8px;
+      color: rgba(255,255,255,0.7);
+    }
+
+    .input-box input,
+    .input-box textarea,
+    .input-box select {
+      width: 100%;
+      background: none;
+      border: none;
+      color: white;
       outline: none;
+      font-size: 14px;
+      font-family: Arial, sans-serif;
+    }
+
+    .input-box textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .input-box input::placeholder,
+    .input-box textarea::placeholder {
+      color: rgba(255,255,255,0.45);
+    }
+
+    .message {
+      margin-top: 12px;
+      font-size: 14px;
+      min-height: 20px;
+    }
+
+    .release-list,
+    .user-list {
+      display: grid;
+      gap: 16px;
+    }
+
+    .release-item,
+    .user-item {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px;
+      padding: 18px;
+    }
+
+    .release-top {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+
+    .cover-box {
+      width: 78px;
+      height: 78px;
+      border-radius: 14px;
+      overflow: hidden;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      flex-shrink: 0;
+    }
+
+    .cover-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .release-content {
+      flex: 1;
       min-width: 260px;
     }
 
-    button {
-      padding: 9px 14px;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      font-weight: 700;
-    }
-
-    textarea {
-      width: 100%;
-      min-height: 90px;
-      border: none;
-      outline: none;
-      border-radius: 10px;
-      padding: 12px;
-      font-family: Arial, sans-serif;
-      font-size: 14px;
-      resize: vertical;
-      margin-top: 12px;
-    }
-
-    .filter-btn {
-      background: #1f2937;
-      color: white;
-    }
-
-    .logout-btn {
-      background: #ef4444;
-      color: white;
-      margin-left: auto;
-    }
-
-    .container {
-      padding: 20px;
-    }
-
-    .release {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 16px;
-      padding: 16px;
-      margin-bottom: 15px;
-      display: flex;
-      gap: 15px;
-      align-items: flex-start;
-    }
-
-    .cover img {
-      width: 80px;
-      height: 80px;
-      object-fit: cover;
-      border-radius: 10px;
-      background: rgba(255,255,255,0.05);
-    }
-
-    .info {
-      flex: 1;
-    }
-
-    .info h3 {
+    .release-item h3,
+    .user-item h3 {
       margin: 0 0 8px;
-      font-size: 21px;
+      font-size: 22px;
     }
 
-    .info p {
+    .release-item p,
+    .user-item p {
       margin: 0 0 6px;
       color: rgba(255,255,255,0.72);
       line-height: 1.6;
@@ -117,112 +286,65 @@
 
     .status {
       display: inline-block;
-      padding: 5px 10px;
+      margin-top: 8px;
+      padding: 6px 10px;
       border-radius: 999px;
       font-size: 12px;
-      font-weight: 700;
-      margin: 6px 0 10px;
+      background: rgba(255,255,255,0.08);
     }
 
-    .pending { background: rgba(245, 158, 11, 0.18); color: #ffd27a; }
-    .approved { background: rgba(34, 197, 94, 0.18); color: #a7f3c0; }
-    .rejected { background: rgba(239, 68, 68, 0.18); color: #fecaca; }
-    .live { background: rgba(123, 47, 247, 0.22); color: #d8c4ff; }
-    .needs { background: rgba(245, 158, 11, 0.22); color: #fcd34d; }
-    .scheduled { background: rgba(59, 130, 246, 0.22); color: #bfdbfe; }
-
-    .buttons {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-top: 12px;
+    .status.pending {
+      background: rgba(245, 158, 11, 0.16);
+      color: #ffd27a;
     }
 
-    .approve-btn {
-      background: #22c55e;
-      color: white;
+    .status.approved {
+      background: rgba(34, 197, 94, 0.16);
+      color: #a7f3c0;
     }
 
-    .reject-btn {
-      background: #ef4444;
-      color: white;
+    .status.rejected {
+      background: rgba(239, 68, 68, 0.16);
+      color: #fecaca;
     }
 
-    .live-btn {
-      background: #7B2FF7;
-      color: white;
+    .status.live {
+      background: rgba(123, 47, 247, 0.22);
+      color: #d8c4ff;
     }
 
-    .fix-btn {
-      background: #f59e0b;
-      color: white;
+    .status.needs {
+      background: rgba(245, 158, 11, 0.22);
+      color: #fcd34d;
     }
 
-    .save-reason-btn {
-      background: #2563eb;
-      color: white;
+    .status.scheduled {
+      background: rgba(59, 130, 246, 0.22);
+      color: #bfdbfe;
+    }
+
+    .status.disabled {
+      background: rgba(239, 68, 68, 0.16);
+      color: #fecaca;
+    }
+
+    .status.active {
+      background: rgba(34, 197, 94, 0.16);
+      color: #a7f3c0;
+    }
+
+    .audio-player {
+      display: block;
       margin-top: 10px;
+      width: 100%;
+      max-width: 320px;
     }
 
-    .schedule-btn {
-      background: #3b82f6;
-      color: white;
+    .audio-link {
+      display: inline-block;
       margin-top: 10px;
-    }
-
-    .schedule-row {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      flex-wrap: wrap;
-      margin-top: 12px;
-    }
-
-    .schedule-row input[type="date"] {
-      min-width: 180px;
-    }
-
-    audio {
-      margin-top: 10px;
-      width: 260px;
-      max-width: 100%;
-    }
-
-    .center-box {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-    }
-
-    .message-card {
-      width: min(520px, 100%);
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 20px;
-      padding: 28px;
-      text-align: center;
-    }
-
-    .message-card h2 {
-      margin-top: 0;
-      font-size: 30px;
-    }
-
-    .message-card p {
-      color: rgba(255,255,255,0.72);
-      line-height: 1.8;
-    }
-
-    .hidden {
-      display: none !important;
-    }
-
-    .small-note {
-      color: rgba(255,255,255,0.55);
       font-size: 13px;
-      margin-top: 8px;
+      color: #f5b26b;
     }
 
     .reason-box {
@@ -233,83 +355,194 @@
       padding: 12px;
     }
 
-    .reason-label {
+    .reason-title {
       font-size: 12px;
       color: rgba(255,255,255,0.55);
-      margin-bottom: 6px;
       text-transform: uppercase;
       letter-spacing: 1px;
+      margin-bottom: 6px;
     }
 
     .reason-text {
-      color: rgba(255,255,255,0.85);
-      line-height: 1.6;
+      color: rgba(255,255,255,0.9);
       font-size: 14px;
+      line-height: 1.6;
       white-space: pre-wrap;
     }
 
-    @media (max-width: 700px) {
-      .release {
-        flex-direction: column;
+    .inline-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .empty-box {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 18px;
+      color: rgba(255,255,255,0.7);
+    }
+
+    .tabs {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .tab-btn {
+      padding: 10px 16px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      color: white;
+      background: rgba(255,255,255,0.08);
+      font-weight: 700;
+    }
+
+    .tab-btn.active {
+      background: linear-gradient(90deg, #7B2FF7, #FF7A18);
+    }
+
+    .tab-section {
+      display: none;
+    }
+
+    .tab-section.active {
+      display: block;
+    }
+
+    @media (max-width: 980px) {
+      .layout {
+        grid-template-columns: 1fr;
       }
 
-      .logout-btn {
-        margin-left: 0;
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .stats {
+        grid-template-columns: 1fr;
       }
 
-      .controls {
-        flex-direction: column;
-        align-items: stretch;
+      .main {
+        padding: 18px;
       }
 
-      input {
-        min-width: 100%;
+      .topbar h1 {
+        font-size: 28px;
       }
     }
   </style>
 </head>
 <body>
-  <div id="loadingScreen" class="center-box">
-    <div class="message-card">
-      <h2>Checking access...</h2>
-      <p>Please wait while we verify your admin account.</p>
-    </div>
-  </div>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">
+        <img src="./PandishaaLogo.png" alt="Pandisha Logo">
+        <div class="brand-text">
+          <h2>PANDISHA</h2>
+          <span>Admin Panel</span>
+        </div>
+      </div>
 
-  <div id="deniedScreen" class="center-box hidden">
-    <div class="message-card">
-      <h2>Access denied</h2>
-      <p>This page is only for Pandisha admins.</p>
-      <p class="small-note">Log in with your admin account to continue.</p>
-      <button onclick="goHome()">Go to Home</button>
-    </div>
-  </div>
+      <div class="menu-title">Admin</div>
+      <div class="menu-item active">Dashboard</div>
+      <div class="menu-item" onclick="showTab('releases')">Release Management</div>
+      <div class="menu-item" onclick="showTab('users')">Users Management</div>
+      <div class="menu-item" onclick="logout()">Log Out</div>
+    </aside>
 
-  <div id="adminApp" class="hidden">
-    <div class="header">
-      <h1>Pandisha Admin Panel</h1>
-      <p id="adminEmail">Loading admin...</p>
-    </div>
+    <main class="main">
+      <div class="topbar">
+        <div>
+          <h1>Admin Dashboard</h1>
+          <p id="admin-email">Checking admin access...</p>
+        </div>
 
-    <div class="controls">
-      <input id="search" placeholder="Search artist or song..." oninput="renderReleases()" />
-      <button class="filter-btn" onclick="setFilter('all')">All</button>
-      <button class="filter-btn" onclick="setFilter('Pending Review')">Pending</button>
-      <button class="filter-btn" onclick="setFilter('Needs Correction')">Needs Fix</button>
-      <button class="filter-btn" onclick="setFilter('Approved')">Approved</button>
-      <button class="filter-btn" onclick="setFilter('Scheduled')">Scheduled</button>
-      <button class="filter-btn" onclick="setFilter('Live')">Live</button>
-      <button class="filter-btn" onclick="setFilter('Rejected')">Rejected</button>
-      <button class="logout-btn" onclick="logout()">Log Out</button>
-    </div>
+        <div class="top-actions">
+          <a href="dashboard.html" class="btn btn-secondary">Artist Dashboard</a>
+          <button class="btn btn-primary" onclick="refreshAll()">Refresh</button>
+        </div>
+      </div>
 
-    <div class="container" id="list"></div>
+      <section class="stats">
+        <div class="card">
+          <small>Total Releases</small>
+          <strong id="total-releases">0</strong>
+        </div>
+        <div class="card">
+          <small>Pending Review</small>
+          <strong id="pending-releases">0</strong>
+        </div>
+        <div class="card">
+          <small>Total Users</small>
+          <strong id="total-users">0</strong>
+        </div>
+        <div class="card">
+          <small>Disabled Users</small>
+          <strong id="disabled-users">0</strong>
+        </div>
+      </section>
+
+      <div class="tabs">
+        <button class="tab-btn active" id="tabBtn-releases" onclick="showTab('releases')">Releases</button>
+        <button class="tab-btn" id="tabBtn-users" onclick="showTab('users')">Users</button>
+      </div>
+
+      <section id="tab-releases" class="tab-section active">
+        <div class="card">
+          <h2 class="section-title">Reset Artist Name Limit</h2>
+          <p class="section-text">Weka email ya artist kisha urudishe artist name changes kuwa 0.</p>
+
+          <div class="input-box">
+            <label>Artist Email</label>
+            <input id="reset-artist-email" type="email" placeholder="artist@email.com">
+          </div>
+
+          <button class="btn btn-warning" onclick="resetArtistNameLimit()">Reset Artist Name Limit</button>
+          <div id="reset-name-message" class="message"></div>
+        </div>
+
+        <div class="card">
+          <h2 class="section-title">All Releases</h2>
+          <p class="section-text">Approve, reject, request correction, au schedule release hapa.</p>
+
+          <div id="release-list" class="release-list">
+            <div class="empty-box">Loading releases...</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="tab-users" class="tab-section">
+        <div class="card">
+          <h2 class="section-title">All Users</h2>
+          <p class="section-text">Hapa admin anaweza kuona users wote na kuwacontrol.</p>
+
+          <div id="user-list" class="user-list">
+            <div class="empty-box">Loading users...</div>
+          </div>
+        </div>
+      </section>
+    </main>
   </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
-    import { getFirestore, collection, getDocs, updateDoc, doc } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+    import {
+      getFirestore,
+      collection,
+      getDocs,
+      query,
+      where,
+      doc,
+      updateDoc
+    } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyB7zfgQ3GqdPL2o1tyFt2RmW3Obqb1nKPk",
@@ -328,73 +561,17 @@
       "madeinmwanza@gmail.com"
     ];
 
-    let filter = "all";
-    let allReleases = [];
-
-    const loadingScreen = document.getElementById("loadingScreen");
-    const deniedScreen = document.getElementById("deniedScreen");
-    const adminApp = document.getElementById("adminApp");
-    const adminEmailText = document.getElementById("adminEmail");
-
-    function normalizeEmail(email) {
-      return (email || "").trim().toLowerCase();
-    }
+    let currentAdmin = null;
 
     function isAdminEmail(email) {
-      return ADMIN_EMAILS.map(normalizeEmail).includes(normalizeEmail(email));
+      return ADMIN_EMAILS.map(item => (item || "").trim().toLowerCase())
+        .includes((email || "").trim().toLowerCase());
     }
 
-    function todayString() {
-      const d = new Date();
-      const year = d.getFullYear();
-      const month = String(d.getMonth() + 1).padStart(2, "0");
-      const day = String(d.getDate()).padStart(2, "0");
-      return `${year}-${month}-${day}`;
-    }
-
-    async function autoPublishScheduledReleases() {
-      const snap = await getDocs(collection(db, "releases"));
-      const today = todayString();
-
-      const updates = [];
-      snap.forEach((docSnap) => {
-        const data = docSnap.data();
-        if (data.status === "Scheduled" && data.scheduledReleaseDate && data.scheduledReleaseDate <= today) {
-          updates.push(
-            updateDoc(doc(db, "releases", docSnap.id), {
-              status: "Live"
-            })
-          );
-        }
-      });
-
-      if (updates.length) {
-        await Promise.all(updates);
-      }
-    }
-
-    function showLoading() {
-      loadingScreen.classList.remove("hidden");
-      deniedScreen.classList.add("hidden");
-      adminApp.classList.add("hidden");
-    }
-
-    function showDenied() {
-      loadingScreen.classList.add("hidden");
-      deniedScreen.classList.remove("hidden");
-      adminApp.classList.add("hidden");
-    }
-
-    function showAdmin() {
-      loadingScreen.classList.add("hidden");
-      deniedScreen.classList.add("hidden");
-      adminApp.classList.remove("hidden");
-    }
-
-    function escapeHtml(text) {
-      const div = document.createElement("div");
-      div.textContent = text || "";
-      return div.innerHTML;
+    function setResetMessage(text, type = "success") {
+      const box = document.getElementById("reset-name-message");
+      box.textContent = text;
+      box.style.color = type === "error" ? "#fca5a5" : "#9ae6b4";
     }
 
     function statusClass(statusText) {
@@ -407,183 +584,437 @@
       return "pending";
     }
 
-    window.setFilter = function(status) {
-      filter = status;
-      renderReleases();
-    };
-
-    function renderReleases() {
-      const list = document.getElementById("list");
-      const search = document.getElementById("search").value.trim().toLowerCase();
-
-      const filtered = allReleases.filter(item => {
-        const d = item.data;
-        const title = (d.title || "").toLowerCase();
-        const artist = (d.artist || "").toLowerCase();
-        const status = d.status || "";
-
-        const matchesSearch = title.includes(search) || artist.includes(search);
-        const matchesFilter = filter === "all" || status === filter;
-        return matchesSearch && matchesFilter;
-      });
-
-      if (!filtered.length) {
-        list.innerHTML = `
-          <div class="message-card" style="margin: 0 auto;">
-            <h2 style="font-size:24px;">No releases found</h2>
-            <p>Try another search or filter.</p>
-          </div>
-        `;
-        return;
-      }
-
-      list.innerHTML = filtered.map(item => {
-        const id = item.id;
-        const d = item.data;
-        const currentReason = d.reviewReason || "";
-        const scheduledDate = d.scheduledReleaseDate || "";
-
-        return `
-          <div class="release">
-            <div class="cover">
-              <img src="${d.coverUrl || ""}" alt="Cover">
-            </div>
-
-            <div class="info">
-              <h3>${escapeHtml(d.title || "-")}</h3>
-              <p>Artist: ${escapeHtml(d.artist || "-")}</p>
-              <p>Genre: ${escapeHtml(d.genre || "-")}</p>
-              <p>Release Date: ${escapeHtml(d.releaseDate || "-")}</p>
-              ${scheduledDate ? `<p>Scheduled Live Date: ${escapeHtml(scheduledDate)}</p>` : ""}
-              <span class="status ${statusClass(d.status)}">${escapeHtml(d.status || "Pending Review")}</span>
-
-              ${d.audioUrl ? `<audio controls src="${d.audioUrl}"></audio>` : ""}
-
-              ${
-                currentReason
-                  ? `
-                    <div class="reason-box">
-                      <div class="reason-label">Current reason</div>
-                      <div class="reason-text">${escapeHtml(currentReason)}</div>
-                    </div>
-                  `
-                  : ""
-              }
-
-              <div class="reason-box">
-                <div class="reason-label">Write reason for artist</div>
-                <textarea id="reason-${id}" placeholder="Example: Cover artwork ina blurry, rekebisha title spelling, au tuma audio clean version...">${escapeHtml(currentReason)}</textarea>
-                <button class="save-reason-btn" onclick="saveReasonOnly('${id}')">Save Reason Only</button>
-
-                <div class="schedule-row">
-                  <input id="schedule-${id}" type="date" value="${escapeHtml(scheduledDate)}" />
-                  <button class="schedule-btn" onclick="scheduleRelease('${id}')">Schedule</button>
-                </div>
-              </div>
-
-              <div class="buttons">
-                <button class="approve-btn" onclick="setStatusWithReason('${id}','Approved')">Approve</button>
-                <button class="fix-btn" onclick="setStatusWithReason('${id}','Needs Correction')">Needs Fix</button>
-                <button class="live-btn" onclick="setStatusWithReason('${id}','Live')">Make Live</button>
-                <button class="reject-btn" onclick="setStatusWithReason('${id}','Rejected')">Reject</button>
-              </div>
-            </div>
-          </div>
-        `;
-      }).join("");
+    function formatDateValue(value) {
+      if (!value) return "-";
+      return value;
     }
 
-    async function fetchReleases() {
-      const snap = await getDocs(collection(db, "releases"));
-
-      allReleases = snap.docs.map(docSnap => ({
-        id: docSnap.id,
-        data: docSnap.data()
-      }));
-
-      allReleases.sort((a, b) => {
-        const aTime = a.data?.createdAt?.seconds || a.data?.updatedAt?.seconds || 0;
-        const bTime = b.data?.createdAt?.seconds || b.data?.updatedAt?.seconds || 0;
-        return bTime - aTime;
-      });
-
-      renderReleases();
+    function escapeHtml(text) {
+      return String(text || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
     }
 
-    window.saveReasonOnly = async function(id) {
-      const reason = document.getElementById(`reason-${id}`)?.value?.trim() || "";
-      await updateDoc(doc(db, "releases", id), {
-        reviewReason: reason
-      });
-      await fetchReleases();
-    };
+    window.showTab = function(tabName) {
+      document.querySelectorAll(".tab-section").forEach(el => el.classList.remove("active"));
+      document.querySelectorAll(".tab-btn").forEach(el => el.classList.remove("active"));
 
-    window.scheduleRelease = async function(id) {
-      const reason = document.getElementById(`reason-${id}`)?.value?.trim() || "";
-      const scheduleDate = document.getElementById(`schedule-${id}`)?.value || "";
-
-      if (!scheduleDate) {
-        alert("Choose schedule date first.");
-        return;
-      }
-
-      await updateDoc(doc(db, "releases", id), {
-        status: "Scheduled",
-        scheduledReleaseDate: scheduleDate,
-        reviewReason: reason
-      });
-
-      await fetchReleases();
-    };
-
-    window.setStatusWithReason = async function(id, status) {
-      const reason = document.getElementById(`reason-${id}`)?.value?.trim() || "";
-
-      const payload = {
-        status
-      };
-
-      if (status === "Approved" || status === "Live") {
-        payload.reviewReason = "";
-      } else {
-        payload.reviewReason = reason;
-      }
-
-      if (status === "Live") {
-        payload.scheduledReleaseDate = "";
-      }
-
-      await updateDoc(doc(db, "releases", id), payload);
-      await fetchReleases();
-    };
-
-    window.logout = async function() {
-      await signOut(auth);
-      window.location.href = "index.html";
-    };
-
-    window.goHome = function() {
-      window.location.href = "index.html";
+      document.getElementById("tab-" + tabName).classList.add("active");
+      document.getElementById("tabBtn-" + tabName).classList.add("active");
     };
 
     onAuthStateChanged(auth, async (user) => {
-      showLoading();
-
       if (!user) {
         window.location.href = "index.html";
         return;
       }
 
       if (!isAdminEmail(user.email)) {
-        showDenied();
+        document.body.innerHTML = `
+          <div style="min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px; background:#0b0f1a; color:white; font-family:Arial,sans-serif;">
+            <div style="max-width:520px; width:100%; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); border-radius:20px; padding:28px; text-align:center;">
+              <h1 style="margin-top:0;">Access denied</h1>
+              <p style="color:rgba(255,255,255,0.72); line-height:1.7;">This page is only for Pandisha admins.</p>
+              <p style="color:rgba(255,255,255,0.72); line-height:1.7;">Log in with your admin account to continue.</p>
+              <a href="index.html" style="display:inline-block; margin-top:10px; padding:12px 18px; border-radius:12px; background:linear-gradient(90deg,#7B2FF7,#FF7A18); color:white; font-weight:700;">
+                Go to Home
+              </a>
+            </div>
+          </div>
+        `;
         return;
       }
 
-      adminEmailText.textContent = `Logged in as: ${user.email}`;
-      showAdmin();
-      await autoPublishScheduledReleases();
-      await fetchReleases();
+      currentAdmin = user;
+      document.getElementById("admin-email").textContent = user.email || "Admin";
+      await refreshAll();
     });
+
+    window.logout = async function() {
+      await signOut(auth);
+      window.location.href = "index.html";
+    };
+
+    window.refreshAll = async function() {
+      await loadReleases();
+      await loadUsers();
+    };
+
+    window.resetArtistNameLimit = async function () {
+      const email = document.getElementById("reset-artist-email").value.trim();
+
+      setResetMessage("");
+
+      if (!email) {
+        setResetMessage("Weka email ya artist kwanza.", "error");
+        return;
+      }
+
+      try {
+        const q = query(collection(db, "users"), where("email", "==", email));
+        const snapshot = await getDocs(q);
+
+        if (snapshot.empty) {
+          setResetMessage("Hakuna user mwenye email hiyo.", "error");
+          return;
+        }
+
+        const userDoc = snapshot.docs[0];
+
+        await updateDoc(doc(db, "users", userDoc.id), {
+          artistNameChanges: 0,
+          artistNameChangesResetAt: new Date().toISOString(),
+          artistNameChangesResetBy: currentAdmin?.email || "admin"
+        });
+
+        setResetMessage("Artist name limit imereset successfully.");
+        document.getElementById("reset-artist-email").value = "";
+        await loadUsers();
+      } catch (error) {
+        setResetMessage(error.message || "Reset imeshindikana.", "error");
+      }
+    };
+
+    window.approveRelease = async function(releaseId) {
+      try {
+        await updateDoc(doc(db, "releases", releaseId), {
+          status: "Approved",
+          reviewReason: "",
+          scheduledReleaseDate: ""
+        });
+        await loadReleases();
+      } catch (error) {
+        alert(error.message || "Imeshindikana kuapprove.");
+      }
+    };
+
+    window.makeLive = async function(releaseId) {
+      try {
+        await updateDoc(doc(db, "releases", releaseId), {
+          status: "Live",
+          reviewReason: "",
+          scheduledReleaseDate: ""
+        });
+        await loadReleases();
+      } catch (error) {
+        alert(error.message || "Imeshindikana kuweka live.");
+      }
+    };
+
+    window.rejectRelease = async function(releaseId) {
+      const reason = prompt("Weka reason ya kukataa release:");
+      if (reason === null) return;
+
+      if (!reason.trim()) {
+        alert("Weka reason kwanza.");
+        return;
+      }
+
+      try {
+        await updateDoc(doc(db, "releases", releaseId), {
+          status: "Rejected",
+          reviewReason: reason.trim(),
+          scheduledReleaseDate: ""
+        });
+        await loadReleases();
+      } catch (error) {
+        alert(error.message || "Imeshindikana kukataa release.");
+      }
+    };
+
+    window.requestCorrection = async function(releaseId) {
+      const reason = prompt("Weka correction reason / message kwa artist:");
+      if (reason === null) return;
+
+      if (!reason.trim()) {
+        alert("Weka correction reason kwanza.");
+        return;
+      }
+
+      try {
+        await updateDoc(doc(db, "releases", releaseId), {
+          status: "Needs Correction",
+          reviewReason: reason.trim(),
+          scheduledReleaseDate: ""
+        });
+        await loadReleases();
+      } catch (error) {
+        alert(error.message || "Imeshindikana kutuma correction request.");
+      }
+    };
+
+    window.scheduleRelease = async function(releaseId) {
+      const date = prompt("Weka tarehe ya release (YYYY-MM-DD):");
+      if (date === null) return;
+
+      if (!date.trim()) {
+        alert("Weka tarehe kwanza.");
+        return;
+      }
+
+      try {
+        await updateDoc(doc(db, "releases", releaseId), {
+          status: "Scheduled",
+          scheduledReleaseDate: date.trim(),
+          reviewReason: ""
+        });
+        await loadReleases();
+      } catch (error) {
+        alert(error.message || "Imeshindikana kuschedule release.");
+      }
+    };
+
+    window.disableUser = async function(userDocId) {
+      try {
+        await updateDoc(doc(db, "users", userDocId), {
+          isDisabled: true
+        });
+        await loadUsers();
+      } catch (error) {
+        alert(error.message || "Imeshindikana kudisable user.");
+      }
+    };
+
+    window.enableUser = async function(userDocId) {
+      try {
+        await updateDoc(doc(db, "users", userDocId), {
+          isDisabled: false
+        });
+        await loadUsers();
+      } catch (error) {
+        alert(error.message || "Imeshindikana kuenable user.");
+      }
+    };
+
+    window.resetUserNameChangesByDoc = async function(userDocId) {
+      try {
+        await updateDoc(doc(db, "users", userDocId), {
+          artistNameChanges: 0,
+          artistNameChangesResetAt: new Date().toISOString(),
+          artistNameChangesResetBy: currentAdmin?.email || "admin"
+        });
+        await loadUsers();
+      } catch (error) {
+        alert(error.message || "Imeshindikana kufanya reset.");
+      }
+    };
+
+    window.makeUserAdmin = async function(userDocId) {
+      try {
+        await updateDoc(doc(db, "users", userDocId), {
+          role: "admin"
+        });
+        alert("User amewekwa admin kwenye database.");
+        await loadUsers();
+      } catch (error) {
+        alert(error.message || "Imeshindikana kumweka admin.");
+      }
+    };
+
+    window.removeUserAdmin = async function(userDocId) {
+      try {
+        await updateDoc(doc(db, "users", userDocId), {
+          role: "artist"
+        });
+        alert("Admin role imeondolewa kwenye database.");
+        await loadUsers();
+      } catch (error) {
+        alert(error.message || "Imeshindikana kuondoa admin.");
+      }
+    };
+
+    window.changeUserPlan = async function(userDocId) {
+      const newPlan = prompt("Weka plan mpya: Starter / Artist Boost / Full Promotion");
+      if (newPlan === null) return;
+
+      const plan = newPlan.trim();
+      if (!plan) {
+        alert("Weka plan kwanza.");
+        return;
+      }
+
+      try {
+        await updateDoc(doc(db, "users", userDocId), {
+          plan: plan
+        });
+        await loadUsers();
+      } catch (error) {
+        alert(error.message || "Imeshindikana kubadili plan.");
+      }
+    };
+
+    async function loadReleases() {
+      const releaseList = document.getElementById("release-list");
+      const totalReleases = document.getElementById("total-releases");
+      const pendingReleases = document.getElementById("pending-releases");
+
+      releaseList.innerHTML = `<div class="empty-box">Loading releases...</div>`;
+
+      try {
+        const snapshot = await getDocs(collection(db, "releases"));
+        const releases = [];
+
+        snapshot.forEach((docSnap) => {
+          releases.push({ id: docSnap.id, ...docSnap.data() });
+        });
+
+        releases.sort((a, b) => {
+          const aTime = a?.updatedAt?.seconds || a?.createdAt?.seconds || 0;
+          const bTime = b?.updatedAt?.seconds || b?.createdAt?.seconds || 0;
+          return bTime - aTime;
+        });
+
+        totalReleases.textContent = releases.length;
+
+        let pendingCount = 0;
+        releases.forEach((item) => {
+          const s = (item.status || "").toLowerCase();
+          if (s.includes("pending") || s.includes("correction")) pendingCount++;
+        });
+        pendingReleases.textContent = pendingCount;
+
+        if (!releases.length) {
+          releaseList.innerHTML = `<div class="empty-box">Hakuna releases bado.</div>`;
+          return;
+        }
+
+        let html = "";
+
+        releases.forEach((data) => {
+          const statusText = data.status || "Pending Review";
+          const reviewReason = data.reviewReason || "";
+          const scheduledReleaseDate = data.scheduledReleaseDate || "";
+
+          html += `
+            <div class="release-item">
+              <div class="release-top">
+                <div class="cover-box">
+                  ${data.coverUrl ? `<img src="${data.coverUrl}" alt="Cover">` : ``}
+                </div>
+
+                <div class="release-content">
+                  <h3>${escapeHtml(data.title || "-")}</h3>
+                  <p><strong>Artist:</strong> ${escapeHtml(data.artist || "-")}</p>
+                  <p><strong>Username:</strong> ${escapeHtml(data.username || "-")}</p>
+                  <p><strong>User ID:</strong> ${escapeHtml(data.userId || "-")}</p>
+                  <p><strong>Release Date:</strong> ${escapeHtml(formatDateValue(data.releaseDate))}</p>
+                  <p><strong>Genre:</strong> ${escapeHtml(data.genre || "-")}</p>
+                  ${data.notes ? `<p><strong>Notes:</strong> ${escapeHtml(data.notes)}</p>` : ``}
+                  ${scheduledReleaseDate ? `<p><strong>Scheduled Live Date:</strong> ${escapeHtml(scheduledReleaseDate)}</p>` : ``}
+                  <span class="status ${statusClass(statusText)}">${escapeHtml(statusText)}</span>
+
+                  ${
+                    reviewReason
+                      ? `
+                        <div class="reason-box">
+                          <div class="reason-title">Admin Message</div>
+                          <div class="reason-text">${escapeHtml(reviewReason)}</div>
+                        </div>
+                      `
+                      : ``
+                  }
+
+                  ${data.audioUrl ? `<audio class="audio-player" controls src="${data.audioUrl}"></audio>` : ``}
+                  ${data.audioUrl ? `<a class="audio-link" href="${data.audioUrl}" target="_blank">Open Audio File</a>` : ``}
+
+                  <div class="inline-actions">
+                    <button class="btn btn-success" onclick="approveRelease('${data.id}')">Approve</button>
+                    <button class="btn btn-info" onclick="makeLive('${data.id}')">Make Live</button>
+                    <button class="btn btn-warning" onclick="scheduleRelease('${data.id}')">Schedule</button>
+                    <button class="btn btn-primary" onclick="requestCorrection('${data.id}')">Need Correction</button>
+                    <button class="btn btn-danger" onclick="rejectRelease('${data.id}')">Reject</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+
+        releaseList.innerHTML = html;
+      } catch (error) {
+        releaseList.innerHTML = `<div class="empty-box">Failed to load releases: ${escapeHtml(error.message || "Unknown error")}</div>`;
+      }
+    }
+
+    async function loadUsers() {
+      const userList = document.getElementById("user-list");
+      const totalUsers = document.getElementById("total-users");
+      const disabledUsers = document.getElementById("disabled-users");
+
+      userList.innerHTML = `<div class="empty-box">Loading users...</div>`;
+
+      try {
+        const snapshot = await getDocs(collection(db, "users"));
+        const users = [];
+
+        snapshot.forEach((docSnap) => {
+          users.push({ id: docSnap.id, ...docSnap.data() });
+        });
+
+        users.sort((a, b) => {
+          const aName = (a.username || "").toLowerCase();
+          const bName = (b.username || "").toLowerCase();
+          return aName.localeCompare(bName);
+        });
+
+        totalUsers.textContent = users.length;
+
+        let disabledCount = 0;
+        users.forEach((u) => {
+          if (u.isDisabled === true) disabledCount++;
+        });
+        disabledUsers.textContent = disabledCount;
+
+        if (!users.length) {
+          userList.innerHTML = `<div class="empty-box">Hakuna users bado.</div>`;
+          return;
+        }
+
+        let html = "";
+
+        users.forEach((user) => {
+          const plan = user.plan || "Starter";
+          const role = user.role || "artist";
+          const artistName = user.artistName || "-";
+          const artistNameChanges = user.artistNameChanges || 0;
+          const userStatus = user.isDisabled ? "Disabled" : "Active";
+
+          html += `
+            <div class="user-item">
+              <h3>${escapeHtml(user.username || "No Username")}</h3>
+              <p><strong>Email:</strong> ${escapeHtml(user.email || "-")}</p>
+              <p><strong>Artist Name:</strong> ${escapeHtml(artistName)}</p>
+              <p><strong>Role:</strong> ${escapeHtml(role)}</p>
+              <p><strong>Plan:</strong> ${escapeHtml(plan)}</p>
+              <p><strong>Artist Name Changes:</strong> ${artistNameChanges} / 5</p>
+              <span class="status ${user.isDisabled ? "disabled" : "active"}">${escapeHtml(userStatus)}</span>
+
+              <div class="inline-actions">
+                ${user.isDisabled
+                  ? `<button class="btn btn-success" onclick="enableUser('${user.id}')">Enable User</button>`
+                  : `<button class="btn btn-danger" onclick="disableUser('${user.id}')">Disable User</button>`
+                }
+
+                <button class="btn btn-warning" onclick="resetUserNameChangesByDoc('${user.id}')">Reset Name Limit</button>
+                <button class="btn btn-info" onclick="changeUserPlan('${user.id}')">Change Plan</button>
+
+                ${role === "admin"
+                  ? `<button class="btn btn-dark" onclick="removeUserAdmin('${user.id}')">Remove Admin</button>`
+                  : `<button class="btn btn-primary" onclick="makeUserAdmin('${user.id}')">Make Admin</button>`
+                }
+              </div>
+            </div>
+          `;
+        });
+
+        userList.innerHTML = html;
+      } catch (error) {
+        userList.innerHTML = `<div class="empty-box">Failed to load users: ${escapeHtml(error.message || "Unknown error")}</div>`;
+      }
+    }
   </script>
 </body>
 </html>
