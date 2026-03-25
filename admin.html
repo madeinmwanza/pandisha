@@ -129,6 +129,7 @@
     .rejected { background: rgba(239, 68, 68, 0.18); color: #fecaca; }
     .live { background: rgba(123, 47, 247, 0.22); color: #d8c4ff; }
     .needs { background: rgba(245, 158, 11, 0.22); color: #fcd34d; }
+    .scheduled { background: rgba(59, 130, 246, 0.22); color: #bfdbfe; }
 
     .buttons {
       display: flex;
@@ -161,6 +162,24 @@
       background: #2563eb;
       color: white;
       margin-top: 10px;
+    }
+
+    .schedule-btn {
+      background: #3b82f6;
+      color: white;
+      margin-top: 10px;
+    }
+
+    .schedule-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .schedule-row input[type="date"] {
+      min-width: 180px;
     }
 
     audio {
@@ -274,14 +293,13 @@
 
     <div class="controls">
       <input id="search" placeholder="Search artist or song..." oninput="renderReleases()" />
-
       <button class="filter-btn" onclick="setFilter('all')">All</button>
       <button class="filter-btn" onclick="setFilter('Pending Review')">Pending</button>
       <button class="filter-btn" onclick="setFilter('Needs Correction')">Needs Fix</button>
       <button class="filter-btn" onclick="setFilter('Approved')">Approved</button>
+      <button class="filter-btn" onclick="setFilter('Scheduled')">Scheduled</button>
       <button class="filter-btn" onclick="setFilter('Live')">Live</button>
       <button class="filter-btn" onclick="setFilter('Rejected')">Rejected</button>
-
       <button class="logout-btn" onclick="logout()">Log Out</button>
     </div>
 
@@ -290,18 +308,8 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-    import {
-      getAuth,
-      onAuthStateChanged,
-      signOut
-    } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
-    import {
-      getFirestore,
-      collection,
-      getDocs,
-      updateDoc,
-      doc
-    } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+    import { getFirestore, collection, getDocs, updateDoc, doc } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyB7zfgQ3GqdPL2o1tyFt2RmW3Obqb1nKPk",
@@ -317,8 +325,8 @@
     const db = getFirestore(app);
 
     const ADMIN_EMAILS = [
-  "madeinmwanza@gmail.com"
-];
+      "WEKA_EMAIL_YAKO_HALISI_HAPA"
+    ];
 
     let filter = "all";
     let allReleases = [];
@@ -333,9 +341,36 @@
     }
 
     function isAdminEmail(email) {
-      return ADMIN_EMAILS
-        .map(normalizeEmail)
-        .includes(normalizeEmail(email));
+      return ADMIN_EMAILS.map(normalizeEmail).includes(normalizeEmail(email));
+    }
+
+    function todayString() {
+      const d = new Date();
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, "0");
+      const day = String(d.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    }
+
+    async function autoPublishScheduledReleases() {
+      const snap = await getDocs(collection(db, "releases"));
+      const today = todayString();
+
+      const updates = [];
+      snap.forEach((docSnap) => {
+        const data = docSnap.data();
+        if (data.status === "Scheduled" && data.scheduledReleaseDate && data.scheduledReleaseDate <= today) {
+          updates.push(
+            updateDoc(doc(db, "releases", docSnap.id), {
+              status: "Live"
+            })
+          );
+        }
+      });
+
+      if (updates.length) {
+        await Promise.all(updates);
+      }
     }
 
     function showLoading() {
@@ -366,6 +401,7 @@
       const s = (statusText || "").toLowerCase();
       if (s.includes("approved")) return "approved";
       if (s.includes("rejected")) return "rejected";
+      if (s.includes("scheduled")) return "scheduled";
       if (s.includes("live")) return "live";
       if (s.includes("correction")) return "needs";
       return "pending";
@@ -388,7 +424,6 @@
 
         const matchesSearch = title.includes(search) || artist.includes(search);
         const matchesFilter = filter === "all" || status === filter;
-
         return matchesSearch && matchesFilter;
       });
 
@@ -406,6 +441,7 @@
         const id = item.id;
         const d = item.data;
         const currentReason = d.reviewReason || "";
+        const scheduledDate = d.scheduledReleaseDate || "";
 
         return `
           <div class="release">
@@ -418,6 +454,7 @@
               <p>Artist: ${escapeHtml(d.artist || "-")}</p>
               <p>Genre: ${escapeHtml(d.genre || "-")}</p>
               <p>Release Date: ${escapeHtml(d.releaseDate || "-")}</p>
+              ${scheduledDate ? `<p>Scheduled Live Date: ${escapeHtml(scheduledDate)}</p>` : ""}
               <span class="status ${statusClass(d.status)}">${escapeHtml(d.status || "Pending Review")}</span>
 
               ${d.audioUrl ? `<audio controls src="${d.audioUrl}"></audio>` : ""}
@@ -437,6 +474,11 @@
                 <div class="reason-label">Write reason for artist</div>
                 <textarea id="reason-${id}" placeholder="Example: Cover artwork ina blurry, rekebisha title spelling, au tuma audio clean version...">${escapeHtml(currentReason)}</textarea>
                 <button class="save-reason-btn" onclick="saveReasonOnly('${id}')">Save Reason Only</button>
+
+                <div class="schedule-row">
+                  <input id="schedule-${id}" type="date" value="${escapeHtml(scheduledDate)}" />
+                  <button class="schedule-btn" onclick="scheduleRelease('${id}')">Schedule</button>
+                </div>
               </div>
 
               <div class="buttons">
@@ -460,8 +502,8 @@
       }));
 
       allReleases.sort((a, b) => {
-        const aTime = a.data?.createdAt?.seconds || 0;
-        const bTime = b.data?.createdAt?.seconds || 0;
+        const aTime = a.data?.createdAt?.seconds || a.data?.updatedAt?.seconds || 0;
+        const bTime = b.data?.createdAt?.seconds || b.data?.updatedAt?.seconds || 0;
         return bTime - aTime;
       });
 
@@ -476,15 +518,39 @@
       await fetchReleases();
     };
 
+    window.scheduleRelease = async function(id) {
+      const reason = document.getElementById(`reason-${id}`)?.value?.trim() || "";
+      const scheduleDate = document.getElementById(`schedule-${id}`)?.value || "";
+
+      if (!scheduleDate) {
+        alert("Choose schedule date first.");
+        return;
+      }
+
+      await updateDoc(doc(db, "releases", id), {
+        status: "Scheduled",
+        scheduledReleaseDate: scheduleDate,
+        reviewReason: reason
+      });
+
+      await fetchReleases();
+    };
+
     window.setStatusWithReason = async function(id, status) {
       const reason = document.getElementById(`reason-${id}`)?.value?.trim() || "";
 
-      const payload = { status };
+      const payload = {
+        status
+      };
 
       if (status === "Approved" || status === "Live") {
         payload.reviewReason = "";
       } else {
         payload.reviewReason = reason;
+      }
+
+      if (status === "Live") {
+        payload.scheduledReleaseDate = "";
       }
 
       await updateDoc(doc(db, "releases", id), payload);
@@ -515,6 +581,7 @@
 
       adminEmailText.textContent = `Logged in as: ${user.email}`;
       showAdmin();
+      await autoPublishScheduledReleases();
       await fetchReleases();
     });
   </script>
