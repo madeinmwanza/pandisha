@@ -157,6 +157,12 @@
       color: white;
     }
 
+    .btn-secondary {
+      background: rgba(255,255,255,0.08);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
     .stats {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -508,10 +514,16 @@
       <div class="content-panel">
         <div id="create-release" class="section-block active">
           <h2>Create a Release</h2>
-          <p class="lead">Hapa msanii anaweza kupandisha taarifa za wimbo wake mpya pamoja na cover art na audio file.</p>
+          <p class="lead">Username ni kwa login tu. Artist Name ni jina la msanii litakaloonekana kwenye releases.</p>
 
           <div id="editBanner" class="edit-banner">
             Unarekebisha release iliyotumwa awali. Ukisubmit, itarudi kuwa <strong>Pending Review</strong>.
+          </div>
+
+          <div class="input-box">
+            <label>Artist Name (Stage Name)</label>
+            <input id="artist-name" type="text" placeholder="Enter artist name">
+            <button class="btn btn-secondary" style="margin-top:10px;" onclick="saveArtistName()">Save Artist Name</button>
           </div>
 
           <div class="grid-2">
@@ -519,11 +531,6 @@
               <div class="input-box">
                 <label>Song Title</label>
                 <input id="song-title" type="text" placeholder="Song Title">
-              </div>
-
-              <div class="input-box">
-                <label>Artist Name</label>
-                <input id="artist-name" type="text" placeholder="Artist Name">
               </div>
 
               <div class="input-box">
@@ -671,11 +678,13 @@
     const CLOUDINARY_UPLOAD_PRESET = "pandisha_upload";
 
     const ADMIN_EMAILS = [
-      "madeinmwanza@gmail.com"
+      "WEKA_EMAIL_YAKO_HAPA"
     ];
 
     let currentUser = null;
     let currentUsername = "";
+    let currentArtistName = "";
+    let currentUserDocId = "";
     let editingReleaseId = null;
     let existingCoverUrl = "";
     let existingAudioUrl = "";
@@ -754,6 +763,7 @@
     window.startNewRelease = function() {
       resetEditState();
       clearForm();
+      document.getElementById("artist-name").value = currentArtistName || "";
       showSection("create-release");
       setMessage("", "success");
     };
@@ -770,14 +780,20 @@
         const userSnapshot = await getDocs(userQuery);
 
         if (!userSnapshot.empty) {
-          const userData = userSnapshot.docs[0].data();
+          const userDoc = userSnapshot.docs[0];
+          const userData = userDoc.data();
+
+          currentUserDocId = userDoc.id;
           currentUsername = userData.username || "";
-          document.getElementById("user-name").textContent = userData.username;
-          document.getElementById("artist-name").value = userData.username;
+          currentArtistName = userData.artistName || "";
+
+          document.getElementById("user-name").textContent = currentUsername;
+          document.getElementById("artist-name").value = currentArtistName;
         } else {
           currentUsername = user.email || "";
+          currentArtistName = "";
           document.getElementById("user-name").textContent = user.email || "Artist";
-          document.getElementById("artist-name").value = user.email || "";
+          document.getElementById("artist-name").value = "";
         }
 
         await autoPublishScheduledReleasesForCurrentUser();
@@ -821,13 +837,37 @@
 
     function clearForm() {
       document.getElementById("song-title").value = "";
-      document.getElementById("artist-name").value = currentUsername || "";
       document.getElementById("release-date").value = "";
       document.getElementById("genre").value = "";
       document.getElementById("release-notes").value = "";
       document.getElementById("cover-file").value = "";
       document.getElementById("audio-file").value = "";
     }
+
+    window.saveArtistName = async function() {
+      const artistName = document.getElementById("artist-name").value.trim();
+
+      if (!artistName) {
+        setMessage("Weka artist name kwanza.", "error");
+        return;
+      }
+
+      if (!currentUser || !currentUserDocId) {
+        setMessage("User info haijapatikana vizuri.", "error");
+        return;
+      }
+
+      try {
+        await updateDoc(doc(db, "users", currentUserDocId), {
+          artistName: artistName
+        });
+
+        currentArtistName = artistName;
+        setMessage("Artist name saved successfully ✅", "success");
+      } catch (error) {
+        setMessage(error.message || "Failed to save artist name.", "error");
+      }
+    };
 
     async function uploadToCloudinary(file, folder = "pandisha_uploads") {
       const formData = new FormData();
@@ -861,7 +901,7 @@
       existingAudioFileName = payload.audioFileName || "";
 
       document.getElementById("song-title").value = payload.title || "";
-      document.getElementById("artist-name").value = payload.artist || currentUsername || "";
+      document.getElementById("artist-name").value = payload.artist || currentArtistName || "";
       document.getElementById("release-date").value = payload.releaseDate || "";
       document.getElementById("genre").value = payload.genre || "";
       document.getElementById("release-notes").value = payload.notes || "";
@@ -904,6 +944,13 @@
         submitBtn.disabled = true;
         submitBtn.textContent = wasEditing ? "Resubmitting..." : "Uploading...";
         setMessage("Subiri kidogo, tunahifadhi release yako...", "success");
+
+        if (currentUserDocId && artist !== currentArtistName) {
+          await updateDoc(doc(db, "users", currentUserDocId), {
+            artistName: artist
+          });
+          currentArtistName = artist;
+        }
 
         let finalCoverUrl = existingCoverUrl;
         let finalAudioUrl = existingAudioUrl;
@@ -950,8 +997,8 @@
           await addDoc(collection(db, "releases"), {
             userId: currentUser.uid,
             username: currentUsername,
-            title,
             artist,
+            title,
             releaseDate,
             genre,
             notes,
@@ -972,6 +1019,7 @@
 
         resetEditState();
         clearForm();
+        document.getElementById("artist-name").value = currentArtistName || "";
         await autoPublishScheduledReleasesForCurrentUser();
         await loadDiscography();
         showSection("discography");
