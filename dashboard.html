@@ -163,6 +163,12 @@
       border: 1px solid rgba(255,255,255,0.08);
     }
 
+    .name-change-note {
+      font-size: 13px;
+      color: rgba(255,255,255,0.65);
+      margin-top: 8px;
+    }
+
     .stats {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -484,9 +490,11 @@
         <div>
           <h1>Artist Dashboard</h1>
           <p id="user-name">Loading username...</p>
+          <div id="artist-name-limit" class="name-change-note">Loading name change limit...</div>
         </div>
 
         <div class="topbar-actions">
+          <button class="btn btn-secondary" onclick="changeArtistName()">Change Artist Name</button>
           <button class="btn btn-primary" onclick="startNewRelease()">New Release</button>
           <a id="adminBtn" href="admin.html" class="btn btn-primary" style="display:none;">Admin Panel</a>
         </div>
@@ -681,10 +689,13 @@
       "madeinmwanza@gmail.com"
     ];
 
+    const MAX_ARTIST_NAME_CHANGES = 5;
+
     let currentUser = null;
     let currentUsername = "";
     let currentArtistName = "";
     let currentUserDocId = "";
+    let currentArtistNameChanges = 0;
     let editingReleaseId = null;
     let existingCoverUrl = "";
     let existingAudioUrl = "";
@@ -699,6 +710,12 @@
       const month = String(d.getMonth() + 1).padStart(2, "0");
       const day = String(d.getDate()).padStart(2, "0");
       return `${year}-${month}-${day}`;
+    }
+
+    function updateArtistNameLimitUI() {
+      const remaining = Math.max(0, MAX_ARTIST_NAME_CHANGES - (currentArtistNameChanges || 0));
+      document.getElementById("artist-name-limit").textContent =
+        `Artist name changes left: ${remaining} / ${MAX_ARTIST_NAME_CHANGES}`;
     }
 
     async function autoPublishScheduledReleasesForCurrentUser() {
@@ -786,14 +803,18 @@
           currentUserDocId = userDoc.id;
           currentUsername = userData.username || "";
           currentArtistName = userData.artistName || "";
+          currentArtistNameChanges = userData.artistNameChanges || 0;
 
           document.getElementById("user-name").textContent = currentUsername;
           document.getElementById("artist-name").value = currentArtistName;
+          updateArtistNameLimitUI();
         } else {
           currentUsername = user.email || "";
           currentArtistName = "";
+          currentArtistNameChanges = 0;
           document.getElementById("user-name").textContent = user.email || "Artist";
           document.getElementById("artist-name").value = "";
+          updateArtistNameLimitUI();
         }
 
         await autoPublishScheduledReleasesForCurrentUser();
@@ -844,6 +865,80 @@
       document.getElementById("audio-file").value = "";
     }
 
+    async function isArtistNameTakenByAnotherUser(artistName) {
+      const trimmed = (artistName || "").trim().toLowerCase();
+      if (!trimmed) return false;
+
+      const q = query(collection(db, "users"), where("artistName", "==", artistName));
+      const snap = await getDocs(q);
+
+      if (snap.empty) return false;
+
+      let taken = false;
+      snap.forEach((docSnap) => {
+        if (docSnap.id !== currentUserDocId) {
+          const data = docSnap.data() || {};
+          if ((data.artistName || "").trim().toLowerCase() === trimmed) {
+            taken = true;
+          }
+        }
+      });
+
+      return taken;
+    }
+
+    window.changeArtistName = async function() {
+      if (!currentUser || !currentUserDocId) {
+        alert("User info haijapatikana vizuri.");
+        return;
+      }
+
+      if ((currentArtistNameChanges || 0) >= MAX_ARTIST_NAME_CHANGES) {
+        alert("Umefikia mwisho wa kubadilisha Artist Name mara 5.");
+        return;
+      }
+
+      const newArtistName = prompt("Weka Artist Name mpya:");
+
+      if (!newArtistName) return;
+
+      const trimmedName = newArtistName.trim();
+
+      if (!trimmedName) {
+        alert("Artist Name haiwezi kuwa tupu.");
+        return;
+      }
+
+      if (trimmedName === currentArtistName) {
+        alert("Hiyo ndio Artist Name yako ya sasa.");
+        return;
+      }
+
+      try {
+        const taken = await isArtistNameTakenByAnotherUser(trimmedName);
+        if (taken) {
+          alert("Artist Name tayari imetumika na user mwingine.");
+          return;
+        }
+
+        const newCount = (currentArtistNameChanges || 0) + 1;
+
+        await updateDoc(doc(db, "users", currentUserDocId), {
+          artistName: trimmedName,
+          artistNameChanges: newCount
+        });
+
+        currentArtistName = trimmedName;
+        currentArtistNameChanges = newCount;
+        document.getElementById("artist-name").value = trimmedName;
+        updateArtistNameLimitUI();
+
+        alert("Artist Name imebadilika successfully.");
+      } catch (error) {
+        alert(error.message || "Imeshindikana kubadili Artist Name.");
+      }
+    };
+
     window.saveArtistName = async function() {
       const artistName = document.getElementById("artist-name").value.trim();
 
@@ -858,6 +953,33 @@
       }
 
       try {
+        if (artistName !== currentArtistName) {
+          if ((currentArtistNameChanges || 0) >= MAX_ARTIST_NAME_CHANGES) {
+            setMessage("Umefikia mwisho wa kubadilisha Artist Name mara 5.", "error");
+            document.getElementById("artist-name").value = currentArtistName || "";
+            return;
+          }
+
+          const taken = await isArtistNameTakenByAnotherUser(artistName);
+          if (taken) {
+            setMessage("Artist Name tayari imetumika na user mwingine.", "error");
+            return;
+          }
+
+          const newCount = (currentArtistNameChanges || 0) + 1;
+
+          await updateDoc(doc(db, "users", currentUserDocId), {
+            artistName: artistName,
+            artistNameChanges: newCount
+          });
+
+          currentArtistName = artistName;
+          currentArtistNameChanges = newCount;
+          updateArtistNameLimitUI();
+          setMessage("Artist name saved successfully ✅", "success");
+          return;
+        }
+
         await updateDoc(doc(db, "users", currentUserDocId), {
           artistName: artistName
         });
@@ -946,10 +1068,31 @@
         setMessage("Subiri kidogo, tunahifadhi release yako...", "success");
 
         if (currentUserDocId && artist !== currentArtistName) {
+          if ((currentArtistNameChanges || 0) >= MAX_ARTIST_NAME_CHANGES) {
+            setMessage("Umefikia mwisho wa kubadilisha Artist Name mara 5.", "error");
+            submitBtn.disabled = false;
+            submitBtn.textContent = wasEditing ? "Resubmit Corrected Release" : "Submit Release";
+            return;
+          }
+
+          const taken = await isArtistNameTakenByAnotherUser(artist);
+          if (taken) {
+            setMessage("Artist Name tayari imetumika na user mwingine.", "error");
+            submitBtn.disabled = false;
+            submitBtn.textContent = wasEditing ? "Resubmit Corrected Release" : "Submit Release";
+            return;
+          }
+
+          const newCount = (currentArtistNameChanges || 0) + 1;
+
           await updateDoc(doc(db, "users", currentUserDocId), {
-            artistName: artist
+            artistName: artist,
+            artistNameChanges: newCount
           });
+
           currentArtistName = artist;
+          currentArtistNameChanges = newCount;
+          updateArtistNameLimitUI();
         }
 
         let finalCoverUrl = existingCoverUrl;
