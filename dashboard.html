@@ -1,56 +1,816 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Dashboard</title>
-<style>
-body{background:#0b0f1a;color:white;font-family:Arial}
-.container{padding:30px}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pandisha Admin Dashboard</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0b0f1a;
+      color: white;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      background: rgba(255,255,255,0.04);
+      border-right: 1px solid rgba(255,255,255,0.08);
+      padding: 24px 18px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 30px;
+      padding: 0 8px;
+    }
+
+    .brand img {
+      height: 54px;
+      object-fit: contain;
+    }
+
+    .brand-text h2 {
+      margin: 0;
+      font-size: 18px;
+      letter-spacing: 3px;
+    }
+
+    .brand-text span {
+      font-size: 11px;
+      color: rgba(255,255,255,0.6);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .menu-title {
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin: 18px 8px 10px;
+    }
+
+    .menu-item {
+      display: block;
+      padding: 12px 14px;
+      border-radius: 12px;
+      margin-bottom: 8px;
+      background: rgba(255,255,255,0.04);
+      color: rgba(255,255,255,0.82);
+      cursor: pointer;
+    }
+
+    .menu-item:hover,
+    .menu-item.active {
+      background: linear-gradient(90deg, rgba(123,47,247,0.25), rgba(255,122,24,0.20));
+      color: white;
+    }
+
+    .main {
+      padding: 28px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+
+    .topbar h1 {
+      margin: 0;
+      font-size: 34px;
+    }
+
+    .topbar p {
+      margin: 6px 0 0;
+      color: rgba(255,255,255,0.65);
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-block;
+      border: none;
+      border-radius: 12px;
+      padding: 11px 16px;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: center;
+      color: white;
+    }
+
+    .btn-primary {
+      background: linear-gradient(90deg, #7B2FF7, #FF7A18);
+    }
+
+    .btn-secondary {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .btn-success {
+      background: #16a34a;
+    }
+
+    .btn-danger {
+      background: #dc2626;
+    }
+
+    .btn-warning {
+      background: #f59e0b;
+    }
+
+    .btn-info {
+      background: #2563eb;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px;
+      padding: 20px;
+    }
+
+    .card small {
+      color: rgba(255,255,255,0.6);
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .card strong {
+      font-size: 30px;
+    }
+
+    .section {
+      margin-bottom: 24px;
+    }
+
+    .section h2 {
+      margin: 0 0 12px;
+      font-size: 26px;
+    }
+
+    .section p {
+      margin: 0 0 16px;
+      color: rgba(255,255,255,0.68);
+      line-height: 1.7;
+    }
+
+    .input-box {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      padding: 14px 16px;
+      margin-bottom: 12px;
+    }
+
+    .input-box label {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 8px;
+      color: rgba(255,255,255,0.7);
+    }
+
+    .input-box input,
+    .input-box textarea,
+    .input-box select {
+      width: 100%;
+      background: none;
+      border: none;
+      color: white;
+      outline: none;
+      font-size: 14px;
+      font-family: Arial, sans-serif;
+    }
+
+    .input-box textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .input-box input::placeholder,
+    .input-box textarea::placeholder {
+      color: rgba(255,255,255,0.45);
+    }
+
+    .message {
+      margin-top: 12px;
+      font-size: 14px;
+      min-height: 20px;
+    }
+
+    .release-list {
+      display: grid;
+      gap: 16px;
+    }
+
+    .release-item {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px;
+      padding: 18px;
+    }
+
+    .release-top {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+
+    .cover-box {
+      width: 78px;
+      height: 78px;
+      border-radius: 14px;
+      overflow: hidden;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      flex-shrink: 0;
+    }
+
+    .cover-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .release-content {
+      flex: 1;
+      min-width: 260px;
+    }
+
+    .release-item h3 {
+      margin: 0 0 8px;
+      font-size: 22px;
+    }
+
+    .release-item p {
+      margin: 0 0 6px;
+      color: rgba(255,255,255,0.72);
+      line-height: 1.6;
+    }
+
+    .status {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      background: rgba(255,255,255,0.08);
+    }
+
+    .status.pending {
+      background: rgba(245, 158, 11, 0.16);
+      color: #ffd27a;
+    }
+
+    .status.approved {
+      background: rgba(34, 197, 94, 0.16);
+      color: #a7f3c0;
+    }
+
+    .status.rejected {
+      background: rgba(239, 68, 68, 0.16);
+      color: #fecaca;
+    }
+
+    .status.live {
+      background: rgba(123, 47, 247, 0.22);
+      color: #d8c4ff;
+    }
+
+    .status.needs {
+      background: rgba(245, 158, 11, 0.22);
+      color: #fcd34d;
+    }
+
+    .status.scheduled {
+      background: rgba(59, 130, 246, 0.22);
+      color: #bfdbfe;
+    }
+
+    .audio-player {
+      display: block;
+      margin-top: 10px;
+      width: 100%;
+      max-width: 320px;
+    }
+
+    .audio-link {
+      display: inline-block;
+      margin-top: 10px;
+      font-size: 13px;
+      color: #f5b26b;
+    }
+
+    .reason-box {
+      margin-top: 12px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 12px;
+    }
+
+    .reason-title {
+      font-size: 12px;
+      color: rgba(255,255,255,0.55);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+    }
+
+    .reason-text {
+      color: rgba(255,255,255,0.9);
+      font-size: 14px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+    }
+
+    .action-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .inline-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .empty-box {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 18px;
+      color: rgba(255,255,255,0.7);
+    }
+
+    @media (max-width: 980px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .action-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .main {
+        padding: 18px;
+      }
+
+      .topbar h1 {
+        font-size: 28px;
+      }
+    }
+  </style>
 </head>
-
 <body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">
+        <img src="./PandishaaLogo.png" alt="Pandisha Logo">
+        <div class="brand-text">
+          <h2>PANDISHA</h2>
+          <span>Admin Panel</span>
+        </div>
+      </div>
 
-<div class="container">
-<h2 id="user"></h2>
-<button onclick="logout()">Logout</button>
-</div>
+      <div class="menu-title">Admin</div>
+      <div class="menu-item active">Release Management</div>
+      <div class="menu-item">Artist Support</div>
+      <div class="menu-item" onclick="logout()">Log Out</div>
+    </aside>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-import { getAuth, onAuthStateChanged, signOut }
-from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+    <main class="main">
+      <div class="topbar">
+        <div>
+          <h1>Admin Dashboard</h1>
+          <p id="admin-email">Checking admin access...</p>
+        </div>
 
-import { getFirestore, collection, query, where, getDocs }
-from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+        <div class="top-actions">
+          <a href="dashboard.html" class="btn btn-secondary">Artist Dashboard</a>
+          <button class="btn btn-primary" onclick="loadReleases()">Refresh Releases</button>
+        </div>
+      </div>
 
-const app=initializeApp({apiKey:"AIzaSyB7z...",authDomain:"pandisha1.firebaseapp.com",projectId:"pandisha1"});
-const auth=getAuth(app);
-const db=getFirestore(app);
+      <section class="stats">
+        <div class="card">
+          <small>Total Releases</small>
+          <strong id="total-releases">0</strong>
+        </div>
+        <div class="card">
+          <small>Pending Review</small>
+          <strong id="pending-releases">0</strong>
+        </div>
+        <div class="card">
+          <small>Scheduled</small>
+          <strong id="scheduled-releases">0</strong>
+        </div>
+        <div class="card">
+          <small>Live / Approved</small>
+          <strong id="live-releases">0</strong>
+        </div>
+      </section>
 
-onAuthStateChanged(auth,async(user)=>{
-if(!user){location.href="index.html";return;}
+      <section class="section">
+        <div class="card">
+          <h2>Reset Artist Name Limit</h2>
+          <p>Weka email ya artist kisha urudishe artist name changes kuwa 0.</p>
 
-const q=query(collection(db,"users"),where("userId","==",user.uid));
-const snap=await getDocs(q);
+          <div class="input-box">
+            <label>Artist Email</label>
+            <input id="reset-artist-email" type="email" placeholder="artist@email.com">
+          </div>
 
-const data=snap.docs[0].data();
+          <button class="btn btn-warning" onclick="resetArtistNameLimit()">Reset Artist Name Limit</button>
+          <div id="reset-name-message" class="message"></div>
+        </div>
+      </section>
 
-if(data.isDisabled){
-alert("Account imezuiwa");
-await signOut(auth);
-location.href="index.html";
-return;
-}
+      <section class="section">
+        <h2>All Releases</h2>
+        <p>Approve, reject, request correction, au schedule release hapa.</p>
 
-document.getElementById("user").innerText="Welcome "+data.username;
-});
+        <div id="release-list" class="release-list">
+          <div class="empty-box">Loading releases...</div>
+        </div>
+      </section>
+    </main>
+  </div>
 
-window.logout=async()=>{
-await signOut(auth);
-location.href="index.html";
-};
-</script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+    import {
+      getFirestore,
+      collection,
+      getDocs,
+      query,
+      where,
+      doc,
+      updateDoc
+    } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
+    const firebaseConfig = {
+      apiKey: "AIzaSyB7zfgQ3GqdPL2o1tyFt2RmW3Obqb1nKPk",
+      authDomain: "pandisha1.firebaseapp.com",
+      projectId: "pandisha1",
+      storageBucket: "pandisha1.firebasestorage.app",
+      messagingSenderId: "914457078679",
+      appId: "1:914457078679:web:f11bf8ccc4fd824459f2d2",
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const ADMIN_EMAILS = [
+      "madeinmwanza@gmail.com"
+    ];
+
+    let currentAdmin = null;
+
+    function isAdminEmail(email) {
+      return ADMIN_EMAILS.map(item => (item || "").trim().toLowerCase())
+        .includes((email || "").trim().toLowerCase());
+    }
+
+    function setResetMessage(text, type = "success") {
+      const box = document.getElementById("reset-name-message");
+      box.textContent = text;
+      box.style.color = type === "error" ? "#fca5a5" : "#9ae6b4";
+    }
+
+    function statusClass(statusText) {
+      const s = (statusText || "").toLowerCase();
+      if (s.includes("approved")) return "approved";
+      if (s.includes("rejected")) return "rejected";
+      if (s.includes("scheduled")) return "scheduled";
+      if (s.includes("live")) return "live";
+      if (s.includes("correction")) return "needs";
+      return "pending";
+    }
+
+    function formatDateValue(value) {
+      if (!value) return "-";
+      return value;
+    }
+
+    function escapeHtml(text) {
+      return String(text || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.href = "index.html";
+        return;
+      }
+
+      if (!isAdminEmail(user.email)) {
+        document.body.innerHTML = `
+          <div style="min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px; background:#0b0f1a; color:white; font-family:Arial,sans-serif;">
+            <div style="max-width:520px; width:100%; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); border-radius:20px; padding:28px; text-align:center;">
+              <h1 style="margin-top:0;">Access denied</h1>
+              <p style="color:rgba(255,255,255,0.72); line-height:1.7;">
+                This page is only for Pandisha admins.
+              </p>
+              <p style="color:rgba(255,255,255,0.72); line-height:1.7;">
+                Log in with your admin account to continue.
+              </p>
+              <a href="index.html" style="display:inline-block; margin-top:10px; padding:12px 18px; border-radius:12px; background:linear-gradient(90deg,#7B2FF7,#FF7A18); color:white; font-weight:700;">
+                Go to Home
+              </a>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      currentAdmin = user;
+      document.getElementById("admin-email").textContent = user.email || "Admin";
+      await loadReleases();
+    });
+
+    window.logout = async function() {
+      await signOut(auth);
+      window.location.href = "index.html";
+    };
+
+    window.resetArtistNameLimit = async function () {
+      const email = document.getElementById("reset-artist-email").value.trim();
+
+      setResetMessage("");
+
+      if (!email) {
+        setResetMessage("Weka email ya artist kwanza.", "error");
+        return;
+      }
+
+      try {
+        const q = query(collection(db, "users"), where("email", "==", email));
+        const snapshot = await getDocs(q);
+
+        if (snapshot.empty) {
+          setResetMessage("Hakuna user mwenye email hiyo.", "error");
+          return;
+        }
+
+        const userDoc = snapshot.docs[0];
+
+        await updateDoc(doc(db, "users", userDoc.id), {
+          artistNameChanges: 0,
+          artistNameChangesResetAt: new Date().toISOString(),
+          artistNameChangesResetBy: currentAdmin?.email || "admin"
+        });
+
+        setResetMessage("Artist name limit imereset successfully.");
+        document.getElementById("reset-artist-email").value = "";
+      } catch (error) {
+        setResetMessage(error.message || "Reset imeshindikana.", "error");
+      }
+    };
+
+    window.approveRelease = async function(releaseId) {
+      try {
+        await updateDoc(doc(db, "releases", releaseId), {
+          status: "Approved",
+          reviewReason: "",
+          scheduledReleaseDate: ""
+        });
+        await loadReleases();
+      } catch (error) {
+        alert(error.message || "Imeshindikana kuapprove.");
+      }
+    };
+
+    window.makeLive = async function(releaseId) {
+      try {
+        await updateDoc(doc(db, "releases", releaseId), {
+          status: "Live",
+          reviewReason: "",
+          scheduledReleaseDate: ""
+        });
+        await loadReleases();
+      } catch (error) {
+        alert(error.message || "Imeshindikana kuweka live.");
+      }
+    };
+
+    window.rejectRelease = async function(releaseId) {
+      const reason = prompt("Weka reason ya kukataa release:");
+      if (reason === null) return;
+
+      if (!reason.trim()) {
+        alert("Weka reason kwanza.");
+        return;
+      }
+
+      try {
+        await updateDoc(doc(db, "releases", releaseId), {
+          status: "Rejected",
+          reviewReason: reason.trim(),
+          scheduledReleaseDate: ""
+        });
+        await loadReleases();
+      } catch (error) {
+        alert(error.message || "Imeshindikana kukataa release.");
+      }
+    };
+
+    window.requestCorrection = async function(releaseId) {
+      const reason = prompt("Weka correction reason / message kwa artist:");
+      if (reason === null) return;
+
+      if (!reason.trim()) {
+        alert("Weka correction reason kwanza.");
+        return;
+      }
+
+      try {
+        await updateDoc(doc(db, "releases", releaseId), {
+          status: "Needs Correction",
+          reviewReason: reason.trim(),
+          scheduledReleaseDate: ""
+        });
+        await loadReleases();
+      } catch (error) {
+        alert(error.message || "Imeshindikana kutuma correction request.");
+      }
+    };
+
+    window.scheduleRelease = async function(releaseId) {
+      const date = prompt("Weka tarehe ya release (YYYY-MM-DD):");
+      if (date === null) return;
+
+      if (!date.trim()) {
+        alert("Weka tarehe kwanza.");
+        return;
+      }
+
+      try {
+        await updateDoc(doc(db, "releases", releaseId), {
+          status: "Scheduled",
+          scheduledReleaseDate: date.trim(),
+          reviewReason: ""
+        });
+        await loadReleases();
+      } catch (error) {
+        alert(error.message || "Imeshindikana kuschedule release.");
+      }
+    };
+
+    async function loadReleases() {
+      const releaseList = document.getElementById("release-list");
+      const totalReleases = document.getElementById("total-releases");
+      const pendingReleases = document.getElementById("pending-releases");
+      const scheduledReleases = document.getElementById("scheduled-releases");
+      const liveReleases = document.getElementById("live-releases");
+
+      releaseList.innerHTML = `<div class="empty-box">Loading releases...</div>`;
+
+      try {
+        const snapshot = await getDocs(collection(db, "releases"));
+        const releases = [];
+
+        snapshot.forEach((docSnap) => {
+          releases.push({ id: docSnap.id, ...docSnap.data() });
+        });
+
+        releases.sort((a, b) => {
+          const aTime = a?.updatedAt?.seconds || a?.createdAt?.seconds || 0;
+          const bTime = b?.updatedAt?.seconds || b?.createdAt?.seconds || 0;
+          return bTime - aTime;
+        });
+
+        totalReleases.textContent = releases.length;
+
+        let pendingCount = 0;
+        let scheduledCount = 0;
+        let liveCount = 0;
+
+        releases.forEach((item) => {
+          const s = (item.status || "").toLowerCase();
+          if (s.includes("pending") || s.includes("correction")) pendingCount++;
+          if (s.includes("scheduled")) scheduledCount++;
+          if (s.includes("live") || s.includes("approved")) liveCount++;
+        });
+
+        pendingReleases.textContent = pendingCount;
+        scheduledReleases.textContent = scheduledCount;
+        liveReleases.textContent = liveCount;
+
+        if (!releases.length) {
+          releaseList.innerHTML = `<div class="empty-box">Hakuna releases bado.</div>`;
+          return;
+        }
+
+        let html = "";
+
+        releases.forEach((data) => {
+          const statusText = data.status || "Pending Review";
+          const reviewReason = data.reviewReason || "";
+          const scheduledReleaseDate = data.scheduledReleaseDate || "";
+
+          html += `
+            <div class="release-item">
+              <div class="release-top">
+                <div class="cover-box">
+                  ${data.coverUrl ? `<img src="${data.coverUrl}" alt="Cover">` : ``}
+                </div>
+
+                <div class="release-content">
+                  <h3>${escapeHtml(data.title || "-")}</h3>
+                  <p><strong>Artist:</strong> ${escapeHtml(data.artist || "-")}</p>
+                  <p><strong>Username:</strong> ${escapeHtml(data.username || "-")}</p>
+                  <p><strong>User ID:</strong> ${escapeHtml(data.userId || "-")}</p>
+                  <p><strong>Release Date:</strong> ${escapeHtml(formatDateValue(data.releaseDate))}</p>
+                  <p><strong>Genre:</strong> ${escapeHtml(data.genre || "-")}</p>
+                  ${data.notes ? `<p><strong>Notes:</strong> ${escapeHtml(data.notes)}</p>` : ``}
+                  ${scheduledReleaseDate ? `<p><strong>Scheduled Live Date:</strong> ${escapeHtml(scheduledReleaseDate)}</p>` : ``}
+                  <span class="status ${statusClass(statusText)}">${escapeHtml(statusText)}</span>
+
+                  ${
+                    reviewReason
+                      ? `
+                        <div class="reason-box">
+                          <div class="reason-title">Admin Message</div>
+                          <div class="reason-text">${escapeHtml(reviewReason)}</div>
+                        </div>
+                      `
+                      : ``
+                  }
+
+                  ${data.audioUrl ? `<audio class="audio-player" controls src="${data.audioUrl}"></audio>` : ``}
+                  ${data.audioUrl ? `<a class="audio-link" href="${data.audioUrl}" target="_blank">Open Audio File</a>` : ``}
+
+                  <div class="inline-actions">
+                    <button class="btn btn-success" onclick="approveRelease('${data.id}')">Approve</button>
+                    <button class="btn btn-info" onclick="makeLive('${data.id}')">Make Live</button>
+                    <button class="btn btn-warning" onclick="scheduleRelease('${data.id}')">Schedule</button>
+                    <button class="btn btn-primary" onclick="requestCorrection('${data.id}')">Need Correction</button>
+                    <button class="btn btn-danger" onclick="rejectRelease('${data.id}')">Reject</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+
+        releaseList.innerHTML = html;
+      } catch (error) {
+        releaseList.innerHTML = `<div class="empty-box">Failed to load releases: ${escapeHtml(error.message || "Unknown error")}</div>`;
+      }
+    }
+
+    window.loadReleases = loadReleases;
+  </script>
 </body>
 </html>
