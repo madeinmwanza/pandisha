@@ -53,6 +53,19 @@
       font-weight: 700;
     }
 
+    textarea {
+      width: 100%;
+      min-height: 90px;
+      border: none;
+      outline: none;
+      border-radius: 10px;
+      padding: 12px;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      resize: vertical;
+      margin-top: 12px;
+    }
+
     .filter-btn {
       background: #1f2937;
       color: white;
@@ -115,12 +128,13 @@
     .approved { background: rgba(34, 197, 94, 0.18); color: #a7f3c0; }
     .rejected { background: rgba(239, 68, 68, 0.18); color: #fecaca; }
     .live { background: rgba(123, 47, 247, 0.22); color: #d8c4ff; }
+    .needs { background: rgba(245, 158, 11, 0.22); color: #fcd34d; }
 
     .buttons {
       display: flex;
       gap: 8px;
       flex-wrap: wrap;
-      margin-top: 10px;
+      margin-top: 12px;
     }
 
     .approve-btn {
@@ -136,6 +150,17 @@
     .live-btn {
       background: #7B2FF7;
       color: white;
+    }
+
+    .fix-btn {
+      background: #f59e0b;
+      color: white;
+    }
+
+    .save-reason-btn {
+      background: #2563eb;
+      color: white;
+      margin-top: 10px;
     }
 
     audio {
@@ -179,6 +204,29 @@
       color: rgba(255,255,255,0.55);
       font-size: 13px;
       margin-top: 8px;
+    }
+
+    .reason-box {
+      margin-top: 12px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 12px;
+    }
+
+    .reason-label {
+      font-size: 12px;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .reason-text {
+      color: rgba(255,255,255,0.85);
+      line-height: 1.6;
+      font-size: 14px;
+      white-space: pre-wrap;
     }
 
     @media (max-width: 700px) {
@@ -229,6 +277,7 @@
 
       <button class="filter-btn" onclick="setFilter('all')">All</button>
       <button class="filter-btn" onclick="setFilter('Pending Review')">Pending</button>
+      <button class="filter-btn" onclick="setFilter('Needs Correction')">Needs Fix</button>
       <button class="filter-btn" onclick="setFilter('Approved')">Approved</button>
       <button class="filter-btn" onclick="setFilter('Live')">Live</button>
       <button class="filter-btn" onclick="setFilter('Rejected')">Rejected</button>
@@ -267,10 +316,9 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    // WEKA EMAIL YAKO HALISI YA ADMIN HAPA
     const ADMIN_EMAILS = [
-  "madeinmwanza@gmail.com"
-];
+      "WEKA_EMAIL_YAKO_HALISI_HAPA"
+    ];
 
     let filter = "all";
     let allReleases = [];
@@ -319,6 +367,7 @@
       if (s.includes("approved")) return "approved";
       if (s.includes("rejected")) return "rejected";
       if (s.includes("live")) return "live";
+      if (s.includes("correction")) return "needs";
       return "pending";
     }
 
@@ -356,6 +405,7 @@
       list.innerHTML = filtered.map(item => {
         const id = item.id;
         const d = item.data;
+        const currentReason = d.reviewReason || "";
 
         return `
           <div class="release">
@@ -372,11 +422,28 @@
 
               ${d.audioUrl ? `<audio controls src="${d.audioUrl}"></audio>` : ""}
 
+              ${
+                currentReason
+                  ? `
+                    <div class="reason-box">
+                      <div class="reason-label">Current reason</div>
+                      <div class="reason-text">${escapeHtml(currentReason)}</div>
+                    </div>
+                  `
+                  : ""
+              }
+
+              <div class="reason-box">
+                <div class="reason-label">Write reason for artist</div>
+                <textarea id="reason-${id}" placeholder="Example: Cover artwork ina blurry, rekebisha title spelling, au tuma audio clean version...">${escapeHtml(currentReason)}</textarea>
+                <button class="save-reason-btn" onclick="saveReasonOnly('${id}')">Save Reason Only</button>
+              </div>
+
               <div class="buttons">
-                <button class="approve-btn" onclick="setStatus('${id}','Approved')">Approve</button>
-<button class="live-btn" onclick="setStatus('${id}','Live')">Make Live</button>
-<button onclick="setStatus('${id}','Needs Correction')" style="background:#f59e0b; color:white;">Needs Fix</button>
-<button class="reject-btn" onclick="setStatus('${id}','Rejected')">Reject</button>
+                <button class="approve-btn" onclick="setStatusWithReason('${id}','Approved')">Approve</button>
+                <button class="fix-btn" onclick="setStatusWithReason('${id}','Needs Correction')">Needs Fix</button>
+                <button class="live-btn" onclick="setStatusWithReason('${id}','Live')">Make Live</button>
+                <button class="reject-btn" onclick="setStatusWithReason('${id}','Rejected')">Reject</button>
               </div>
             </div>
           </div>
@@ -401,8 +468,26 @@
       renderReleases();
     }
 
-    window.setStatus = async function(id, status) {
-      await updateDoc(doc(db, "releases", id), { status });
+    window.saveReasonOnly = async function(id) {
+      const reason = document.getElementById(`reason-${id}`)?.value?.trim() || "";
+      await updateDoc(doc(db, "releases", id), {
+        reviewReason: reason
+      });
+      await fetchReleases();
+    };
+
+    window.setStatusWithReason = async function(id, status) {
+      const reason = document.getElementById(`reason-${id}`)?.value?.trim() || "";
+
+      const payload = { status };
+
+      if (status === "Approved" || status === "Live") {
+        payload.reviewReason = "";
+      } else {
+        payload.reviewReason = reason;
+      }
+
+      await updateDoc(doc(db, "releases", id), payload);
       await fetchReleases();
     };
 
