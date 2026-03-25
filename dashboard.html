@@ -152,12 +152,6 @@
       color: white;
     }
 
-    .btn-secondary {
-      background: rgba(255,255,255,0.08);
-      color: white;
-      border: 1px solid rgba(255,255,255,0.08);
-    }
-
     .btn-warning {
       background: #f59e0b;
       color: white;
@@ -296,6 +290,11 @@
     .status.needs {
       background: rgba(245, 158, 11, 0.22);
       color: #fcd34d;
+    }
+
+    .status.scheduled {
+      background: rgba(59, 130, 246, 0.22);
+      color: #bfdbfe;
     }
 
     .reason-box {
@@ -627,7 +626,7 @@
             </div>
             <div class="item">
               <strong>Release Status Report</strong>
-              <span>Approved, pending, and live releases will appear here.</span>
+              <span>Approved, pending, scheduled, and live releases will appear here.</span>
             </div>
           </div>
         </div>
@@ -672,7 +671,7 @@
     const CLOUDINARY_UPLOAD_PRESET = "pandisha_upload";
 
     const ADMIN_EMAILS = [
-      "madeinmwanza@gmail.com"
+      "WEKA_EMAIL_YAKO_HAPA"
     ];
 
     let currentUser = null;
@@ -685,6 +684,34 @@
     let existingCoverFileName = "";
     let existingAudioFileName = "";
 
+    function todayString() {
+      const d = new Date();
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, "0");
+      const day = String(d.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    }
+
+    async function autoPublishScheduledReleasesForCurrentUser() {
+      if (!currentUser) return;
+
+      const q = query(collection(db, "releases"), where("userId", "==", currentUser.uid));
+      const snap = await getDocs(q);
+      const today = todayString();
+      const updates = [];
+
+      snap.forEach((docSnap) => {
+        const data = docSnap.data();
+        if (data.status === "Scheduled" && data.scheduledReleaseDate && data.scheduledReleaseDate <= today) {
+          updates.push(updateDoc(doc(db, "releases", docSnap.id), { status: "Live" }));
+        }
+      });
+
+      if (updates.length) {
+        await Promise.all(updates);
+      }
+    }
+
     function isAdminEmail(email) {
       return ADMIN_EMAILS.map(item => (item || "").trim().toLowerCase())
         .includes((email || "").trim().toLowerCase());
@@ -694,6 +721,7 @@
       const s = (statusText || "").toLowerCase();
       if (s.includes("approved")) return "approved";
       if (s.includes("rejected")) return "rejected";
+      if (s.includes("scheduled")) return "scheduled";
       if (s.includes("live")) return "live";
       if (s.includes("correction")) return "needs";
       return "pending";
@@ -738,10 +766,7 @@
           document.getElementById("adminBtn").style.display = "inline-block";
         }
 
-        const userQuery = query(
-          collection(db, "users"),
-          where("userId", "==", user.uid)
-        );
+        const userQuery = query(collection(db, "users"), where("userId", "==", user.uid));
         const userSnapshot = await getDocs(userQuery);
 
         if (!userSnapshot.empty) {
@@ -755,6 +780,7 @@
           document.getElementById("artist-name").value = user.email || "";
         }
 
+        await autoPublishScheduledReleasesForCurrentUser();
         await loadDiscography();
       } else {
         window.location.href = "index.html";
@@ -857,6 +883,7 @@
       const coverFile = document.getElementById("cover-file").files[0];
       const audioFile = document.getElementById("audio-file").files[0];
       const submitBtn = document.getElementById("submit-btn");
+      const wasEditing = !!editingReleaseId;
 
       if (!title || !artist || !releaseDate || !genre) {
         setMessage("Jaza taarifa zote muhimu kwanza.", "error");
@@ -875,7 +902,7 @@
 
       try {
         submitBtn.disabled = true;
-        submitBtn.textContent = editingReleaseId ? "Resubmitting..." : "Uploading...";
+        submitBtn.textContent = wasEditing ? "Resubmitting..." : "Uploading...";
         setMessage("Subiri kidogo, tunahifadhi release yako...", "success");
 
         let finalCoverUrl = existingCoverUrl;
@@ -914,6 +941,7 @@
             audioFileName: finalAudioFileName,
             status: "Pending Review",
             reviewReason: "",
+            scheduledReleaseDate: "",
             updatedAt: serverTimestamp()
           });
 
@@ -935,6 +963,7 @@
             audioFileName: finalAudioFileName,
             status: "Pending Review",
             reviewReason: "",
+            scheduledReleaseDate: "",
             createdAt: serverTimestamp()
           });
 
@@ -943,13 +972,14 @@
 
         resetEditState();
         clearForm();
+        await autoPublishScheduledReleasesForCurrentUser();
         await loadDiscography();
         showSection("discography");
       } catch (error) {
         setMessage(error.message || "Upload failed", "error");
       } finally {
         submitBtn.disabled = false;
-        submitBtn.textContent = editingReleaseId ? "Resubmit Corrected Release" : "Submit Release";
+        submitBtn.textContent = wasEditing ? "Resubmit Corrected Release" : "Submit Release";
       }
     };
 
@@ -961,11 +991,7 @@
       const pendingReleases = document.getElementById("pending-releases");
       const liveReleases = document.getElementById("live-releases");
 
-      const q = query(
-        collection(db, "releases"),
-        where("userId", "==", currentUser.uid)
-      );
-
+      const q = query(collection(db, "releases"), where("userId", "==", currentUser.uid));
       const snapshot = await getDocs(q);
 
       totalReleases.textContent = snapshot.size;
@@ -979,8 +1005,8 @@
       });
 
       releases.sort((a, b) => {
-        const aTime = a?.createdAt?.seconds || a?.updatedAt?.seconds || 0;
-        const bTime = b?.createdAt?.seconds || b?.updatedAt?.seconds || 0;
+        const aTime = a?.updatedAt?.seconds || a?.createdAt?.seconds || 0;
+        const bTime = b?.updatedAt?.seconds || b?.createdAt?.seconds || 0;
         return bTime - aTime;
       });
 
@@ -1003,8 +1029,9 @@
         const statusText = data.status || "Pending Review";
         const statusLower = statusText.toLowerCase();
         const reviewReason = data.reviewReason || "";
+        const scheduledReleaseDate = data.scheduledReleaseDate || "";
 
-        if (statusLower.includes("pending") || statusLower.includes("correction")) pendingCount++;
+        if (statusLower.includes("pending") || statusLower.includes("correction") || statusLower.includes("scheduled")) pendingCount++;
         if (statusLower.includes("live") || statusLower.includes("approved")) liveCount++;
 
         const safePayload = encodeURIComponent(JSON.stringify({
@@ -1032,6 +1059,7 @@
                 <p>Artist: ${data.artist || "-"}</p>
                 <p>Release Date: ${data.releaseDate || "-"}</p>
                 <p>Genre: ${data.genre || "-"}</p>
+                ${scheduledReleaseDate ? `<p>Scheduled Live Date: ${scheduledReleaseDate}</p>` : ""}
                 ${data.notes ? `<p>Notes: ${data.notes}</p>` : ""}
                 ${data.audioUrl ? `<audio class="audio-player" controls src="${data.audioUrl}"></audio>` : ""}
                 ${data.audioUrl ? `<a class="audio-link" href="${data.audioUrl}" target="_blank">Open Audio File</a>` : ""}
