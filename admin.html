@@ -3,514 +3,397 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pandisha Admin Dashboard</title>
+  <title>Pandisha Admin</title>
   <style>
-    * { box-sizing: border-box; }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      margin: 0;
       font-family: Arial, sans-serif;
-      background: #0b0f1a;
-      color: white;
+      background: #0b1020;
+      color: #fff;
     }
-
-    a {
-      text-decoration: none;
-      color: inherit;
-    }
-
-    .layout {
+    a { text-decoration: none; color: inherit; }
+    .app {
       display: grid;
-      grid-template-columns: 280px 1fr;
+      grid-template-columns: 260px 1fr;
       min-height: 100vh;
     }
-
     .sidebar {
-      background: rgba(255,255,255,0.04);
+      background: #0f172a;
       border-right: 1px solid rgba(255,255,255,0.08);
       padding: 24px 18px;
     }
-
     .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 30px;
-      padding: 0 8px;
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 28px;
+      color: #22c55e;
     }
-
-    .brand img {
-      height: 54px;
-      object-fit: contain;
+    .admin-box {
+      background: #111827;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 24px;
     }
-
-    .brand-text h2 {
-      margin: 0;
-      font-size: 18px;
-      letter-spacing: 3px;
+    .admin-box p {
+      color: #cbd5e1;
+      font-size: 14px;
+      margin-top: 6px;
+      word-break: break-word;
     }
-
-    .brand-text span {
-      font-size: 11px;
-      color: rgba(255,255,255,0.6);
-      text-transform: uppercase;
-      letter-spacing: 2px;
-    }
-
-    .menu-title {
-      font-size: 12px;
-      color: rgba(255,255,255,0.5);
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      margin: 18px 8px 10px;
-    }
-
-    .menu-item {
-      display: block;
+    .nav-btn {
+      width: 100%;
+      border: 0;
+      background: #111827;
+      color: #fff;
       padding: 12px 14px;
       border-radius: 12px;
-      margin-bottom: 8px;
-      background: rgba(255,255,255,0.04);
-      color: rgba(255,255,255,0.82);
+      text-align: left;
+      margin-bottom: 10px;
       cursor: pointer;
+      transition: 0.2s;
     }
-
-    .menu-item:hover,
-    .menu-item.active {
-      background: linear-gradient(90deg, rgba(123,47,247,0.25), rgba(255,122,24,0.20));
-      color: white;
+    .nav-btn:hover, .nav-btn.active {
+      background: #22c55e;
+      color: #08110c;
+      font-weight: 700;
+    }
+    .side-actions {
+      margin-top: 24px;
+    }
+    .logout-btn, .home-btn {
+      display: block;
+      width: 100%;
+      text-align: center;
+      border: 0;
+      padding: 12px 14px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .logout-btn {
+      background: #ef4444;
+      color: #fff;
+    }
+    .home-btn {
+      background: #1e293b;
+      color: #fff;
     }
 
     .main {
-      padding: 28px;
+      padding: 24px;
     }
-
     .topbar {
       display: flex;
       justify-content: space-between;
       align-items: center;
       gap: 16px;
-      flex-wrap: wrap;
       margin-bottom: 24px;
-    }
-
-    .topbar h1 {
-      margin: 0;
-      font-size: 34px;
-    }
-
-    .topbar p {
-      margin: 6px 0 0;
-      color: rgba(255,255,255,0.65);
-    }
-
-    .top-actions {
-      display: flex;
-      gap: 10px;
       flex-wrap: wrap;
+    }
+    .topbar h1 {
+      font-size: 28px;
+      line-height: 1.2;
+    }
+    .topbar p {
+      color: #94a3b8;
+      margin-top: 6px;
     }
 
     .stats {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(4, minmax(180px, 1fr));
       gap: 16px;
       margin-bottom: 24px;
     }
+    .stat-card {
+      background: #111827;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 16px;
+      padding: 18px;
+    }
+    .stat-label {
+      color: #94a3b8;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+    .stat-value {
+      font-size: 30px;
+      font-weight: 700;
+    }
+
+    .tab-section { display: none; }
+    .tab-section.active { display: block; }
 
     .card {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 20px;
-      padding: 20px;
-      margin-bottom: 22px;
+      background: #111827;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 18px;
+      padding: 18px;
+      margin-bottom: 20px;
     }
-
-    .card small {
-      color: rgba(255,255,255,0.6);
-      display: block;
-      margin-bottom: 10px;
-    }
-
-    .card strong {
-      font-size: 30px;
-    }
-
     .section-title {
-      margin: 0 0 10px;
-      font-size: 26px;
-    }
-
-    .section-text {
-      margin: 0 0 16px;
-      color: rgba(255,255,255,0.68);
-      line-height: 1.7;
-    }
-
-    .btn {
-      display: inline-block;
-      border: none;
-      border-radius: 12px;
-      padding: 11px 16px;
-      font-weight: 700;
-      cursor: pointer;
-      text-align: center;
-      color: white;
-    }
-
-    .btn-primary {
-      background: linear-gradient(90deg, #7B2FF7, #FF7A18);
-    }
-
-    .btn-secondary {
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .btn-success {
-      background: #16a34a;
-    }
-
-    .btn-danger {
-      background: #dc2626;
-    }
-
-    .btn-warning {
-      background: #f59e0b;
-    }
-
-    .btn-info {
-      background: #2563eb;
-    }
-
-    .btn-dark {
-      background: #374151;
-    }
-
-    .input-box {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 14px;
-      padding: 14px 16px;
-      margin-bottom: 12px;
-    }
-
-    .input-box label {
-      display: block;
-      font-size: 13px;
+      font-size: 22px;
       margin-bottom: 8px;
-      color: rgba(255,255,255,0.7);
+    }
+    .section-text {
+      color: #94a3b8;
+      margin-bottom: 16px;
+      font-size: 14px;
     }
 
-    .input-box input,
-    .input-box textarea,
-    .input-box select {
+    .toolbar {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr auto;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .toolbar.single {
+      grid-template-columns: 1fr auto;
+    }
+    .input, .select {
       width: 100%;
-      background: none;
-      border: none;
-      color: white;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: #0f172a;
+      color: #fff;
+      padding: 12px 14px;
+      border-radius: 12px;
       outline: none;
-      font-size: 14px;
-      font-family: Arial, sans-serif;
     }
-
-    .input-box textarea {
-      min-height: 90px;
-      resize: vertical;
+    .btn {
+      border: 0;
+      border-radius: 12px;
+      padding: 11px 14px;
+      cursor: pointer;
+      font-weight: 700;
+      color: #fff;
     }
-
-    .input-box input::placeholder,
-    .input-box textarea::placeholder {
-      color: rgba(255,255,255,0.45);
+    .btn-sm {
+      padding: 9px 12px;
+      font-size: 13px;
     }
+    .btn-success { background: #16a34a; }
+    .btn-danger { background: #dc2626; }
+    .btn-warning { background: #d97706; }
+    .btn-info { background: #0284c7; }
+    .btn-primary { background: #2563eb; }
+    .btn-dark { background: #475569; }
+    .btn-purple { background: #7c3aed; }
 
-    .message {
-      margin-top: 12px;
-      font-size: 14px;
-      min-height: 20px;
-    }
-
-    .release-list,
-    .user-list {
+    .release-list, .user-list, .log-list {
       display: grid;
       gap: 16px;
     }
-
-    .release-item,
-    .user-item {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 20px;
-      padding: 18px;
+    .release-item, .user-item, .log-item {
+      background: #0f172a;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 16px;
+      padding: 16px;
     }
-
     .release-top {
-      display: flex;
+      display: grid;
+      grid-template-columns: 120px 1fr;
       gap: 16px;
-      align-items: flex-start;
-      flex-wrap: wrap;
     }
-
     .cover-box {
-      width: 78px;
-      height: 78px;
+      width: 120px;
+      height: 120px;
+      background: #1e293b;
       border-radius: 14px;
       overflow: hidden;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
-      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #94a3b8;
+      font-size: 12px;
+      text-align: center;
     }
-
     .cover-box img {
       width: 100%;
       height: 100%;
       object-fit: cover;
     }
 
-    .release-content {
-      flex: 1;
-      min-width: 260px;
+    .release-info h3, .user-item h3 {
+      font-size: 20px;
+      margin-bottom: 10px;
     }
-
-    .release-item h3,
-    .user-item h3 {
-      margin: 0 0 8px;
-      font-size: 22px;
+    .release-info p, .user-item p, .log-item p {
+      margin-bottom: 7px;
+      color: #dbe4ee;
+      line-height: 1.45;
+      word-break: break-word;
     }
-
-    .release-item p,
-    .user-item p {
-      margin: 0 0 6px;
-      color: rgba(255,255,255,0.72);
-      line-height: 1.6;
-    }
-
-    .status {
-      display: inline-block;
-      margin-top: 8px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      font-size: 12px;
-      background: rgba(255,255,255,0.08);
-    }
-
-    .status.pending {
-      background: rgba(245, 158, 11, 0.16);
-      color: #ffd27a;
-    }
-
-    .status.approved {
-      background: rgba(34, 197, 94, 0.16);
-      color: #a7f3c0;
-    }
-
-    .status.rejected {
-      background: rgba(239, 68, 68, 0.16);
-      color: #fecaca;
-    }
-
-    .status.live {
-      background: rgba(123, 47, 247, 0.22);
-      color: #d8c4ff;
-    }
-
-    .status.needs {
-      background: rgba(245, 158, 11, 0.22);
-      color: #fcd34d;
-    }
-
-    .status.scheduled {
-      background: rgba(59, 130, 246, 0.22);
-      color: #bfdbfe;
-    }
-
-    .status.disabled {
-      background: rgba(239, 68, 68, 0.16);
-      color: #fecaca;
-    }
-
-    .status.active {
-      background: rgba(34, 197, 94, 0.16);
-      color: #a7f3c0;
-    }
-
-    .audio-player {
-      display: block;
-      margin-top: 10px;
-      width: 100%;
-      max-width: 320px;
-    }
-
-    .audio-link {
-      display: inline-block;
-      margin-top: 10px;
-      font-size: 13px;
-      color: #f5b26b;
-    }
-
-    .reason-box {
-      margin-top: 12px;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 12px;
-      padding: 12px;
-    }
-
-    .reason-title {
-      font-size: 12px;
-      color: rgba(255,255,255,0.55);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 6px;
-    }
-
-    .reason-text {
-      color: rgba(255,255,255,0.9);
-      font-size: 14px;
-      line-height: 1.6;
-      white-space: pre-wrap;
+    .release-info strong, .user-item strong, .log-item strong {
+      color: #fff;
     }
 
     .inline-actions {
       display: flex;
-      gap: 10px;
       flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 7px 11px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+    .pending { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+    .approved { background: rgba(34, 197, 94, 0.2); color: #4ade80; }
+    .rejected { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+    .scheduled { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
+    .live { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+    .needs { background: rgba(168, 85, 247, 0.2); color: #c084fc; }
+    .disabled { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+    .active-user { background: rgba(34, 197, 94, 0.2); color: #4ade80; }
+
+    .reason-box {
       margin-top: 12px;
+      background: #111827;
+      border-left: 4px solid #f59e0b;
+      padding: 12px;
+      border-radius: 12px;
+    }
+    .reason-title {
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: #fbbf24;
+    }
+    .reason-text {
+      color: #e5e7eb;
+      line-height: 1.5;
+    }
+
+    .audio-player {
+      width: 100%;
+      margin-top: 12px;
+    }
+    .audio-link {
+      display: inline-block;
+      margin-top: 10px;
+      color: #60a5fa;
     }
 
     .empty-box {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 16px;
       padding: 18px;
-      color: rgba(255,255,255,0.7);
+      background: #0f172a;
+      border: 1px dashed rgba(255,255,255,0.12);
+      border-radius: 14px;
+      color: #94a3b8;
     }
 
-    .tabs {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-bottom: 20px;
+    .message {
+      margin-top: 12px;
+      font-size: 14px;
+      color: #9ae6b4;
     }
 
-    .tab-btn {
-      padding: 10px 16px;
-      border-radius: 12px;
-      border: none;
-      cursor: pointer;
-      color: white;
-      background: rgba(255,255,255,0.08);
-      font-weight: 700;
+    @media (max-width: 1100px) {
+      .stats { grid-template-columns: repeat(2, minmax(180px, 1fr)); }
+      .toolbar { grid-template-columns: 1fr 1fr; }
     }
 
-    .tab-btn.active {
-      background: linear-gradient(90deg, #7B2FF7, #FF7A18);
-    }
-
-    .tab-section {
-      display: none;
-    }
-
-    .tab-section.active {
-      display: block;
-    }
-
-    @media (max-width: 980px) {
-      .layout {
-        grid-template-columns: 1fr;
-      }
-
-      .stats {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    @media (max-width: 640px) {
-      .stats {
-        grid-template-columns: 1fr;
-      }
-
-      .main {
-        padding: 18px;
-      }
-
-      .topbar h1 {
-        font-size: 28px;
-      }
+    @media (max-width: 820px) {
+      .app { grid-template-columns: 1fr; }
+      .sidebar { border-right: 0; border-bottom: 1px solid rgba(255,255,255,0.08); }
+      .release-top { grid-template-columns: 1fr; }
+      .cover-box { width: 100%; height: 240px; }
+      .stats { grid-template-columns: 1fr; }
+      .toolbar, .toolbar.single { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
-  <div class="layout">
+  <div class="app">
     <aside class="sidebar">
-      <div class="brand">
-        <img src="./PandishaaLogo.png" alt="Pandisha Logo">
-        <div class="brand-text">
-          <h2>PANDISHA</h2>
-          <span>Admin Panel</span>
-        </div>
+      <div class="brand">Pandisha Admin</div>
+
+      <div class="admin-box">
+        <strong id="admin-name">Loading...</strong>
+        <p id="admin-email">Checking access...</p>
       </div>
 
-      <div class="menu-title">Admin</div>
-      <div class="menu-item active">Dashboard</div>
-      <div class="menu-item" onclick="showTab('releases')">Release Management</div>
-      <div class="menu-item" onclick="showTab('users')">Users Management</div>
-      <div class="menu-item" onclick="logout()">Log Out</div>
+      <button class="nav-btn active" data-tab="dashboard">Dashboard</button>
+      <button class="nav-btn" data-tab="releases">Releases</button>
+      <button class="nav-btn" data-tab="users">Users</button>
+      <button class="nav-btn" data-tab="logs">Audit Logs</button>
+
+      <div class="side-actions">
+        <a class="home-btn" href="/">Go to Home</a>
+        <button class="logout-btn" id="logoutBtn">Logout</button>
+      </div>
     </aside>
 
     <main class="main">
       <div class="topbar">
         <div>
           <h1>Admin Dashboard</h1>
-          <p id="admin-email">Checking admin access...</p>
-        </div>
-
-        <div class="top-actions">
-          <a href="dashboard.html" class="btn btn-secondary">Artist Dashboard</a>
-          <button class="btn btn-primary" onclick="refreshAll()">Refresh</button>
+          <p>Approve releases, manage users, na kufuatilia actions zote.</p>
         </div>
       </div>
 
-      <section class="stats">
-        <div class="card">
-          <small>Total Releases</small>
-          <strong id="total-releases">0</strong>
+      <section id="tab-dashboard" class="tab-section active">
+        <div class="stats">
+          <div class="stat-card">
+            <div class="stat-label">Total Users</div>
+            <div class="stat-value" id="total-users">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Disabled Users</div>
+            <div class="stat-value" id="disabled-users">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Total Releases</div>
+            <div class="stat-value" id="total-releases">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Pending / Correction</div>
+            <div class="stat-value" id="pending-releases">0</div>
+          </div>
         </div>
+
         <div class="card">
-          <small>Pending Review</small>
-          <strong id="pending-releases">0</strong>
-        </div>
-        <div class="card">
-          <small>Total Users</small>
-          <strong id="total-users">0</strong>
-        </div>
-        <div class="card">
-          <small>Disabled Users</small>
-          <strong id="disabled-users">0</strong>
+          <h2 class="section-title">Quick Reset</h2>
+          <p class="section-text">Reset artist name change limit kwa user fulani kwa email yake.</p>
+
+          <div class="toolbar single">
+            <input type="email" id="reset-email" class="input" placeholder="Weka email ya user" />
+            <button class="btn btn-warning" id="resetNameBtn">Reset Artist Name Limit</button>
+          </div>
+
+          <div id="reset-name-message" class="message"></div>
         </div>
       </section>
 
-      <div class="tabs">
-        <button class="tab-btn active" id="tabBtn-releases" onclick="showTab('releases')">Releases</button>
-        <button class="tab-btn" id="tabBtn-users" onclick="showTab('users')">Users</button>
-      </div>
-
-      <section id="tab-releases" class="tab-section active">
-        <div class="card">
-          <h2 class="section-title">Reset Artist Name Limit</h2>
-          <p class="section-text">Weka email ya artist kisha urudishe artist name changes kuwa 0.</p>
-
-          <div class="input-box">
-            <label>Artist Email</label>
-            <input id="reset-artist-email" type="email" placeholder="artist@email.com">
-          </div>
-
-          <button class="btn btn-warning" onclick="resetArtistNameLimit()">Reset Artist Name Limit</button>
-          <div id="reset-name-message" class="message"></div>
-        </div>
-
+      <section id="tab-releases" class="tab-section">
         <div class="card">
           <h2 class="section-title">All Releases</h2>
-          <p class="section-text">Approve, reject, request correction, au schedule release hapa.</p>
+          <p class="section-text">Approve, reject, correction, live na scheduling.</p>
+
+          <div class="toolbar">
+            <input type="text" id="release-search" class="input" placeholder="Search by song, artist, email..." />
+            <select id="release-status-filter" class="select">
+              <option value="all">All Status</option>
+              <option value="pending">Pending</option>
+              <option value="approved">Approved</option>
+              <option value="live">Live</option>
+              <option value="scheduled">Scheduled</option>
+              <option value="correction">Needs Correction</option>
+              <option value="rejected">Rejected</option>
+            </select>
+            <select id="release-sort" class="select">
+              <option value="newest">Newest First</option>
+              <option value="oldest">Oldest First</option>
+              <option value="title">Title A-Z</option>
+            </select>
+            <button class="btn btn-info" id="refreshReleasesBtn">Refresh</button>
+          </div>
 
           <div id="release-list" class="release-list">
             <div class="empty-box">Loading releases...</div>
@@ -521,10 +404,41 @@
       <section id="tab-users" class="tab-section">
         <div class="card">
           <h2 class="section-title">All Users</h2>
-          <p class="section-text">Hapa admin anaweza kuona users wote na kuwacontrol.</p>
+          <p class="section-text">Search, plans, disable/enable, roles.</p>
+
+          <div class="toolbar">
+            <input type="text" id="user-search" class="input" placeholder="Search by username, email, artist..." />
+            <select id="user-role-filter" class="select">
+              <option value="all">All Roles</option>
+              <option value="artist">Artist</option>
+              <option value="admin">Admin</option>
+            </select>
+            <select id="user-status-filter" class="select">
+              <option value="all">All Status</option>
+              <option value="active">Active</option>
+              <option value="disabled">Disabled</option>
+            </select>
+            <button class="btn btn-info" id="refreshUsersBtn">Refresh</button>
+          </div>
 
           <div id="user-list" class="user-list">
             <div class="empty-box">Loading users...</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="tab-logs" class="tab-section">
+        <div class="card">
+          <h2 class="section-title">Audit Logs</h2>
+          <p class="section-text">Hapa utaona admin actions za karibuni.</p>
+
+          <div class="toolbar single">
+            <input type="text" id="log-search" class="input" placeholder="Search logs..." />
+            <button class="btn btn-info" id="refreshLogsBtn">Refresh</button>
+          </div>
+
+          <div id="log-list" class="log-list">
+            <div class="empty-box">Loading logs...</div>
           </div>
         </div>
       </section>
@@ -541,7 +455,10 @@
       query,
       where,
       doc,
-      updateDoc
+      getDoc,
+      updateDoc,
+      addDoc,
+      serverTimestamp
     } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -557,21 +474,34 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    const ADMIN_EMAILS = [
-      "madeinmwanza@gmail.com"
-    ];
-
     let currentAdmin = null;
+    let allUsers = [];
+    let allReleases = [];
+    let allLogs = [];
 
-    function isAdminEmail(email) {
-      return ADMIN_EMAILS.map(item => (item || "").trim().toLowerCase())
-        .includes((email || "").trim().toLowerCase());
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
     }
 
-    function setResetMessage(text, type = "success") {
-      const box = document.getElementById("reset-name-message");
-      box.textContent = text;
-      box.style.color = type === "error" ? "#fca5a5" : "#9ae6b4";
+    function formatDateValue(value) {
+      if (!value) return "-";
+
+      if (typeof value === "string") return value;
+
+      if (value?.seconds) {
+        return new Date(value.seconds * 1000).toLocaleString();
+      }
+
+      if (value instanceof Date) {
+        return value.toLocaleString();
+      }
+
+      return "-";
     }
 
     function statusClass(statusText) {
@@ -584,230 +514,515 @@
       return "pending";
     }
 
-    function formatDateValue(value) {
-      if (!value) return "-";
-      return value;
+    function setResetMessage(text, type = "success") {
+      const box = document.getElementById("reset-name-message");
+      box.textContent = text;
+      box.style.color = type === "error" ? "#fca5a5" : "#9ae6b4";
     }
 
-    function escapeHtml(text) {
-      return String(text || "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+    async function addAdminLog(action, targetType, targetId, details = {}) {
+      try {
+        await addDoc(collection(db, "adminLogs"), {
+          action,
+          targetType,
+          targetId,
+          details,
+          adminUid: currentAdmin?.uid || null,
+          adminEmail: currentAdmin?.email || null,
+          createdAt: serverTimestamp()
+        });
+      } catch (error) {
+        console.error("Failed to write admin log:", error);
+      }
     }
 
-    window.showTab = function(tabName) {
-      document.querySelectorAll(".tab-section").forEach(el => el.classList.remove("active"));
-      document.querySelectorAll(".tab-btn").forEach(el => el.classList.remove("active"));
+    function updateStats() {
+      document.getElementById("total-users").textContent = allUsers.length;
+      document.getElementById("disabled-users").textContent =
+        allUsers.filter(u => u.isDisabled === true).length;
 
-      document.getElementById("tab-" + tabName).classList.add("active");
-      document.getElementById("tabBtn-" + tabName).classList.add("active");
-    };
+      document.getElementById("total-releases").textContent = allReleases.length;
+      document.getElementById("pending-releases").textContent =
+        allReleases.filter(r => {
+          const s = (r.status || "").toLowerCase();
+          return s.includes("pending") || s.includes("correction");
+        }).length;
+    }
 
-    onAuthStateChanged(auth, async (user) => {
-      if (!user) {
-        window.location.href = "index.html";
+    function renderUsers() {
+      const userList = document.getElementById("user-list");
+      const search = document.getElementById("user-search").value.trim().toLowerCase();
+      const roleFilter = document.getElementById("user-role-filter").value;
+      const statusFilter = document.getElementById("user-status-filter").value;
+
+      let users = [...allUsers];
+
+      users = users.filter(user => {
+        const username = (user.username || "").toLowerCase();
+        const email = (user.email || "").toLowerCase();
+        const artistName = (user.artistName || "").toLowerCase();
+        const role = (user.role || "artist").toLowerCase();
+        const status = user.isDisabled ? "disabled" : "active";
+
+        const matchesSearch =
+          !search ||
+          username.includes(search) ||
+          email.includes(search) ||
+          artistName.includes(search);
+
+        const matchesRole = roleFilter === "all" || role === roleFilter;
+        const matchesStatus = statusFilter === "all" || status === statusFilter;
+
+        return matchesSearch && matchesRole && matchesStatus;
+      });
+
+      users.sort((a, b) => {
+        const aName = (a.username || "").toLowerCase();
+        const bName = (b.username || "").toLowerCase();
+        return aName.localeCompare(bName);
+      });
+
+      if (!users.length) {
+        userList.innerHTML = `<div class="empty-box">Hakuna users waliopatikana.</div>`;
         return;
       }
 
-      if (!isAdminEmail(user.email)) {
-        document.body.innerHTML = `
-          <div style="min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px; background:#0b0f1a; color:white; font-family:Arial,sans-serif;">
-            <div style="max-width:520px; width:100%; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); border-radius:20px; padding:28px; text-align:center;">
-              <h1 style="margin-top:0;">Access denied</h1>
-              <p style="color:rgba(255,255,255,0.72); line-height:1.7;">This page is only for Pandisha admins.</p>
-              <p style="color:rgba(255,255,255,0.72); line-height:1.7;">Log in with your admin account to continue.</p>
-              <a href="index.html" style="display:inline-block; margin-top:10px; padding:12px 18px; border-radius:12px; background:linear-gradient(90deg,#7B2FF7,#FF7A18); color:white; font-weight:700;">
-                Go to Home
-              </a>
+      let html = "";
+
+      users.forEach((user) => {
+        const plan = user.plan || "Starter";
+        const role = user.role || "artist";
+        const artistName = user.artistName || "-";
+        const artistNameChanges = user.artistNameChanges || 0;
+        const userStatus = user.isDisabled ? "Disabled" : "Active";
+        const createdAt = formatDateValue(user.createdAt);
+
+        html += `
+          <div class="user-item">
+            <h3>${escapeHtml(user.username || "No Username")}</h3>
+            <p><strong>Email:</strong> ${escapeHtml(user.email || "-")}</p>
+            <p><strong>Artist Name:</strong> ${escapeHtml(artistName)}</p>
+            <p><strong>Role:</strong> ${escapeHtml(role)}</p>
+            <p><strong>Plan:</strong> ${escapeHtml(plan)}</p>
+            <p><strong>Joined:</strong> ${escapeHtml(createdAt)}</p>
+            <p><strong>Artist Name Changes:</strong> ${artistNameChanges} / 5</p>
+
+            <span class="status ${user.isDisabled ? "disabled" : "active-user"}">${escapeHtml(userStatus)}</span>
+
+            <div class="inline-actions">
+              ${
+                user.isDisabled
+                  ? `<button class="btn btn-success btn-sm" onclick="enableUser('${user.id}')">Enable User</button>`
+                  : `<button class="btn btn-danger btn-sm" onclick="disableUser('${user.id}')">Disable User</button>`
+              }
+
+              <button class="btn btn-warning btn-sm" onclick="resetUserNameChangesByDoc('${user.id}')">Reset Name Limit</button>
+              <button class="btn btn-info btn-sm" onclick="changeUserPlan('${user.id}')">Change Plan</button>
+
+              ${
+                role === "admin"
+                  ? `<button class="btn btn-dark btn-sm" onclick="removeUserAdmin('${user.id}')">Remove Admin</button>`
+                  : `<button class="btn btn-primary btn-sm" onclick="makeUserAdmin('${user.id}')">Make Admin</button>`
+              }
             </div>
           </div>
         `;
-        return;
-      }
+      });
 
-      currentAdmin = user;
-      document.getElementById("admin-email").textContent = user.email || "Admin";
-      await refreshAll();
-    });
+      userList.innerHTML = html;
+    }
 
-    window.logout = async function() {
-      await signOut(auth);
-      window.location.href = "index.html";
-    };
+    function renderReleases() {
+      const releaseList = document.getElementById("release-list");
+      const search = document.getElementById("release-search").value.trim().toLowerCase();
+      const statusFilter = document.getElementById("release-status-filter").value;
+      const sort = document.getElementById("release-sort").value;
 
-    window.refreshAll = async function() {
-      await loadReleases();
-      await loadUsers();
-    };
+      let releases = [...allReleases];
 
-    window.resetArtistNameLimit = async function () {
-      const email = document.getElementById("reset-artist-email").value.trim();
+      releases = releases.filter((data) => {
+        const title = (data.songTitle || data.title || "").toLowerCase();
+        const artist = (data.artistName || data.artist || "").toLowerCase();
+        const email = (data.email || data.userEmail || "").toLowerCase();
+        const status = (data.status || "pending review").toLowerCase();
 
-      setResetMessage("");
+        const matchesSearch =
+          !search ||
+          title.includes(search) ||
+          artist.includes(search) ||
+          email.includes(search);
 
-      if (!email) {
-        setResetMessage("Weka email ya artist kwanza.", "error");
-        return;
-      }
-
-      try {
-        const q = query(collection(db, "users"), where("email", "==", email));
-        const snapshot = await getDocs(q);
-
-        if (snapshot.empty) {
-          setResetMessage("Hakuna user mwenye email hiyo.", "error");
-          return;
+        let matchesStatus = true;
+        if (statusFilter !== "all") {
+          if (statusFilter === "pending") matchesStatus = status.includes("pending");
+          else if (statusFilter === "approved") matchesStatus = status.includes("approved");
+          else if (statusFilter === "live") matchesStatus = status.includes("live");
+          else if (statusFilter === "scheduled") matchesStatus = status.includes("scheduled");
+          else if (statusFilter === "correction") matchesStatus = status.includes("correction");
+          else if (statusFilter === "rejected") matchesStatus = status.includes("rejected");
         }
 
-        const userDoc = snapshot.docs[0];
+        return matchesSearch && matchesStatus;
+      });
 
-        await updateDoc(doc(db, "users", userDoc.id), {
-          artistNameChanges: 0,
-          artistNameChangesResetAt: new Date().toISOString(),
-          artistNameChangesResetBy: currentAdmin?.email || "admin"
-        });
+      releases.sort((a, b) => {
+        if (sort === "title") {
+          return (a.songTitle || a.title || "").localeCompare(b.songTitle || b.title || "");
+        }
 
-        setResetMessage("Artist name limit imereset successfully.");
-        document.getElementById("reset-artist-email").value = "";
-        await loadUsers();
-      } catch (error) {
-        setResetMessage(error.message || "Reset imeshindikana.", "error");
+        const aTime = a?.updatedAt?.seconds || a?.createdAt?.seconds || 0;
+        const bTime = b?.updatedAt?.seconds || b?.createdAt?.seconds || 0;
+
+        return sort === "oldest" ? aTime - bTime : bTime - aTime;
+      });
+
+      if (!releases.length) {
+        releaseList.innerHTML = `<div class="empty-box">Hakuna releases waliopatikana.</div>`;
+        return;
       }
-    };
+
+      let html = "";
+
+      releases.forEach((data) => {
+        const statusText = data.status || "Pending Review";
+        const reviewReason = data.reviewReason || "";
+        const scheduledReleaseDate = data.scheduledReleaseDate || "";
+        const title = data.songTitle || data.title || "Untitled Release";
+        const artist = data.artistName || data.artist || "-";
+
+        html += `
+          <div class="release-item">
+            <div class="release-top">
+              <div class="cover-box">
+                ${
+                  data.coverUrl
+                    ? `<img src="${escapeHtml(data.coverUrl)}" alt="cover" />`
+                    : `<span>No Cover</span>`
+                }
+              </div>
+
+              <div class="release-info">
+                <h3>${escapeHtml(title)}</h3>
+                <p><strong>Artist:</strong> ${escapeHtml(artist)}</p>
+                <p><strong>Email:</strong> ${escapeHtml(data.email || data.userEmail || "-")}</p>
+                <p><strong>Genre:</strong> ${escapeHtml(data.genre || "-")}</p>
+                <p><strong>Created:</strong> ${escapeHtml(formatDateValue(data.createdAt))}</p>
+                <p><strong>Updated:</strong> ${escapeHtml(formatDateValue(data.updatedAt))}</p>
+                ${data.notes ? `<p><strong>Notes:</strong> ${escapeHtml(data.notes)}</p>` : ``}
+                ${scheduledReleaseDate ? `<p><strong>Scheduled Live Date:</strong> ${escapeHtml(scheduledReleaseDate)}</p>` : ``}
+
+                <span class="status ${statusClass(statusText)}">${escapeHtml(statusText)}</span>
+
+                ${
+                  reviewReason
+                    ? `
+                      <div class="reason-box">
+                        <div class="reason-title">Admin Message</div>
+                        <div class="reason-text">${escapeHtml(reviewReason)}</div>
+                      </div>
+                    `
+                    : ``
+                }
+
+                ${data.audioUrl ? `<audio class="audio-player" controls src="${escapeHtml(data.audioUrl)}"></audio>` : ``}
+                ${data.audioUrl ? `<a class="audio-link" href="${escapeHtml(data.audioUrl)}" target="_blank">Open Audio File</a>` : ``}
+
+                <div class="inline-actions">
+                  <button class="btn btn-success btn-sm" onclick="approveRelease('${data.id}')">Approve</button>
+                  <button class="btn btn-info btn-sm" onclick="makeLive('${data.id}')">Make Live</button>
+                  <button class="btn btn-warning btn-sm" onclick="scheduleRelease('${data.id}')">Schedule</button>
+                  <button class="btn btn-primary btn-sm" onclick="requestCorrection('${data.id}')">Need Correction</button>
+                  <button class="btn btn-danger btn-sm" onclick="rejectRelease('${data.id}')">Reject</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+
+      releaseList.innerHTML = html;
+    }
+
+    function renderLogs() {
+      const logList = document.getElementById("log-list");
+      const search = document.getElementById("log-search").value.trim().toLowerCase();
+
+      let logs = [...allLogs];
+
+      logs = logs.filter((log) => {
+        const text = JSON.stringify(log).toLowerCase();
+        return !search || text.includes(search);
+      });
+
+      logs.sort((a, b) => {
+        const aTime = a?.createdAt?.seconds || 0;
+        const bTime = b?.createdAt?.seconds || 0;
+        return bTime - aTime;
+      });
+
+      if (!logs.length) {
+        logList.innerHTML = `<div class="empty-box">Hakuna logs bado.</div>`;
+        return;
+      }
+
+      let html = "";
+
+      logs.slice(0, 50).forEach((log) => {
+        html += `
+          <div class="log-item">
+            <p><strong>Action:</strong> ${escapeHtml(log.action || "-")}</p>
+            <p><strong>Target Type:</strong> ${escapeHtml(log.targetType || "-")}</p>
+            <p><strong>Target ID:</strong> ${escapeHtml(log.targetId || "-")}</p>
+            <p><strong>Admin:</strong> ${escapeHtml(log.adminEmail || "-")}</p>
+            <p><strong>Time:</strong> ${escapeHtml(formatDateValue(log.createdAt))}</p>
+            <p><strong>Details:</strong> ${escapeHtml(JSON.stringify(log.details || {}))}</p>
+          </div>
+        `;
+      });
+
+      logList.innerHTML = html;
+    }
+
+    async function loadUsers() {
+      const snapshot = await getDocs(collection(db, "users"));
+      allUsers = [];
+
+      snapshot.forEach((docSnap) => {
+        allUsers.push({ id: docSnap.id, ...docSnap.data() });
+      });
+
+      updateStats();
+      renderUsers();
+    }
+
+    async function loadReleases() {
+      const snapshot = await getDocs(collection(db, "releases"));
+      allReleases = [];
+
+      snapshot.forEach((docSnap) => {
+        allReleases.push({ id: docSnap.id, ...docSnap.data() });
+      });
+
+      updateStats();
+      renderReleases();
+    }
+
+    async function loadLogs() {
+      const snapshot = await getDocs(collection(db, "adminLogs"));
+      allLogs = [];
+
+      snapshot.forEach((docSnap) => {
+        allLogs.push({ id: docSnap.id, ...docSnap.data() });
+      });
+
+      renderLogs();
+    }
+
+    async function loadEverything() {
+      try {
+        await Promise.all([loadUsers(), loadReleases(), loadLogs()]);
+      } catch (error) {
+        console.error(error);
+        alert(error.message || "Failed to load admin data.");
+      }
+    }
 
     window.approveRelease = async function(releaseId) {
+      if (!confirm("Una uhakika unataka ku-approve hii release?")) return;
+
       try {
         await updateDoc(doc(db, "releases", releaseId), {
           status: "Approved",
           reviewReason: "",
-          scheduledReleaseDate: ""
+          updatedAt: serverTimestamp()
         });
+
+        await addAdminLog("approve_release", "release", releaseId, {
+          status: "Approved"
+        });
+
         await loadReleases();
       } catch (error) {
-        alert(error.message || "Imeshindikana kuapprove.");
+        alert(error.message || "Imeshindikana ku-approve release.");
       }
     };
 
     window.makeLive = async function(releaseId) {
+      if (!confirm("Una uhakika unataka release hii iwe LIVE?")) return;
+
       try {
         await updateDoc(doc(db, "releases", releaseId), {
           status: "Live",
-          reviewReason: "",
-          scheduledReleaseDate: ""
+          scheduledReleaseDate: "",
+          updatedAt: serverTimestamp()
         });
+
+        await addAdminLog("make_live", "release", releaseId, {
+          status: "Live"
+        });
+
         await loadReleases();
       } catch (error) {
-        alert(error.message || "Imeshindikana kuweka live.");
-      }
-    };
-
-    window.rejectRelease = async function(releaseId) {
-      const reason = prompt("Weka reason ya kukataa release:");
-      if (reason === null) return;
-
-      if (!reason.trim()) {
-        alert("Weka reason kwanza.");
-        return;
-      }
-
-      try {
-        await updateDoc(doc(db, "releases", releaseId), {
-          status: "Rejected",
-          reviewReason: reason.trim(),
-          scheduledReleaseDate: ""
-        });
-        await loadReleases();
-      } catch (error) {
-        alert(error.message || "Imeshindikana kukataa release.");
-      }
-    };
-
-    window.requestCorrection = async function(releaseId) {
-      const reason = prompt("Weka correction reason / message kwa artist:");
-      if (reason === null) return;
-
-      if (!reason.trim()) {
-        alert("Weka correction reason kwanza.");
-        return;
-      }
-
-      try {
-        await updateDoc(doc(db, "releases", releaseId), {
-          status: "Needs Correction",
-          reviewReason: reason.trim(),
-          scheduledReleaseDate: ""
-        });
-        await loadReleases();
-      } catch (error) {
-        alert(error.message || "Imeshindikana kutuma correction request.");
+        alert(error.message || "Imeshindikana kuiweka live.");
       }
     };
 
     window.scheduleRelease = async function(releaseId) {
-      const date = prompt("Weka tarehe ya release (YYYY-MM-DD):");
+      const date = prompt("Weka date ya release kwa format: YYYY-MM-DD");
       if (date === null) return;
 
-      if (!date.trim()) {
+      const cleanDate = date.trim();
+      if (!cleanDate) {
         alert("Weka tarehe kwanza.");
         return;
       }
 
+      if (!confirm(`Una uhakika unataka kuschedule release tarehe ${cleanDate}?`)) return;
+
       try {
         await updateDoc(doc(db, "releases", releaseId), {
           status: "Scheduled",
-          scheduledReleaseDate: date.trim(),
-          reviewReason: ""
+          scheduledReleaseDate: cleanDate,
+          updatedAt: serverTimestamp()
         });
+
+        await addAdminLog("schedule_release", "release", releaseId, {
+          status: "Scheduled",
+          scheduledReleaseDate: cleanDate
+        });
+
         await loadReleases();
       } catch (error) {
         alert(error.message || "Imeshindikana kuschedule release.");
       }
     };
 
+    window.requestCorrection = async function(releaseId) {
+      const reason = prompt("Weka message kwa artist kuhusu correction inayohitajika:");
+      if (reason === null) return;
+
+      const cleanReason = reason.trim();
+      if (!cleanReason) {
+        alert("Weka sababu au message kwanza.");
+        return;
+      }
+
+      if (!confirm("Tuma correction request kwa release hii?")) return;
+
+      try {
+        await updateDoc(doc(db, "releases", releaseId), {
+          status: "Needs Correction",
+          reviewReason: cleanReason,
+          updatedAt: serverTimestamp()
+        });
+
+        await addAdminLog("request_correction", "release", releaseId, {
+          status: "Needs Correction",
+          reviewReason: cleanReason
+        });
+
+        await loadReleases();
+      } catch (error) {
+        alert(error.message || "Imeshindikana kutuma correction.");
+      }
+    };
+
+    window.rejectRelease = async function(releaseId) {
+      const reason = prompt("Weka sababu ya kukataa release hii:");
+      if (reason === null) return;
+
+      const cleanReason = reason.trim();
+      if (!cleanReason) {
+        alert("Weka sababu kwanza.");
+        return;
+      }
+
+      if (!confirm("Una uhakika unataka ku-reject release hii?")) return;
+
+      try {
+        await updateDoc(doc(db, "releases", releaseId), {
+          status: "Rejected",
+          reviewReason: cleanReason,
+          updatedAt: serverTimestamp()
+        });
+
+        await addAdminLog("reject_release", "release", releaseId, {
+          status: "Rejected",
+          reviewReason: cleanReason
+        });
+
+        await loadReleases();
+      } catch (error) {
+        alert(error.message || "Imeshindikana ku-reject release.");
+      }
+    };
+
     window.disableUser = async function(userDocId) {
+      if (!confirm("Una uhakika unataka ku-disable user huyu?")) return;
+
       try {
         await updateDoc(doc(db, "users", userDocId), {
           isDisabled: true
         });
+
+        await addAdminLog("disable_user", "user", userDocId, {
+          isDisabled: true
+        });
+
         await loadUsers();
       } catch (error) {
-        alert(error.message || "Imeshindikana kudisable user.");
+        alert(error.message || "Imeshindikana ku-disable user.");
       }
     };
 
     window.enableUser = async function(userDocId) {
+      if (!confirm("Una uhakika unataka ku-enable user huyu?")) return;
+
       try {
         await updateDoc(doc(db, "users", userDocId), {
           isDisabled: false
         });
+
+        await addAdminLog("enable_user", "user", userDocId, {
+          isDisabled: false
+        });
+
         await loadUsers();
       } catch (error) {
-        alert(error.message || "Imeshindikana kuenable user.");
+        alert(error.message || "Imeshindikana ku-enable user.");
       }
     };
 
     window.resetUserNameChangesByDoc = async function(userDocId) {
+      if (!confirm("Reset artist name change limit kwa user huyu?")) return;
+
       try {
         await updateDoc(doc(db, "users", userDocId), {
-          artistNameChanges: 0,
-          artistNameChangesResetAt: new Date().toISOString(),
-          artistNameChangesResetBy: currentAdmin?.email || "admin"
+          artistNameChanges: 0
         });
+
+        await addAdminLog("reset_artist_name_limit", "user", userDocId, {
+          artistNameChanges: 0
+        });
+
         await loadUsers();
       } catch (error) {
-        alert(error.message || "Imeshindikana kufanya reset.");
+        alert(error.message || "Imeshindikana ku-reset limit.");
       }
     };
 
     window.makeUserAdmin = async function(userDocId) {
+      if (!confirm("Una uhakika unataka kumfanya huyu admin?")) return;
+
       try {
         await updateDoc(doc(db, "users", userDocId), {
           role: "admin"
         });
-        alert("User amewekwa admin kwenye database.");
+
+        await addAdminLog("make_admin", "user", userDocId, {
+          role: "admin"
+        });
+
         await loadUsers();
       } catch (error) {
         alert(error.message || "Imeshindikana kumweka admin.");
@@ -815,11 +1030,17 @@
     };
 
     window.removeUserAdmin = async function(userDocId) {
+      if (!confirm("Una uhakika unataka kuondoa admin role ya user huyu?")) return;
+
       try {
         await updateDoc(doc(db, "users", userDocId), {
           role: "artist"
         });
-        alert("Admin role imeondolewa kwenye database.");
+
+        await addAdminLog("remove_admin", "user", userDocId, {
+          role: "artist"
+        });
+
         await loadUsers();
       } catch (error) {
         alert(error.message || "Imeshindikana kuondoa admin.");
@@ -836,185 +1057,155 @@
         return;
       }
 
+      if (!confirm(`Badilisha plan kwenda "${plan}"?`)) return;
+
       try {
         await updateDoc(doc(db, "users", userDocId), {
           plan: plan
         });
+
+        await addAdminLog("change_user_plan", "user", userDocId, {
+          plan
+        });
+
         await loadUsers();
       } catch (error) {
         alert(error.message || "Imeshindikana kubadili plan.");
       }
     };
 
-    async function loadReleases() {
-      const releaseList = document.getElementById("release-list");
-      const totalReleases = document.getElementById("total-releases");
-      const pendingReleases = document.getElementById("pending-releases");
+    async function resetArtistNameLimitByEmail() {
+      const emailInput = document.getElementById("reset-email");
+      const email = emailInput.value.trim().toLowerCase();
 
-      releaseList.innerHTML = `<div class="empty-box">Loading releases...</div>`;
+      if (!email) {
+        setResetMessage("Weka email kwanza.", "error");
+        return;
+      }
 
       try {
-        const snapshot = await getDocs(collection(db, "releases"));
-        const releases = [];
+        const q = query(collection(db, "users"), where("email", "==", email));
+        const snapshot = await getDocs(q);
 
-        snapshot.forEach((docSnap) => {
-          releases.push({ id: docSnap.id, ...docSnap.data() });
-        });
-
-        releases.sort((a, b) => {
-          const aTime = a?.updatedAt?.seconds || a?.createdAt?.seconds || 0;
-          const bTime = b?.updatedAt?.seconds || b?.createdAt?.seconds || 0;
-          return bTime - aTime;
-        });
-
-        totalReleases.textContent = releases.length;
-
-        let pendingCount = 0;
-        releases.forEach((item) => {
-          const s = (item.status || "").toLowerCase();
-          if (s.includes("pending") || s.includes("correction")) pendingCount++;
-        });
-        pendingReleases.textContent = pendingCount;
-
-        if (!releases.length) {
-          releaseList.innerHTML = `<div class="empty-box">Hakuna releases bado.</div>`;
+        if (snapshot.empty) {
+          setResetMessage("Hakuna user mwenye email hiyo.", "error");
           return;
         }
 
-        let html = "";
+        const target = snapshot.docs[0];
 
-        releases.forEach((data) => {
-          const statusText = data.status || "Pending Review";
-          const reviewReason = data.reviewReason || "";
-          const scheduledReleaseDate = data.scheduledReleaseDate || "";
-
-          html += `
-            <div class="release-item">
-              <div class="release-top">
-                <div class="cover-box">
-                  ${data.coverUrl ? `<img src="${data.coverUrl}" alt="Cover">` : ``}
-                </div>
-
-                <div class="release-content">
-                  <h3>${escapeHtml(data.title || "-")}</h3>
-                  <p><strong>Artist:</strong> ${escapeHtml(data.artist || "-")}</p>
-                  <p><strong>Username:</strong> ${escapeHtml(data.username || "-")}</p>
-                  <p><strong>User ID:</strong> ${escapeHtml(data.userId || "-")}</p>
-                  <p><strong>Release Date:</strong> ${escapeHtml(formatDateValue(data.releaseDate))}</p>
-                  <p><strong>Genre:</strong> ${escapeHtml(data.genre || "-")}</p>
-                  ${data.notes ? `<p><strong>Notes:</strong> ${escapeHtml(data.notes)}</p>` : ``}
-                  ${scheduledReleaseDate ? `<p><strong>Scheduled Live Date:</strong> ${escapeHtml(scheduledReleaseDate)}</p>` : ``}
-                  <span class="status ${statusClass(statusText)}">${escapeHtml(statusText)}</span>
-
-                  ${
-                    reviewReason
-                      ? `
-                        <div class="reason-box">
-                          <div class="reason-title">Admin Message</div>
-                          <div class="reason-text">${escapeHtml(reviewReason)}</div>
-                        </div>
-                      `
-                      : ``
-                  }
-
-                  ${data.audioUrl ? `<audio class="audio-player" controls src="${data.audioUrl}"></audio>` : ``}
-                  ${data.audioUrl ? `<a class="audio-link" href="${data.audioUrl}" target="_blank">Open Audio File</a>` : ``}
-
-                  <div class="inline-actions">
-                    <button class="btn btn-success" onclick="approveRelease('${data.id}')">Approve</button>
-                    <button class="btn btn-info" onclick="makeLive('${data.id}')">Make Live</button>
-                    <button class="btn btn-warning" onclick="scheduleRelease('${data.id}')">Schedule</button>
-                    <button class="btn btn-primary" onclick="requestCorrection('${data.id}')">Need Correction</button>
-                    <button class="btn btn-danger" onclick="rejectRelease('${data.id}')">Reject</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          `;
+        await updateDoc(doc(db, "users", target.id), {
+          artistNameChanges: 0
         });
 
-        releaseList.innerHTML = html;
+        await addAdminLog("reset_artist_name_limit_by_email", "user", target.id, {
+          email,
+          artistNameChanges: 0
+        });
+
+        setResetMessage("Artist name limit imereset.");
+        emailInput.value = "";
+        await loadUsers();
       } catch (error) {
-        releaseList.innerHTML = `<div class="empty-box">Failed to load releases: ${escapeHtml(error.message || "Unknown error")}</div>`;
+        setResetMessage(error.message || "Imeshindikana ku-reset limit.", "error");
       }
     }
 
-    async function loadUsers() {
-      const userList = document.getElementById("user-list");
-      const totalUsers = document.getElementById("total-users");
-      const disabledUsers = document.getElementById("disabled-users");
+    function activateTab(tabName) {
+      document.querySelectorAll(".nav-btn").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.tab === tabName);
+      });
 
-      userList.innerHTML = `<div class="empty-box">Loading users...</div>`;
+      document.querySelectorAll(".tab-section").forEach(section => {
+        section.classList.toggle("active", section.id === `tab-${tabName}`);
+      });
+    }
+
+    document.querySelectorAll(".nav-btn").forEach(btn => {
+      btn.addEventListener("click", () => activateTab(btn.dataset.tab));
+    });
+
+    document.getElementById("logoutBtn").addEventListener("click", async () => {
+      try {
+        await signOut(auth);
+        window.location.href = "/";
+      } catch (error) {
+        alert(error.message || "Logout failed.");
+      }
+    });
+
+    document.getElementById("resetNameBtn").addEventListener("click", resetArtistNameLimitByEmail);
+
+    document.getElementById("user-search").addEventListener("input", renderUsers);
+    document.getElementById("user-role-filter").addEventListener("change", renderUsers);
+    document.getElementById("user-status-filter").addEventListener("change", renderUsers);
+    document.getElementById("refreshUsersBtn").addEventListener("click", loadUsers);
+
+    document.getElementById("release-search").addEventListener("input", renderReleases);
+    document.getElementById("release-status-filter").addEventListener("change", renderReleases);
+    document.getElementById("release-sort").addEventListener("change", renderReleases);
+    document.getElementById("refreshReleasesBtn").addEventListener("click", loadReleases);
+
+    document.getElementById("log-search").addEventListener("input", renderLogs);
+    document.getElementById("refreshLogsBtn").addEventListener("click", loadLogs);
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.href = "/";
+        return;
+      }
 
       try {
-        const snapshot = await getDocs(collection(db, "users"));
-        const users = [];
+        const userRef = doc(db, "users", user.uid);
+        const snap = await getDoc(userRef);
 
-        snapshot.forEach((docSnap) => {
-          users.push({ id: docSnap.id, ...docSnap.data() });
-        });
-
-        users.sort((a, b) => {
-          const aName = (a.username || "").toLowerCase();
-          const bName = (b.username || "").toLowerCase();
-          return aName.localeCompare(bName);
-        });
-
-        totalUsers.textContent = users.length;
-
-        let disabledCount = 0;
-        users.forEach((u) => {
-          if (u.isDisabled === true) disabledCount++;
-        });
-        disabledUsers.textContent = disabledCount;
-
-        if (!users.length) {
-          userList.innerHTML = `<div class="empty-box">Hakuna users bado.</div>`;
+        if (!snap.exists()) {
+          document.body.innerHTML = `
+            <div style="padding:40px;font-family:Arial;background:#0b1020;color:white;min-height:100vh">
+              <h2>Access denied</h2>
+              <p>Account data haijapatikana.</p>
+              <a href="/" style="color:#22c55e">Go to Home</a>
+            </div>
+          `;
           return;
         }
 
-        let html = "";
+        const data = snap.data();
 
-        users.forEach((user) => {
-          const plan = user.plan || "Starter";
-          const role = user.role || "artist";
-          const artistName = user.artistName || "-";
-          const artistNameChanges = user.artistNameChanges || 0;
-          const userStatus = user.isDisabled ? "Disabled" : "Active";
-
-          html += `
-            <div class="user-item">
-              <h3>${escapeHtml(user.username || "No Username")}</h3>
-              <p><strong>Email:</strong> ${escapeHtml(user.email || "-")}</p>
-              <p><strong>Artist Name:</strong> ${escapeHtml(artistName)}</p>
-              <p><strong>Role:</strong> ${escapeHtml(role)}</p>
-              <p><strong>Plan:</strong> ${escapeHtml(plan)}</p>
-              <p><strong>Artist Name Changes:</strong> ${artistNameChanges} / 5</p>
-              <span class="status ${user.isDisabled ? "disabled" : "active"}">${escapeHtml(userStatus)}</span>
-
-              <div class="inline-actions">
-                ${user.isDisabled
-                  ? `<button class="btn btn-success" onclick="enableUser('${user.id}')">Enable User</button>`
-                  : `<button class="btn btn-danger" onclick="disableUser('${user.id}')">Disable User</button>`
-                }
-
-                <button class="btn btn-warning" onclick="resetUserNameChangesByDoc('${user.id}')">Reset Name Limit</button>
-                <button class="btn btn-info" onclick="changeUserPlan('${user.id}')">Change Plan</button>
-
-                ${role === "admin"
-                  ? `<button class="btn btn-dark" onclick="removeUserAdmin('${user.id}')">Remove Admin</button>`
-                  : `<button class="btn btn-primary" onclick="makeUserAdmin('${user.id}')">Make Admin</button>`
-                }
-              </div>
+        if (data.isDisabled === true) {
+          await signOut(auth);
+          document.body.innerHTML = `
+            <div style="padding:40px;font-family:Arial;background:#0b1020;color:white;min-height:100vh">
+              <h2>Account disabled</h2>
+              <p>Account yako imezuiwa kuingia.</p>
+              <a href="/" style="color:#22c55e">Go to Home</a>
             </div>
           `;
-        });
+          return;
+        }
 
-        userList.innerHTML = html;
+        if (data.role !== "admin") {
+          document.body.innerHTML = `
+            <div style="padding:40px;font-family:Arial;background:#0b1020;color:white;min-height:100vh">
+              <h2>Access denied</h2>
+              <p>This page is only for Pandisha admins.</p>
+              <p>Log in with your admin account to continue.</p>
+              <a href="/" style="color:#22c55e">Go to Home</a>
+            </div>
+          `;
+          return;
+        }
+
+        currentAdmin = user;
+        document.getElementById("admin-name").textContent = data.username || data.artistName || "Admin";
+        document.getElementById("admin-email").textContent = user.email || "-";
+
+        await loadEverything();
       } catch (error) {
-        userList.innerHTML = `<div class="empty-box">Failed to load users: ${escapeHtml(error.message || "Unknown error")}</div>`;
+        console.error(error);
+        alert(error.message || "Failed to verify admin.");
       }
-    }
+    });
   </script>
 </body>
 </html>
