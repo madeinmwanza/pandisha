@@ -2,14 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pandisha — Your Music. Everywhere.</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pandisha Dashboard</title>
   <style>
-    * {
-      box-sizing: border-box;
-      scroll-behavior: smooth;
-    }
-
     body {
       margin: 0;
       font-family: Arial, sans-serif;
@@ -17,778 +12,102 @@
       color: white;
     }
 
-    a {
-      text-decoration: none;
-      color: inherit;
-    }
-
     .container {
-      width: min(1140px, 92%);
-      margin: 0 auto;
+      padding: 30px;
     }
 
-    .navbar {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: rgba(11, 15, 26, 0.92);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .nav-inner {
+    .topbar {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      gap: 20px;
-      padding: 18px 0;
-      flex-wrap: wrap;
-    }
-
-    .brand {
-      display: flex;
       align-items: center;
-      gap: 12px;
-    }
-
-    .brand-text h2 {
-      margin: 0;
-      font-size: 18px;
-      letter-spacing: 3px;
-    }
-
-    .brand-text span {
-      font-size: 11px;
-      color: rgba(255,255,255,0.6);
-      letter-spacing: 2px;
-      text-transform: uppercase;
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 18px;
-      flex-wrap: wrap;
-    }
-
-    .nav-links a {
-      font-size: 14px;
-      color: rgba(255,255,255,0.82);
-    }
-
-    .nav-links a:hover {
-      color: white;
+      margin-bottom: 20px;
     }
 
     .btn {
-      display: inline-block;
+      padding: 10px 15px;
+      border-radius: 8px;
       border: none;
-      border-radius: 12px;
-      padding: 14px 22px;
-      font-size: 15px;
-      font-weight: 700;
       cursor: pointer;
-      transition: 0.2s ease;
-    }
-
-    .btn:hover {
-      transform: translateY(-1px);
     }
 
     .btn-primary {
-      background: linear-gradient(90deg, #7B2FF7, #FF7A18);
+      background: #7B2FF7;
       color: white;
-      box-shadow: 0 12px 30px rgba(123,47,247,0.22);
-    }
-
-    .btn-secondary {
-      background: rgba(255,255,255,0.05);
-      color: white;
-      border: 1px solid rgba(255,255,255,0.1);
-    }
-
-    .hero {
-      padding: 85px 0 70px;
-      background:
-        radial-gradient(circle at top left, rgba(123,47,247,0.25), transparent 30%),
-        radial-gradient(circle at right, rgba(255,122,24,0.18), transparent 28%);
-    }
-
-    .hero-grid {
-      display: grid;
-      grid-template-columns: 1.15fr 0.85fr;
-      gap: 34px;
-      align-items: center;
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 10px 16px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.08);
-      color: rgba(255,255,255,0.82);
-      font-size: 14px;
-      margin-bottom: 18px;
-    }
-
-    .hero h1 {
-      margin: 0 0 18px;
-      font-size: 60px;
-      line-height: 1.05;
-      max-width: 680px;
-    }
-
-    .hero p {
-      margin: 0;
-      max-width: 620px;
-      color: rgba(255,255,255,0.72);
-      font-size: 18px;
-      line-height: 1.8;
-    }
-
-    .hero-actions {
-      display: flex;
-      gap: 14px;
-      flex-wrap: wrap;
-      margin-top: 28px;
-    }
-
-    .stats {
-      display: flex;
-      gap: 26px;
-      flex-wrap: wrap;
-      margin-top: 34px;
-    }
-
-    .stat strong {
-      display: block;
-      font-size: 30px;
-      margin-bottom: 4px;
-    }
-
-    .stat span {
-      color: rgba(255,255,255,0.62);
-      font-size: 14px;
-    }
-
-    .panel {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 26px;
-      padding: 24px;
-      box-shadow: 0 18px 50px rgba(0,0,0,0.25);
-    }
-
-    .panel h3 {
-      margin: 0 0 8px;
-      font-size: 24px;
-    }
-
-    .panel-sub {
-      color: rgba(255,255,255,0.62);
-      font-size: 14px;
-      margin-bottom: 18px;
-    }
-
-    .mini-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 14px;
-    }
-
-    .mini-card {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 18px;
-      padding: 18px;
-    }
-
-    .mini-card span {
-      font-size: 13px;
-      color: rgba(255,255,255,0.62);
-    }
-
-    .mini-card strong {
-      display: block;
-      margin-top: 8px;
-      font-size: 30px;
-    }
-
-    .release-box {
-      margin-top: 14px;
-      padding: 18px;
-      border-radius: 18px;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .release-box .label {
-      color: rgba(255,255,255,0.6);
-      font-size: 13px;
-    }
-
-    .release-box .title {
-      margin-top: 8px;
-      font-size: 24px;
-      font-weight: 800;
-    }
-
-    .release-box .meta {
-      margin-top: 8px;
-      color: rgba(255,255,255,0.72);
-      font-size: 14px;
-    }
-
-    .section {
-      padding: 72px 0;
-    }
-
-    .section-title {
-      margin: 0 0 12px;
-      font-size: 40px;
-    }
-
-    .section-text {
-      max-width: 720px;
-      margin: 0 0 32px;
-      color: rgba(255,255,255,0.7);
-      line-height: 1.8;
-    }
-
-    .cards-3 {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
     }
 
     .card {
       background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 22px;
-      padding: 24px;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
     }
 
-    .card h3 {
-      margin: 0 0 10px;
-      font-size: 22px;
-    }
-
-    .card p {
-      margin: 0;
-      color: rgba(255,255,255,0.7);
-      line-height: 1.75;
-    }
-
-    .icon {
-      width: 52px;
-      height: 52px;
-      border-radius: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 22px;
-      margin-bottom: 16px;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .distribute-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 18px;
-    }
-
-    .list {
-      margin: 0;
-      padding-left: 18px;
-      color: rgba(255,255,255,0.74);
-      line-height: 1.9;
-    }
-
-    .cta-box {
-      margin-top: 24px;
-      padding: 22px;
-      border-radius: 22px;
-      background: linear-gradient(135deg, rgba(123,47,247,0.18), rgba(255,122,24,0.18));
-      border: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .cta-box h3 {
-      margin: 0 0 10px;
-      font-size: 24px;
-    }
-
-    .cta-box p {
-      margin: 0 0 16px;
-      color: rgba(255,255,255,0.74);
-      line-height: 1.75;
-    }
-
-    .pricing-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
-    }
-
-    .price-card {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 22px;
-      padding: 24px;
-    }
-
-    .price-card.featured {
-      border: 1px solid rgba(255,122,24,0.35);
-      box-shadow: 0 16px 40px rgba(123,47,247,0.15);
-    }
-
-    .price {
-      font-size: 36px;
-      font-weight: 900;
-      margin: 10px 0;
-    }
-
-    .price span {
-      font-size: 16px;
-      color: rgba(255,255,255,0.65);
-      font-weight: 400;
-    }
-
-    .portal-wrap {
-      max-width: 520px;
-      margin: 0 auto;
-    }
-
-    .input-fake {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 14px;
-      padding: 14px 16px;
-      color: rgba(255,255,255,0.72);
-      margin-bottom: 12px;
-    }
-
-    .input-fake input,
-    .input-fake select {
+    input {
       width: 100%;
-      background: none;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 8px;
       border: none;
-      color: white;
-      outline: none;
-      font-size: 14px;
-    }
-
-    .input-fake input::placeholder,
-    .input-fake select {
-      color: rgba(255,255,255,0.6);
-    }
-
-    .switch-text {
-      text-align: center;
-      margin-top: 16px;
-      color: rgba(255,255,255,0.72);
-      font-size: 14px;
-    }
-
-    .switch-link {
-      color: #FF7A18;
-      font-weight: 700;
-      cursor: pointer;
-      margin-left: 6px;
-    }
-
-    .forgot-link {
-      text-align: right;
-      margin-top: 6px;
-      margin-bottom: 8px;
-      font-size: 14px;
-    }
-
-    .forgot-link span {
-      color: #FF7A18;
-      cursor: pointer;
-      font-weight: 700;
-    }
-
-    .note-text {
-      text-align: center;
-      color: rgba(255,255,255,0.72);
-      font-size: 14px;
-      line-height: 1.7;
-      margin-bottom: 16px;
-    }
-
-    .store-title {
-      font-size: 28px;
-      line-height: 1.35;
-      margin: 0 0 18px;
-      text-align: center;
-    }
-
-    .store-sub {
-      text-align: center;
-      color: rgba(255,255,255,0.7);
-      font-size: 15px;
-      line-height: 1.8;
-      margin-bottom: 24px;
-    }
-
-    .store-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-    }
-
-    .store-item {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 16px;
-      padding: 14px 10px;
-      text-align: center;
-      font-size: 14px;
-      color: rgba(255,255,255,0.9);
-      font-weight: 600;
-    }
-
-    .footer {
-      border-top: 1px solid rgba(255,255,255,0.08);
-      padding: 26px 0;
-      color: rgba(255,255,255,0.62);
-      font-size: 14px;
-    }
-
-    .footer-inner {
-      display: flex;
-      justify-content: space-between;
-      gap: 20px;
-      flex-wrap: wrap;
-    }
-
-    @media (max-width: 920px) {
-      .hero-grid,
-      .cards-3,
-      .distribute-grid,
-      .pricing-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .hero h1 {
-        font-size: 42px;
-      }
-    }
-
-    @media (max-width: 640px) {
-      .nav-inner {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .hero {
-        padding-top: 60px;
-      }
-
-      .hero h1 {
-        font-size: 34px;
-      }
-
-      .mini-grid,
-      .store-grid {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .section-title {
-        font-size: 30px;
-      }
     }
   </style>
 </head>
 <body>
 
-  <div class="navbar">
-    <div class="container nav-inner">
-      <div class="brand">
-        <img src="./PandishaaLogo.png" alt="Pandisha Logo" style="height:60px; object-fit:contain;">
-        <div class="brand-text">
-          <h2>PANDISHA</h2>
-          <span>Music Distribution</span>
-        </div>
-      </div>
-
-      <div class="nav-links">
-        <a href="#home">Home</a>
-        <a href="#distribute">Distribute</a>
-        <a href="#features">Features</a>
-        <a href="#pricing">Pricing</a>
-        <a href="#auth" onclick="showLogin()" class="btn btn-secondary" style="padding:10px 16px;">Log in</a>
-        <a href="#auth" onclick="showSignup()" class="btn btn-primary" style="padding:10px 16px;">Sign Up</a>
-      </div>
-    </div>
+<div class="container">
+  <div class="topbar">
+    <h2>Artist Dashboard</h2>
+    <button class="btn btn-primary" onclick="logout()">Logout</button>
   </div>
 
-  <section class="hero" id="home">
-    <div class="container hero-grid">
-      <div>
-        <div class="badge">Premium platform for independent artists</div>
-        <h1>Your Music. Everywhere.</h1>
-        <p>
-          Release your music to the world with Pandisha. Built for artists who want
-          a clean brand, a simple distribution process, and a stronger digital presence.
-        </p>
+  <div class="card">
+    <h3>Account</h3>
+    <p id="user-email">Loading...</p>
+  </div>
 
-        <div class="hero-actions">
-          <a href="#auth" onclick="showSignup()" class="btn btn-primary">Start Distributing</a>
-          <a href="#distribute" class="btn btn-secondary">How It Works</a>
-        </div>
+  <div class="card">
+    <h3>Upload Song</h3>
 
-        <div class="stats">
-          <div class="stat">
-            <strong>100+</strong>
-            <span>Artists supported</span>
-          </div>
-          <div class="stat">
-            <strong>Global</strong>
-            <span>Distribution reach</span>
-          </div>
-          <div class="stat">
-            <strong>Fast</strong>
-            <span>Release approval workflow</span>
-          </div>
-        </div>
-      </div>
+    <input type="text" placeholder="Song Title">
+    <input type="text" placeholder="Artist Name">
+    <input type="date">
 
-      <div class="panel">
-        <h3 class="store-title">Sell your music,<br>unlimited & everywhere.</h3>
-        <div class="store-sub">
-          Reach major streaming and social platforms with one clean distribution system.
-        </div>
+    <input type="file" accept=".mp3,.wav">
+    <input type="file" accept="image/*">
 
-<div style="display:flex; flex-wrap:wrap; justify-content:center; gap:20px; align-items:center; margin-top:15px;">
-
-  <!-- Spotify -->
-  <img src="https://cdn.simpleicons.org/spotify/ffffff" style="height:32px;">
-
-  <!-- Apple Music -->
-  <img src="https://cdn.simpleicons.org/applemusic/ffffff" style="height:32px;">
-
-  <!-- YouTube -->
-  <img src="https://cdn.simpleicons.org/youtube/ffffff" style="height:32px;">
-
-  <!-- TikTok -->
-  <img src="https://cdn.simpleicons.org/tiktok/ffffff" style="height:32px;">
-
-  <!-- Meta -->
-  <img src="https://cdn.simpleicons.org/facebook/ffffff" style="height:32px;">
-
-  <!-- Audiomack (FIXED SVG) -->
-  <img src="https://upload.wikimedia.org/wikipedia/commons/2/26/Audiomack_logo.svg" style="height:32px; filter:invert(1);">
-
-  <!-- Deezer -->
-  <img src="https://cdn.simpleicons.org/deezer/ffffff" style="height:32px;">
-
-  <!-- Tidal -->
-  <img src="https://cdn.simpleicons.org/tidal/ffffff" style="height:32px;">
-
-  <!-- Boomplay (SAFE ICON) -->
-  <img src="https://cdn-icons-png.flaticon.com/512/727/727245.png" style="height:32px; border-radius:6px;">
-
+    <button class="btn btn-primary">Submit</button>
+  </div>
 </div>
-      </div>
-    </div>
-  </section>
 
-  <section class="section" id="distribute">
-    <div class="container">
-      <h2 class="section-title">Distribute with confidence</h2>
-      <p class="section-text">
-        Pandisha is designed to make the release journey simple for artists and labels.
-        From submission to delivery, every step is built to feel clean, premium, and easy to manage.
-      </p>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
 
-      <div class="distribute-grid">
-        <div class="card">
-          <h3>What you do</h3>
-          <ul class="list">
-            <li>Prepare your audio files</li>
-            <li>Upload your cover artwork</li>
-            <li>Add track title and artist details</li>
-            <li>Choose your release date</li>
-          </ul>
-        </div>
+const firebaseConfig = {
+  apiKey: "AIzaSyB7zfgQ3GqdPL2o1tyFt2RmW3Obqb1nKPk",
+  authDomain: "pandisha1.firebaseapp.com",
+  projectId: "pandisha1",
+  storageBucket: "pandisha1.firebasestorage.app",
+  messagingSenderId: "914457078679",
+  appId: "1:914457078679:web:f11bf8ccc4fd824459f2d2",
+};
 
-        <div class="card">
-          <h3>What Pandisha does</h3>
-          <ul class="list">
-            <li>Review your release information</li>
-            <li>Prepare your delivery package</li>
-            <li>Support your release workflow</li>
-            <li>Help your music reach the world</li>
-          </ul>
-        </div>
-      </div>
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 
-      <div class="cta-box">
-        <h3>Built for artists who are ready to grow</h3>
-        <p>
-          Whether you are starting your first single or managing a bigger catalog,
-          Pandisha gives you a modern platform with strong branding and simple release management.
-        </p>
-        <a href="#auth" onclick="showSignup()" class="btn btn-primary">Create Artist Account</a>
-      </div>
-    </div>
-  </section>
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    document.getElementById("user-email").textContent = user.email;
+  } else {
+    window.location.href = "index.html";
+  }
+});
 
-  <section class="section" id="features">
-    <div class="container">
-      <h2 class="section-title">Why artists choose Pandisha</h2>
-      <p class="section-text">
-        We focus on simplicity, presentation, and growth — the things that make a platform feel trustworthy and professional.
-      </p>
+window.logout = function () {
+  signOut(auth).then(() => {
+    window.location.href = "index.html";
+  });
+};
+</script>
 
-      <div class="cards-3">
-        <div class="card">
-          <div class="icon">🌍</div>
-          <h3>Global Reach</h3>
-          <p>Your music is prepared for a wider audience and a stronger digital presence.</p>
-        </div>
-
-        <div class="card">
-          <div class="icon">⚡</div>
-          <h3>Fast Workflow</h3>
-          <p>Clear submission steps, quick reviews, and a smooth path from upload to release.</p>
-        </div>
-
-        <div class="card">
-          <div class="icon">📊</div>
-          <h3>Artist Dashboard</h3>
-          <p>Track your releases, monitor updates, and manage your catalog in one place.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="section" id="pricing">
-    <div class="container">
-      <h2 class="section-title">Pricing</h2>
-      <p class="section-text">
-        Flexible annual pricing built for artists at every stage.
-      </p>
-
-      <div class="pricing-grid">
-        <div class="price-card">
-          <h3>Starter</h3>
-          <div class="price">Free</div>
-          <ul class="list">
-            <li>1 artist account</li>
-            <li>Submit release (manual review)</li>
-            <li>Standard release time</li>
-            <li>Basic support</li>
-          </ul>
-          <a href="#auth" onclick="showSignup()" class="btn btn-secondary" style="margin-top:16px;">Get Started</a>
-        </div>
-
-        <div class="price-card featured">
-          <h3>Artist Boost (Most Popular)</h3>
-          <div class="price">$12 <span>/ year</span></div>
-          <ul class="list">
-            <li>Unlimited releases</li>
-            <li>Faster approval</li>
-            <li>Priority support</li>
-            <li>Artist dashboard access</li>
-          </ul>
-          <a href="#auth" onclick="showSignup()" class="btn btn-primary" style="margin-top:16px;">Choose Pro</a>
-        </div>
-
-        <div class="price-card">
-          <h3>Full Promotion</h3>
-          <div class="price">$35 <span>/ year</span></div>
-          <ul class="list">
-            <li>Multiple artists</li>
-            <li>Unlimited releases</li>
-            <li>Radio rotation (2 weeks guaranteed)</li>
-            <li>Social Media Promotion</li>
-            <li>Priority support</li>
-            <li>Catalog management</li>
-          </ul>
-          <a href="#auth" onclick="showSignup()" class="btn btn-secondary" style="margin-top:16px;">Contact Us</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="section" id="auth">
-    <div class="container">
-      <div class="portal-wrap">
-
-        <div class="panel" id="loginPanel">
-          <h3>Artist Log in</h3>
-          <div class="panel-sub">Access your dashboard and releases</div>
-
-          <div class="input-fake">
-            <input id="login-username" type="text" placeholder="Username">
-          </div>
-
-          <div class="input-fake">
-            <input id="login-password" type="password" placeholder="Password">
-          </div>
-
-          <div class="forgot-link">
-            <span onclick="showForgotPassword()">Forgot Password?</span>
-          </div>
-
-          <button onclick="login()" class="btn btn-primary" style="width:100%; text-align:center;">Sign In</button>
-
-          <div class="switch-text">
-            Don't have an account?
-            <span class="switch-link" onclick="showSignup()">Sign Up</span>
-          </div>
-        </div>
-
-        <div class="panel" id="signupPanel" style="display:none;">
-          <h3>Sign Up</h3>
-          <div class="panel-sub">Create your Pandisha artist account</div>
-
-          <div class="input-fake">
-            <input id="signup-username" type="text" placeholder="Username">
-          </div>
-
-          <div class="input-fake">
-            <input id="signup-email" type="email" placeholder="Email Address">
-          </div>
-
-          <div class="input-fake">
-            <input id="signup-password" type="password" placeholder="Create Password">
-          </div>
-
-          <div class="input-fake">
-            <input id="signup-confirm-password" type="password" placeholder="Confirm Password">
-          </div>
-
-          <div class="input-fake">
-            <select id="signup-security-question">
-              <option value="">Security Question</option>
-              <option>What is your mother's first name?</option>
-              <option>What was the name of your first school?</option>
-              <option>What is your favorite artist?</option>
-              <option>What city were you born in?</option>
-            </select>
-          </div>
-
-          <div class="input-fake">
-            <input id="signup-security-answer" type="text" placeholder="Answer">
-          </div>
-
-          <button onclick="signUp()" class="btn btn-primary" style="width:100%; text-align:center;">Create Account</button>
-
-          <div class="switch-text">
-            Already have an account?
-            <span class="switch-link" onclick="showLogin()">Log in</span>
-          </div>
-        </div>
-
-        <div class="panel" id="forgotPanel" style="display:none;">
-          <h3>Forgot Password</h3>
-          <div class="panel-sub">Reset your password</div>
-
-          <div class="note-text">
-            Enter your username or email add
+</body>
+</html>
