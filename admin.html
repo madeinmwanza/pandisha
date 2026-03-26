@@ -1,643 +1,90 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin | Pandisha</title>
-  <style>
-    *{
-      box-sizing:border-box;
-      margin:0;
-      padding:0;
-      font-family:Arial, sans-serif;
-    }
-
-    body{
-      background:#0b0f1a;
-      color:#fff;
-    }
-
-    .topbar{
-      background:#111827;
-      padding:18px 24px;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      border-bottom:1px solid rgba(255,255,255,0.08);
-      position:sticky;
-      top:0;
-      z-index:100;
-    }
-
-    .brand{
-      font-size:22px;
-      font-weight:700;
-    }
-
-    .top-actions{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-    }
-
-    .btn{
-      border:none;
-      border-radius:10px;
-      padding:10px 14px;
-      cursor:pointer;
-      font-size:14px;
-      font-weight:600;
-    }
-
-    .btn-primary{
-      background:#2563eb;
-      color:#fff;
-    }
-
-    .btn-primary:hover{
-      background:#1d4ed8;
-    }
-
-    .btn-danger{
-      background:#dc2626;
-      color:#fff;
-    }
-
-    .btn-danger:hover{
-      background:#b91c1c;
-    }
-
-    .btn-secondary{
-      background:#1f2937;
-      color:#fff;
-      border:1px solid rgba(255,255,255,0.08);
-    }
-
-    .btn-secondary:hover{
-      background:#273449;
-    }
-
-    .container{
-      max-width:1200px;
-      margin:30px auto;
-      padding:0 20px 40px;
-    }
-
-    .hero{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:20px;
-      flex-wrap:wrap;
-      margin-bottom:20px;
-    }
-
-    .hero h2{
-      font-size:28px;
-      margin-bottom:8px;
-    }
-
-    .hero p{
-      color:#94a3b8;
-    }
-
-    .stats{
-      display:grid;
-      grid-template-columns:repeat(4,1fr);
-      gap:16px;
-      margin-bottom:22px;
-    }
-
-    .stat{
-      background:#111827;
-      border:1px solid rgba(255,255,255,0.08);
-      border-radius:16px;
-      padding:20px;
-    }
-
-    .stat small{
-      color:#94a3b8;
-      display:block;
-      margin-bottom:10px;
-      font-size:13px;
-    }
-
-    .stat strong{
-      font-size:28px;
-    }
-
-    .toolbar{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:12px;
-      flex-wrap:wrap;
-      margin-bottom:18px;
-    }
-
-    .search-box{
-      flex:1;
-      min-width:240px;
-    }
-
-    .search-box input{
-      width:100%;
-      padding:12px 14px;
-      border-radius:12px;
-      border:1px solid rgba(255,255,255,0.08);
-      background:#111827;
-      color:#fff;
-      outline:none;
-    }
-
-    .grid{
-      display:grid;
-      gap:14px;
-    }
-
-    .card{
-      background:#111827;
-      border:1px solid rgba(255,255,255,0.08);
-      border-radius:16px;
-      padding:18px;
-    }
-
-    .card-top{
-      display:flex;
-      justify-content:space-between;
-      align-items:flex-start;
-      gap:12px;
-      flex-wrap:wrap;
-      margin-bottom:14px;
-    }
-
-    .card-top h3{
-      font-size:19px;
-      margin-bottom:6px;
-    }
-
-    .muted{
-      color:#94a3b8;
-      font-size:14px;
-    }
-
-    .badge{
-      padding:8px 12px;
-      border-radius:999px;
-      font-size:12px;
-      font-weight:700;
-      display:inline-block;
-    }
-
-    .active{
-      background:rgba(34,197,94,0.18);
-      color:#4ade80;
-    }
-
-    .disabled{
-      background:rgba(239,68,68,0.18);
-      color:#f87171;
-    }
-
-    .admin{
-      background:rgba(37,99,235,0.18);
-      color:#60a5fa;
-    }
-
-    .artist{
-      background:rgba(148,163,184,0.18);
-      color:#cbd5e1;
-    }
-
-    .info-grid{
-      display:grid;
-      grid-template-columns:repeat(2,1fr);
-      gap:12px;
-      margin-bottom:16px;
-    }
-
-    .info-box{
-      background:#0f172a;
-      border:1px solid rgba(255,255,255,0.06);
-      border-radius:12px;
-      padding:12px;
-    }
-
-    .info-box small{
-      color:#94a3b8;
-      display:block;
-      margin-bottom:6px;
-      font-size:12px;
-    }
-
-    .info-box div{
-      font-size:15px;
-      font-weight:600;
-      word-break:break-word;
-    }
-
-    .actions{
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px;
-    }
-
-    .mini-btn{
-      border:none;
-      border-radius:10px;
-      padding:10px 12px;
-      cursor:pointer;
-      font-size:13px;
-      font-weight:700;
-    }
-
-    .mini-blue{
-      background:#2563eb;
-      color:#fff;
-    }
-
-    .mini-green{
-      background:#16a34a;
-      color:#fff;
-    }
-
-    .mini-red{
-      background:#dc2626;
-      color:#fff;
-    }
-
-    .mini-gray{
-      background:#374151;
-      color:#fff;
-    }
-
-    .message{
-      display:none;
-      margin-bottom:16px;
-      padding:14px 16px;
-      border-radius:12px;
-      font-weight:700;
-      font-size:14px;
-    }
-
-    .message.success{
-      display:block;
-      background:rgba(34,197,94,0.18);
-      color:#4ade80;
-      border:1px solid rgba(34,197,94,0.25);
-    }
-
-    .message.error{
-      display:block;
-      background:rgba(239,68,68,0.18);
-      color:#f87171;
-      border:1px solid rgba(239,68,68,0.25);
-    }
-
-    .empty{
-      background:#111827;
-      border:1px dashed rgba(255,255,255,0.12);
-      border-radius:16px;
-      padding:30px;
-      text-align:center;
-      color:#94a3b8;
-    }
-
-    .loading{
-      text-align:center;
-      color:#94a3b8;
-      padding:30px;
-    }
-
-    @media(max-width:900px){
-      .stats{
-        grid-template-columns:repeat(2,1fr);
-      }
-      .info-grid{
-        grid-template-columns:1fr;
-      }
-    }
-
-    @media(max-width:600px){
-      .stats{
-        grid-template-columns:1fr;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<title>Admin</title>
+<style>
+body{background:#0b0f1a;color:white;font-family:Arial}
+.container{padding:30px}
+.card{background:#111827;padding:15px;margin-bottom:10px}
+button{margin:5px;padding:8px}
+</style>
 </head>
+
 <body>
-  <div class="topbar">
-    <div class="brand">Pandisha Admin</div>
-    <div class="top-actions">
-      <a href="index.html"><button class="btn btn-secondary">Home</button></a>
-      <button class="btn btn-primary" id="refreshBtn">Refresh</button>
-      <button class="btn btn-danger" id="logoutBtn">Logout</button>
-    </div>
-  </div>
 
-  <div class="container">
-    <div class="hero">
-      <div>
-        <h2>Admin Panel</h2>
-        <p>Manage users, roles, plans and account status.</p>
-      </div>
-    </div>
+<div class="container">
+<h2>Admin Panel</h2>
+<div id="users"></div>
+</div>
 
-    <div id="message" class="message"></div>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+import { getAuth,onAuthStateChanged }
+from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
 
-    <div class="stats">
-      <div class="stat">
-        <small>Total Users</small>
-        <strong id="totalUsers">0</strong>
-      </div>
-      <div class="stat">
-        <small>Active Users</small>
-        <strong id="activeUsers">0</strong>
-      </div>
-      <div class="stat">
-        <small>Disabled Users</small>
-        <strong id="disabledUsers">0</strong>
-      </div>
-      <div class="stat">
-        <small>Admins</small>
-        <strong id="adminUsers">0</strong>
-      </div>
-    </div>
+import { getFirestore,collection,getDocs,doc,updateDoc }
+from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
-    <div class="toolbar">
-      <div class="search-box">
-        <input type="text" id="searchInput" placeholder="Search username or email..." />
-      </div>
-    </div>
+const app=initializeApp({apiKey:"AIzaSyB7z...",authDomain:"pandisha1.firebaseapp.com",projectId:"pandisha1"});
+const auth=getAuth(app);
+const db=getFirestore(app);
 
-    <div id="users" class="grid">
-      <div class="loading">Loading users...</div>
-    </div>
-  </div>
+const ADMIN_EMAIL="madeinmwanza@gmail.com";
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-    import {
-      getAuth,
-      onAuthStateChanged,
-      signOut
-    } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+onAuthStateChanged(auth,async(user)=>{
+if(!user||user.email!==ADMIN_EMAIL){
+document.body.innerHTML="ACCESS DENIED";
+return;
+}
+loadUsers();
+});
 
-    import {
-      getFirestore,
-      collection,
-      getDocs,
-      doc,
-      updateDoc,
-      getDoc
-    } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+async function loadUsers(){
+const snap=await getDocs(collection(db,"users"));
+let html="";
 
-    const firebaseConfig = {
-      apiKey: "WEKA_API_KEY_YAKO_HAPA",
-      authDomain: "pandisha1.firebaseapp.com",
-      projectId: "pandisha1"
-    };
+snap.forEach(docu=>{
+const u=docu.data();
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
+html+=`
+<div class="card">
+<b>${u.username}</b><br>
+${u.email}<br>
+Plan: ${u.plan}<br>
+Status: ${u.isDisabled?"Disabled":"Active"}<br>
 
-    const usersContainer = document.getElementById("users");
-    const messageBox = document.getElementById("message");
-    const searchInput = document.getElementById("searchInput");
-    const refreshBtn = document.getElementById("refreshBtn");
-    const logoutBtn = document.getElementById("logoutBtn");
+<button onclick="disable('${docu.id}')">Disable</button>
+<button onclick="enable('${docu.id}')">Enable</button>
+<button onclick="makeAdmin('${docu.id}')">Make Admin</button>
+<button onclick="reset('${docu.id}')">Reset Name Limit</button>
+</div>
+`;
+});
 
-    const totalUsersEl = document.getElementById("totalUsers");
-    const activeUsersEl = document.getElementById("activeUsers");
-    const disabledUsersEl = document.getElementById("disabledUsers");
-    const adminUsersEl = document.getElementById("adminUsers");
+document.getElementById("users").innerHTML=html;
+}
 
-    let allUsers = [];
+window.disable=async(id)=>{
+await updateDoc(doc(db,"users",id),{isDisabled:true});
+loadUsers();
+};
 
-    function showMessage(text, type="success"){
-      messageBox.className = "message " + type;
-      messageBox.textContent = text;
-    }
+window.enable=async(id)=>{
+await updateDoc(doc(db,"users",id),{isDisabled:false});
+loadUsers();
+};
 
-    function escapeHtml(text){
-      if(text === undefined || text === null) return "";
-      return String(text)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-    }
+window.makeAdmin=async(id)=>{
+await updateDoc(doc(db,"users",id),{role:"admin"});
+loadUsers();
+};
 
-    async function checkAdminAccess(user){
-      if(!user) return false;
+window.reset=async(id)=>{
+await updateDoc(doc(db,"users",id),{artistNameChanges:0});
+loadUsers();
+};
+</script>
 
-      try{
-        const userRef = doc(db, "users", user.uid);
-        const userSnap = await getDoc(userRef);
-
-        if(!userSnap.exists()) return false;
-
-        const data = userSnap.data();
-        return data.role === "admin";
-      }catch(error){
-        return false;
-      }
-    }
-
-    async function loadUsers(){
-      usersContainer.innerHTML = `<div class="loading">Loading users...</div>`;
-
-      try{
-        const snap = await getDocs(collection(db, "users"));
-        allUsers = [];
-
-        snap.forEach((docSnap) => {
-          allUsers.push({
-            id: docSnap.id,
-            ...docSnap.data()
-          });
-        });
-
-        renderUsers(allUsers);
-        renderStats(allUsers);
-      }catch(error){
-        usersContainer.innerHTML = `<div class="empty">Failed to load users.</div>`;
-        showMessage("Failed to load users.", "error");
-      }
-    }
-
-    function renderStats(users){
-      const total = users.length;
-      const active = users.filter(u => !u.isDisabled).length;
-      const disabled = users.filter(u => u.isDisabled).length;
-      const admins = users.filter(u => u.role === "admin").length;
-
-      totalUsersEl.textContent = total;
-      activeUsersEl.textContent = active;
-      disabledUsersEl.textContent = disabled;
-      adminUsersEl.textContent = admins;
-    }
-
-    function renderUsers(users){
-      if(!users.length){
-        usersContainer.innerHTML = `<div class="empty">No users found.</div>`;
-        return;
-      }
-
-      let html = "";
-
-      users.forEach((u) => {
-        const username = u.username || "No username";
-        const email = u.email || "No email";
-        const plan = u.plan || "Starter";
-        const role = u.role || "artist";
-        const statusText = u.isDisabled ? "Disabled" : "Active";
-        const statusClass = u.isDisabled ? "disabled" : "active";
-        const roleClass = role === "admin" ? "admin" : "artist";
-
-        html += `
-          <div class="card">
-            <div class="card-top">
-              <div>
-                <h3>${escapeHtml(username)}</h3>
-                <div class="muted">${escapeHtml(email)}</div>
-              </div>
-              <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                <span class="badge ${statusClass}">${statusText}</span>
-                <span class="badge ${roleClass}">${escapeHtml(role)}</span>
-              </div>
-            </div>
-
-            <div class="info-grid">
-              <div class="info-box">
-                <small>Plan</small>
-                <div>${escapeHtml(plan)}</div>
-              </div>
-              <div class="info-box">
-                <small>Artist Name Changes</small>
-                <div>${u.artistNameChanges ?? 0}</div>
-              </div>
-              <div class="info-box">
-                <small>User ID</small>
-                <div>${escapeHtml(u.id)}</div>
-              </div>
-              <div class="info-box">
-                <small>Status</small>
-                <div>${statusText}</div>
-              </div>
-            </div>
-
-            <div class="actions">
-              <button class="mini-btn mini-red action-disable" data-id="${u.id}">Disable</button>
-              <button class="mini-btn mini-green action-enable" data-id="${u.id}">Enable</button>
-              <button class="mini-btn mini-blue action-admin" data-id="${u.id}">Make Admin</button>
-              <button class="mini-btn mini-gray action-reset" data-id="${u.id}">Reset Name Limit</button>
-            </div>
-          </div>
-        `;
-      });
-
-      usersContainer.innerHTML = html;
-      bindActionButtons();
-    }
-
-    function bindActionButtons(){
-      document.querySelectorAll(".action-disable").forEach(btn => {
-        btn.addEventListener("click", async () => {
-          const id = btn.dataset.id;
-          try{
-            await updateDoc(doc(db, "users", id), { isDisabled: true });
-            showMessage("User disabled successfully.");
-            loadUsers();
-          }catch(error){
-            showMessage("Failed to disable user.", "error");
-          }
-        });
-      });
-
-      document.querySelectorAll(".action-enable").forEach(btn => {
-        btn.addEventListener("click", async () => {
-          const id = btn.dataset.id;
-          try{
-            await updateDoc(doc(db, "users", id), { isDisabled: false });
-            showMessage("User enabled successfully.");
-            loadUsers();
-          }catch(error){
-            showMessage("Failed to enable user.", "error");
-          }
-        });
-      });
-
-      document.querySelectorAll(".action-admin").forEach(btn => {
-        btn.addEventListener("click", async () => {
-          const id = btn.dataset.id;
-          try{
-            await updateDoc(doc(db, "users", id), { role: "admin" });
-            showMessage("User made admin successfully.");
-            loadUsers();
-          }catch(error){
-            showMessage("Failed to make user admin.", "error");
-          }
-        });
-      });
-
-      document.querySelectorAll(".action-reset").forEach(btn => {
-        btn.addEventListener("click", async () => {
-          const id = btn.dataset.id;
-          try{
-            await updateDoc(doc(db, "users", id), { artistNameChanges: 0 });
-            showMessage("Artist name change limit reset.");
-            loadUsers();
-          }catch(error){
-            showMessage("Failed to reset name limit.", "error");
-          }
-        });
-      });
-    }
-
-    searchInput.addEventListener("input", () => {
-      const keyword = searchInput.value.trim().toLowerCase();
-
-      const filtered = allUsers.filter((u) => {
-        const username = (u.username || "").toLowerCase();
-        const email = (u.email || "").toLowerCase();
-        return username.includes(keyword) || email.includes(keyword);
-      });
-
-      renderUsers(filtered);
-    });
-
-    refreshBtn.addEventListener("click", loadUsers);
-
-    logoutBtn.addEventListener("click", async () => {
-      try{
-        await signOut(auth);
-        window.location.href = "login.html";
-      }catch(error){
-        showMessage("Logout failed.", "error");
-      }
-    });
-
-    onAuthStateChanged(auth, async (user) => {
-      const isAdmin = await checkAdminAccess(user);
-
-      if(!user || !isAdmin){
-        document.body.innerHTML = `
-          <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:#0b0f1a;color:white;font-family:Arial,sans-serif;">
-            <div style="max-width:520px;width:100%;background:#111827;border:1px solid rgba(255,255,255,0.08);border-radius:18px;padding:30px;text-align:center;">
-              <h2 style="margin-bottom:12px;">Access denied</h2>
-              <p style="color:#94a3b8;margin-bottom:20px;">This page is only for Pandisha admins.</p>
-              <a href="index.html" style="display:inline-block;background:#2563eb;color:white;text-decoration:none;padding:12px 18px;border-radius:10px;font-weight:700;">Go to Home</a>
-            </div>
-          </div>
-        `;
-        return;
-      }
-
-      loadUsers();
-    });
-  </script>
 </body>
 </html>
