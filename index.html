@@ -906,12 +906,17 @@
         const user = userCredential.user;
 
         await addDoc(collection(db, "users"), {
-          userId: user.uid,
-          username: username,
-          email: email,
-          securityQuestion: securityQuestion,
-          securityAnswer: securityAnswer
-        });
+  userId: user.uid,
+  username: username,
+  email: email,
+  artistName: "",
+  artistNameChanges: 0,
+  plan: "Starter",
+  role: "artist",
+  isDisabled: false,
+  securityQuestion: securityQuestion,
+  securityAnswer: securityAnswer
+});
 
         alert("Account created successfully");
         window.location.href = "dashboard.html";
