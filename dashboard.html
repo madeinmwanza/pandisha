@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pandisha Admin Dashboard</title>
+  <title>Pandisha Artist Dashboard</title>
   <style>
     * { box-sizing: border-box; }
 
@@ -81,6 +81,27 @@
       color: white;
     }
 
+    .submenu {
+      margin: 0 0 14px 14px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .submenu-item {
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.03);
+      color: rgba(255,255,255,0.72);
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .submenu-item:hover,
+    .submenu-item.active {
+      background: rgba(255,255,255,0.09);
+      color: white;
+    }
+
     .main {
       padding: 28px;
     }
@@ -91,7 +112,7 @@
       align-items: center;
       gap: 16px;
       flex-wrap: wrap;
-      margin-bottom: 24px;
+      margin-bottom: 26px;
     }
 
     .topbar h1 {
@@ -104,46 +125,48 @@
       color: rgba(255,255,255,0.65);
     }
 
-    .top-actions {
+    .topbar-actions {
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
+      align-items: center;
     }
 
     .btn {
       display: inline-block;
       border: none;
       border-radius: 12px;
-      padding: 11px 16px;
+      padding: 12px 18px;
       font-weight: 700;
       cursor: pointer;
       text-align: center;
-      color: white;
+    }
+
+    .btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
     }
 
     .btn-primary {
       background: linear-gradient(90deg, #7B2FF7, #FF7A18);
-    }
-
-    .btn-secondary {
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .btn-success {
-      background: #16a34a;
-    }
-
-    .btn-danger {
-      background: #dc2626;
+      color: white;
     }
 
     .btn-warning {
       background: #f59e0b;
+      color: white;
     }
 
-    .btn-info {
-      background: #2563eb;
+    .btn-secondary {
+      background: rgba(255,255,255,0.08);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .name-change-note {
+      font-size: 13px;
+      color: rgba(255,255,255,0.65);
+      margin-top: 8px;
     }
 
     .stats {
@@ -170,86 +193,58 @@
       font-size: 30px;
     }
 
-    .section {
-      margin-bottom: 24px;
-    }
-
-    .section h2 {
-      margin: 0 0 12px;
-      font-size: 26px;
-    }
-
-    .section p {
-      margin: 0 0 16px;
-      color: rgba(255,255,255,0.68);
-      line-height: 1.7;
-    }
-
-    .input-box {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 14px;
-      padding: 14px 16px;
-      margin-bottom: 12px;
-    }
-
-    .input-box label {
-      display: block;
-      font-size: 13px;
-      margin-bottom: 8px;
-      color: rgba(255,255,255,0.7);
-    }
-
-    .input-box input,
-    .input-box textarea,
-    .input-box select {
-      width: 100%;
-      background: none;
-      border: none;
-      color: white;
-      outline: none;
-      font-size: 14px;
-      font-family: Arial, sans-serif;
-    }
-
-    .input-box textarea {
-      min-height: 90px;
-      resize: vertical;
-    }
-
-    .input-box input::placeholder,
-    .input-box textarea::placeholder {
-      color: rgba(255,255,255,0.45);
-    }
-
-    .message {
-      margin-top: 12px;
-      font-size: 14px;
-      min-height: 20px;
-    }
-
-    .release-list {
-      display: grid;
-      gap: 16px;
-    }
-
-    .release-item {
+    .content-panel {
       background: rgba(255,255,255,0.05);
       border: 1px solid rgba(255,255,255,0.08);
       border-radius: 20px;
-      padding: 18px;
+      padding: 22px;
+    }
+
+    .section-block {
+      display: none;
+    }
+
+    .section-block.active {
+      display: block;
+    }
+
+    .section-block h2 {
+      margin-top: 0;
+      margin-bottom: 8px;
+      font-size: 28px;
+    }
+
+    .section-block p.lead {
+      margin-top: 0;
+      color: rgba(255,255,255,0.68);
+      line-height: 1.7;
+      margin-bottom: 20px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .release-item {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 12px;
     }
 
     .release-top {
       display: flex;
-      gap: 16px;
+      gap: 14px;
       align-items: flex-start;
       flex-wrap: wrap;
     }
 
     .cover-box {
-      width: 78px;
-      height: 78px;
+      width: 72px;
+      height: 72px;
       border-radius: 14px;
       overflow: hidden;
       background: rgba(255,255,255,0.05);
@@ -261,27 +256,23 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-    }
-
-    .release-content {
-      flex: 1;
-      min-width: 260px;
+      display: block;
     }
 
     .release-item h3 {
       margin: 0 0 8px;
-      font-size: 22px;
+      font-size: 20px;
     }
 
     .release-item p {
       margin: 0 0 6px;
-      color: rgba(255,255,255,0.72);
+      color: rgba(255,255,255,0.68);
       line-height: 1.6;
     }
 
     .status {
       display: inline-block;
-      margin-top: 8px;
+      margin-top: 10px;
       padding: 6px 10px;
       border-radius: 999px;
       font-size: 12px;
@@ -318,22 +309,8 @@
       color: #bfdbfe;
     }
 
-    .audio-player {
-      display: block;
-      margin-top: 10px;
-      width: 100%;
-      max-width: 320px;
-    }
-
-    .audio-link {
-      display: inline-block;
-      margin-top: 10px;
-      font-size: 13px;
-      color: #f5b26b;
-    }
-
     .reason-box {
-      margin-top: 12px;
+      margin-top: 10px;
       background: rgba(255,255,255,0.04);
       border: 1px solid rgba(255,255,255,0.08);
       border-radius: 12px;
@@ -349,60 +326,131 @@
     }
 
     .reason-text {
-      color: rgba(255,255,255,0.9);
+      color: rgba(255,255,255,0.88);
       font-size: 14px;
       line-height: 1.6;
       white-space: pre-wrap;
     }
 
-    .action-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-      margin-top: 14px;
-    }
-
-    .inline-actions {
+    .release-actions {
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
       margin-top: 12px;
     }
 
-    .empty-box {
+    .input-box {
       background: rgba(255,255,255,0.04);
       border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 16px;
-      padding: 18px;
+      border-radius: 14px;
+      padding: 14px 16px;
+      margin-bottom: 12px;
+    }
+
+    .input-box label {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 8px;
       color: rgba(255,255,255,0.7);
     }
 
+    .input-box input,
+    .input-box select,
+    .input-box textarea {
+      width: 100%;
+      background: none;
+      border: none;
+      color: white;
+      outline: none;
+      font-size: 14px;
+      font-family: Arial, sans-serif;
+    }
+
+    .input-box input::placeholder,
+    .input-box textarea::placeholder {
+      color: rgba(255,255,255,0.45);
+    }
+
+    .input-box textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .upload-note {
+      color: rgba(255,255,255,0.65);
+      line-height: 1.7;
+      font-size: 14px;
+      margin-top: 12px;
+    }
+
+    .mini-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .mini-list .item {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      padding: 16px;
+    }
+
+    .mini-list .item strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 18px;
+    }
+
+    .mini-list .item span {
+      color: rgba(255,255,255,0.65);
+      font-size: 14px;
+    }
+
+    #message {
+      margin-top: 12px;
+      font-size: 14px;
+      line-height: 1.6;
+      min-height: 22px;
+    }
+
+    .audio-link {
+      display: inline-block;
+      margin-top: 10px;
+      font-size: 13px;
+      color: #f5b26b;
+    }
+
+    .audio-player {
+      display: block;
+      margin-top: 10px;
+      width: 100%;
+      max-width: 320px;
+    }
+
+    .edit-banner {
+      display: none;
+      margin-bottom: 16px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: rgba(245, 158, 11, 0.14);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      color: #ffd27a;
+    }
+
+    .edit-banner.show {
+      display: block;
+    }
+
     @media (max-width: 980px) {
-      .layout {
-        grid-template-columns: 1fr;
-      }
-
-      .stats {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .action-grid {
-        grid-template-columns: 1fr;
-      }
+      .layout { grid-template-columns: 1fr; }
+      .stats { grid-template-columns: repeat(2, 1fr); }
+      .grid-2 { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 640px) {
-      .stats {
-        grid-template-columns: 1fr;
-      }
-
-      .main {
-        padding: 18px;
-      }
-
-      .topbar h1 {
-        font-size: 28px;
-      }
+      .stats { grid-template-columns: 1fr; }
+      .main { padding: 18px; }
+      .topbar h1 { font-size: 28px; }
     }
   </style>
 </head>
@@ -413,26 +461,42 @@
         <img src="./PandishaaLogo.png" alt="Pandisha Logo">
         <div class="brand-text">
           <h2>PANDISHA</h2>
-          <span>Admin Panel</span>
+          <span>Artist Dashboard</span>
         </div>
       </div>
 
-      <div class="menu-title">Admin</div>
-      <div class="menu-item active">Release Management</div>
-      <div class="menu-item">Artist Support</div>
+      <div class="menu-title">Distribution</div>
+      <div class="menu-item active">Distribution</div>
+      <div class="submenu">
+        <div class="submenu-item active" onclick="showSection('create-release', this)">Create a Release</div>
+        <div class="submenu-item" onclick="showSection('discography', this)">Discography</div>
+      </div>
+
+      <div class="menu-title">Performance</div>
+      <div class="menu-item">Performance</div>
+      <div class="submenu">
+        <div class="submenu-item" onclick="showSection('trends', this)">Trends</div>
+        <div class="submenu-item" onclick="showSection('statistics', this)">Statistics</div>
+        <div class="submenu-item" onclick="showSection('reports', this)">Reports</div>
+        <div class="submenu-item" onclick="showSection('earnings', this)">Earnings</div>
+      </div>
+
+      <div class="menu-title">Account</div>
       <div class="menu-item" onclick="logout()">Log Out</div>
     </aside>
 
     <main class="main">
       <div class="topbar">
         <div>
-          <h1>Admin Dashboard</h1>
-          <p id="admin-email">Checking admin access...</p>
+          <h1>Artist Dashboard</h1>
+          <p id="user-name">Loading username...</p>
+          <div id="artist-name-limit" class="name-change-note">Loading name change limit...</div>
         </div>
 
-        <div class="top-actions">
-          <a href="dashboard.html" class="btn btn-secondary">Artist Dashboard</a>
-          <button class="btn btn-primary" onclick="loadReleases()">Refresh Releases</button>
+        <div class="topbar-actions">
+          <button class="btn btn-secondary" onclick="changeArtistName()">Change Artist Name</button>
+          <button class="btn btn-primary" onclick="startNewRelease()">New Release</button>
+          <a id="adminBtn" href="admin.html" class="btn btn-primary" style="display:none;">Admin Panel</a>
         </div>
       </div>
 
@@ -446,53 +510,164 @@
           <strong id="pending-releases">0</strong>
         </div>
         <div class="card">
-          <small>Scheduled</small>
-          <strong id="scheduled-releases">0</strong>
-        </div>
-        <div class="card">
-          <small>Live / Approved</small>
+          <small>Live Tracks</small>
           <strong id="live-releases">0</strong>
         </div>
+        <div class="card">
+          <small>Plan</small>
+          <strong>Starter</strong>
+        </div>
       </section>
 
-      <section class="section">
-        <div class="card">
-          <h2>Reset Artist Name Limit</h2>
-          <p>Weka email ya artist kisha urudishe artist name changes kuwa 0.</p>
+      <div class="content-panel">
+        <div id="create-release" class="section-block active">
+          <h2>Create a Release</h2>
+          <p class="lead">Username ni kwa login tu. Artist Name ni jina la msanii litakaloonekana kwenye releases.</p>
 
-          <div class="input-box">
-            <label>Artist Email</label>
-            <input id="reset-artist-email" type="email" placeholder="artist@email.com">
+          <div id="editBanner" class="edit-banner">
+            Unarekebisha release iliyotumwa awali. Ukisubmit, itarudi kuwa <strong>Pending Review</strong>.
           </div>
 
-          <button class="btn btn-warning" onclick="resetArtistNameLimit()">Reset Artist Name Limit</button>
-          <div id="reset-name-message" class="message"></div>
-        </div>
-      </section>
+          <div class="input-box">
+            <label>Artist Name (Stage Name)</label>
+            <input id="artist-name" type="text" placeholder="Enter artist name">
+            <button class="btn btn-secondary" style="margin-top:10px;" onclick="saveArtistName()">Save Artist Name</button>
+          </div>
 
-      <section class="section">
-        <h2>All Releases</h2>
-        <p>Approve, reject, request correction, au schedule release hapa.</p>
+          <div class="grid-2">
+            <div>
+              <div class="input-box">
+                <label>Song Title</label>
+                <input id="song-title" type="text" placeholder="Song Title">
+              </div>
 
-        <div id="release-list" class="release-list">
-          <div class="empty-box">Loading releases...</div>
+              <div class="input-box">
+                <label>Release Date</label>
+                <input id="release-date" type="date">
+              </div>
+
+              <div class="input-box">
+                <label>Genre</label>
+                <select id="genre">
+                  <option value="">Choose Genre</option>
+                  <option>Bongo Flava</option>
+                  <option>Hip Hop</option>
+                  <option>Afropop</option>
+                  <option>Gospel</option>
+                  <option>Amapiano</option>
+                  <option>R&B</option>
+                  <option>Dancehall</option>
+                  <option>Other</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <div class="input-box">
+                <label>Description / Release Notes</label>
+                <textarea id="release-notes" placeholder="Release notes or description"></textarea>
+              </div>
+
+              <div class="input-box">
+                <label>Cover Artwork</label>
+                <input id="cover-file" type="file" accept="image/*">
+              </div>
+
+              <div class="input-box">
+                <label>Audio File</label>
+                <input id="audio-file" type="file" accept=".mp3,.wav,.flac,audio/*">
+              </div>
+
+              <button id="submit-btn" class="btn btn-primary" style="width:100%;" onclick="submitRelease()">Submit Release</button>
+              <div id="message"></div>
+
+              <p class="upload-note">
+                Kama unafanya correction, unaweza kubadili files au kuacha za zamani kama bado ziko sawa.
+              </p>
+            </div>
+          </div>
         </div>
-      </section>
+
+        <div id="discography" class="section-block">
+          <h2>Discography</h2>
+          <p class="lead">Hapa utaona nyimbo zilizopandishwa tayari na historia ya releases zako.</p>
+
+          <div id="discography-list">
+            <div class="release-item">
+              <h3>No releases yet</h3>
+              <p>Ukishapandisha wimbo, utaonekana hapa.</p>
+              <span class="status pending">Waiting</span>
+            </div>
+          </div>
+        </div>
+
+        <div id="trends" class="section-block">
+          <h2>Trends</h2>
+          <p class="lead">Hapa utaona mwenendo wa plays, reach, na growth ya releases zako.</p>
+          <div class="mini-list">
+            <div class="item">
+              <strong>Weekly Listener Trend</strong>
+              <span>No trend data yet.</span>
+            </div>
+            <div class="item">
+              <strong>Top Performing Release</strong>
+              <span>Data itaonekana baada ya releases kuwa live.</span>
+            </div>
+          </div>
+        </div>
+
+        <div id="statistics" class="section-block">
+          <h2>Statistics</h2>
+          <p class="lead">Hapa utaona total streams, active releases, na audience activity.</p>
+          <div class="mini-list">
+            <div class="item">
+              <strong>Total Streams</strong>
+              <span>0</span>
+            </div>
+            <div class="item">
+              <strong>Active Releases</strong>
+              <span>0</span>
+            </div>
+          </div>
+        </div>
+
+        <div id="reports" class="section-block">
+          <h2>Reports</h2>
+          <p class="lead">Hapa msanii ataona ripoti za performance na status za releases.</p>
+          <div class="mini-list">
+            <div class="item">
+              <strong>Monthly Report</strong>
+              <span>No reports available yet.</span>
+            </div>
+            <div class="item">
+              <strong>Release Status Report</strong>
+              <span>Approved, pending, scheduled, and live releases will appear here.</span>
+            </div>
+          </div>
+        </div>
+
+        <div id="earnings" class="section-block">
+          <h2>Earnings</h2>
+          <p class="lead">Hapa utaona mapato ya msanii kutoka kwenye releases zake.</p>
+          <div class="mini-list">
+            <div class="item">
+              <strong>Available Balance</strong>
+              <span>$0.00</span>
+            </div>
+            <div class="item">
+              <strong>Last Payout</strong>
+              <span>No payout yet.</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </main>
   </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
-    import {
-      getFirestore,
-      collection,
-      getDocs,
-      query,
-      where,
-      doc,
-      updateDoc
-    } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, getDocs, query, where, serverTimestamp, doc, updateDoc } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyB7zfgQ3GqdPL2o1tyFt2RmW3Obqb1nKPk",
@@ -507,21 +682,65 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
+    const CLOUDINARY_CLOUD_NAME = "dfcirrf0j";
+    const CLOUDINARY_UPLOAD_PRESET = "pandisha_upload";
+
     const ADMIN_EMAILS = [
       "madeinmwanza@gmail.com"
     ];
 
-    let currentAdmin = null;
+    const MAX_ARTIST_NAME_CHANGES = 5;
+
+    let currentUser = null;
+    let currentUsername = "";
+    let currentArtistName = "";
+    let currentUserDocId = "";
+    let currentArtistNameChanges = 0;
+    let editingReleaseId = null;
+    let existingCoverUrl = "";
+    let existingAudioUrl = "";
+    let existingCoverPublicId = "";
+    let existingAudioPublicId = "";
+    let existingCoverFileName = "";
+    let existingAudioFileName = "";
+
+    function todayString() {
+      const d = new Date();
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, "0");
+      const day = String(d.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    }
+
+    function updateArtistNameLimitUI() {
+      const remaining = Math.max(0, MAX_ARTIST_NAME_CHANGES - (currentArtistNameChanges || 0));
+      document.getElementById("artist-name-limit").textContent =
+        `Artist name changes left: ${remaining} / ${MAX_ARTIST_NAME_CHANGES}`;
+    }
+
+    async function autoPublishScheduledReleasesForCurrentUser() {
+      if (!currentUser) return;
+
+      const q = query(collection(db, "releases"), where("userId", "==", currentUser.uid));
+      const snap = await getDocs(q);
+      const today = todayString();
+      const updates = [];
+
+      snap.forEach((docSnap) => {
+        const data = docSnap.data();
+        if (data.status === "Scheduled" && data.scheduledReleaseDate && data.scheduledReleaseDate <= today) {
+          updates.push(updateDoc(doc(db, "releases", docSnap.id), { status: "Live" }));
+        }
+      });
+
+      if (updates.length) {
+        await Promise.all(updates);
+      }
+    }
 
     function isAdminEmail(email) {
       return ADMIN_EMAILS.map(item => (item || "").trim().toLowerCase())
         .includes((email || "").trim().toLowerCase());
-    }
-
-    function setResetMessage(text, type = "success") {
-      const box = document.getElementById("reset-name-message");
-      box.textContent = text;
-      box.style.color = type === "error" ? "#fca5a5" : "#9ae6b4";
     }
 
     function statusClass(statusText) {
@@ -534,283 +753,542 @@
       return "pending";
     }
 
-    function formatDateValue(value) {
-      if (!value) return "-";
-      return value;
+    function setEditMode(isEditing) {
+      const banner = document.getElementById("editBanner");
+      const submitBtn = document.getElementById("submit-btn");
+
+      if (isEditing) {
+        banner.classList.add("show");
+        submitBtn.textContent = "Resubmit Corrected Release";
+      } else {
+        banner.classList.remove("show");
+        submitBtn.textContent = "Submit Release";
+      }
     }
 
-    function escapeHtml(text) {
-      return String(text || "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+    function resetEditState() {
+      editingReleaseId = null;
+      existingCoverUrl = "";
+      existingAudioUrl = "";
+      existingCoverPublicId = "";
+      existingAudioPublicId = "";
+      existingCoverFileName = "";
+      existingAudioFileName = "";
+      setEditMode(false);
     }
+
+    window.startNewRelease = function() {
+      resetEditState();
+      clearForm();
+      document.getElementById("artist-name").value = currentArtistName || "";
+      showSection("create-release");
+      setMessage("", "success");
+    };
 
     onAuthStateChanged(auth, async (user) => {
-      if (!user) {
+      if (user) {
+        currentUser = user;
+
+        if (isAdminEmail(user.email)) {
+          document.getElementById("adminBtn").style.display = "inline-block";
+        }
+
+        const userQuery = query(collection(db, "users"), where("userId", "==", user.uid));
+        const userSnapshot = await getDocs(userQuery);
+
+        if (!userSnapshot.empty) {
+          const userDoc = userSnapshot.docs[0];
+          const userData = userDoc.data();
+
+          currentUserDocId = userDoc.id;
+          currentUsername = userData.username || "";
+          currentArtistName = userData.artistName || "";
+          currentArtistNameChanges = userData.artistNameChanges || 0;
+
+          document.getElementById("user-name").textContent = currentUsername;
+          document.getElementById("artist-name").value = currentArtistName;
+          updateArtistNameLimitUI();
+        } else {
+          currentUsername = user.email || "";
+          currentArtistName = "";
+          currentArtistNameChanges = 0;
+          document.getElementById("user-name").textContent = user.email || "Artist";
+          document.getElementById("artist-name").value = "";
+          updateArtistNameLimitUI();
+        }
+
+        await autoPublishScheduledReleasesForCurrentUser();
+        await loadDiscography();
+      } else {
         window.location.href = "index.html";
+      }
+    });
+
+    window.logout = function() {
+      signOut(auth).then(() => {
+        window.location.href = "index.html";
+      });
+    };
+
+    window.showSection = function(sectionId, clickedItem) {
+      document.querySelectorAll(".section-block").forEach(section => {
+        section.classList.remove("active");
+      });
+
+      const target = document.getElementById(sectionId);
+      if (target) target.classList.add("active");
+
+      document.querySelectorAll(".submenu-item").forEach(item => {
+        item.classList.remove("active");
+      });
+
+      if (clickedItem) {
+        clickedItem.classList.add("active");
+      } else {
+        const autoItem = document.querySelector(`[onclick*="${sectionId}"]`);
+        if (autoItem) autoItem.classList.add("active");
+      }
+    };
+
+    function setMessage(text, type = "success") {
+      const message = document.getElementById("message");
+      message.textContent = text;
+      message.style.color = type === "error" ? "#fca5a5" : "#9ae6b4";
+    }
+
+    function clearForm() {
+      document.getElementById("song-title").value = "";
+      document.getElementById("release-date").value = "";
+      document.getElementById("genre").value = "";
+      document.getElementById("release-notes").value = "";
+      document.getElementById("cover-file").value = "";
+      document.getElementById("audio-file").value = "";
+    }
+
+    async function isArtistNameTakenByAnotherUser(artistName) {
+      const trimmed = (artistName || "").trim().toLowerCase();
+      if (!trimmed) return false;
+
+      const q = query(collection(db, "users"), where("artistName", "==", artistName));
+      const snap = await getDocs(q);
+
+      if (snap.empty) return false;
+
+      let taken = false;
+      snap.forEach((docSnap) => {
+        if (docSnap.id !== currentUserDocId) {
+          const data = docSnap.data() || {};
+          if ((data.artistName || "").trim().toLowerCase() === trimmed) {
+            taken = true;
+          }
+        }
+      });
+
+      return taken;
+    }
+
+    window.changeArtistName = async function() {
+      if (!currentUser || !currentUserDocId) {
+        alert("User info haijapatikana vizuri.");
         return;
       }
 
-      if (!isAdminEmail(user.email)) {
-        document.body.innerHTML = `
-          <div style="min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px; background:#0b0f1a; color:white; font-family:Arial,sans-serif;">
-            <div style="max-width:520px; width:100%; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); border-radius:20px; padding:28px; text-align:center;">
-              <h1 style="margin-top:0;">Access denied</h1>
-              <p style="color:rgba(255,255,255,0.72); line-height:1.7;">
-                This page is only for Pandisha admins.
-              </p>
-              <p style="color:rgba(255,255,255,0.72); line-height:1.7;">
-                Log in with your admin account to continue.
-              </p>
-              <a href="index.html" style="display:inline-block; margin-top:10px; padding:12px 18px; border-radius:12px; background:linear-gradient(90deg,#7B2FF7,#FF7A18); color:white; font-weight:700;">
-                Go to Home
-              </a>
+      if ((currentArtistNameChanges || 0) >= MAX_ARTIST_NAME_CHANGES) {
+        alert("Umefikia mwisho wa kubadilisha Artist Name mara 5.");
+        return;
+      }
+
+      const newArtistName = prompt("Weka Artist Name mpya:");
+
+      if (!newArtistName) return;
+
+      const trimmedName = newArtistName.trim();
+
+      if (!trimmedName) {
+        alert("Artist Name haiwezi kuwa tupu.");
+        return;
+      }
+
+      if (trimmedName === currentArtistName) {
+        alert("Hiyo ndio Artist Name yako ya sasa.");
+        return;
+      }
+
+      try {
+        const taken = await isArtistNameTakenByAnotherUser(trimmedName);
+        if (taken) {
+          alert("Artist Name tayari imetumika na user mwingine.");
+          return;
+        }
+
+        const newCount = (currentArtistNameChanges || 0) + 1;
+
+        await updateDoc(doc(db, "users", currentUserDocId), {
+          artistName: trimmedName,
+          artistNameChanges: newCount
+        });
+
+        currentArtistName = trimmedName;
+        currentArtistNameChanges = newCount;
+        document.getElementById("artist-name").value = trimmedName;
+        updateArtistNameLimitUI();
+
+        alert("Artist Name imebadilika successfully.");
+      } catch (error) {
+        alert(error.message || "Imeshindikana kubadili Artist Name.");
+      }
+    };
+
+    window.saveArtistName = async function() {
+      const artistName = document.getElementById("artist-name").value.trim();
+
+      if (!artistName) {
+        setMessage("Weka artist name kwanza.", "error");
+        return;
+      }
+
+      if (!currentUser || !currentUserDocId) {
+        setMessage("User info haijapatikana vizuri.", "error");
+        return;
+      }
+
+      try {
+        if (artistName !== currentArtistName) {
+          if ((currentArtistNameChanges || 0) >= MAX_ARTIST_NAME_CHANGES) {
+            setMessage("Umefikia mwisho wa kubadilisha Artist Name mara 5.", "error");
+            document.getElementById("artist-name").value = currentArtistName || "";
+            return;
+          }
+
+          const taken = await isArtistNameTakenByAnotherUser(artistName);
+          if (taken) {
+            setMessage("Artist Name tayari imetumika na user mwingine.", "error");
+            return;
+          }
+
+          const newCount = (currentArtistNameChanges || 0) + 1;
+
+          await updateDoc(doc(db, "users", currentUserDocId), {
+            artistName: artistName,
+            artistNameChanges: newCount
+          });
+
+          currentArtistName = artistName;
+          currentArtistNameChanges = newCount;
+          updateArtistNameLimitUI();
+          setMessage("Artist name saved successfully ✅", "success");
+          return;
+        }
+
+        await updateDoc(doc(db, "users", currentUserDocId), {
+          artistName: artistName
+        });
+
+        currentArtistName = artistName;
+        setMessage("Artist name saved successfully ✅", "success");
+      } catch (error) {
+        setMessage(error.message || "Failed to save artist name.", "error");
+      }
+    };
+
+    async function uploadToCloudinary(file, folder = "pandisha_uploads") {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+      formData.append("folder", folder);
+
+      const url = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/auto/upload`;
+
+      const response = await fetch(url, {
+        method: "POST",
+        body: formData
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error?.message || "Cloudinary upload failed");
+      }
+
+      return data;
+    }
+
+    window.editRelease = function(releaseId, payload) {
+      editingReleaseId = releaseId;
+      existingCoverUrl = payload.coverUrl || "";
+      existingAudioUrl = payload.audioUrl || "";
+      existingCoverPublicId = payload.coverPublicId || "";
+      existingAudioPublicId = payload.audioPublicId || "";
+      existingCoverFileName = payload.coverFileName || "";
+      existingAudioFileName = payload.audioFileName || "";
+
+      document.getElementById("song-title").value = payload.title || "";
+      document.getElementById("artist-name").value = payload.artist || currentArtistName || "";
+      document.getElementById("release-date").value = payload.releaseDate || "";
+      document.getElementById("genre").value = payload.genre || "";
+      document.getElementById("release-notes").value = payload.notes || "";
+      document.getElementById("cover-file").value = "";
+      document.getElementById("audio-file").value = "";
+
+      setEditMode(true);
+      showSection("create-release");
+      setMessage("Fanya marekebisho kisha bonyeza Resubmit Corrected Release.", "success");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+
+    window.submitRelease = async function() {
+      const title = document.getElementById("song-title").value.trim();
+      const artist = document.getElementById("artist-name").value.trim();
+      const releaseDate = document.getElementById("release-date").value;
+      const genre = document.getElementById("genre").value;
+      const notes = document.getElementById("release-notes").value.trim();
+      const coverFile = document.getElementById("cover-file").files[0];
+      const audioFile = document.getElementById("audio-file").files[0];
+      const submitBtn = document.getElementById("submit-btn");
+      const wasEditing = !!editingReleaseId;
+
+      if (!title || !artist || !releaseDate || !genre) {
+        setMessage("Jaza taarifa zote muhimu kwanza.", "error");
+        return;
+      }
+
+      if (!currentUser) {
+        setMessage("User hajalogin vizuri.", "error");
+        return;
+      }
+
+      if (!editingReleaseId && (!coverFile || !audioFile)) {
+        setMessage("Kwa release mpya, weka cover na audio file.", "error");
+        return;
+      }
+
+      try {
+        submitBtn.disabled = true;
+        submitBtn.textContent = wasEditing ? "Resubmitting..." : "Uploading...";
+        setMessage("Subiri kidogo, tunahifadhi release yako...", "success");
+
+        if (currentUserDocId && artist !== currentArtistName) {
+          if ((currentArtistNameChanges || 0) >= MAX_ARTIST_NAME_CHANGES) {
+            setMessage("Umefikia mwisho wa kubadilisha Artist Name mara 5.", "error");
+            submitBtn.disabled = false;
+            submitBtn.textContent = wasEditing ? "Resubmit Corrected Release" : "Submit Release";
+            return;
+          }
+
+          const taken = await isArtistNameTakenByAnotherUser(artist);
+          if (taken) {
+            setMessage("Artist Name tayari imetumika na user mwingine.", "error");
+            submitBtn.disabled = false;
+            submitBtn.textContent = wasEditing ? "Resubmit Corrected Release" : "Submit Release";
+            return;
+          }
+
+          const newCount = (currentArtistNameChanges || 0) + 1;
+
+          await updateDoc(doc(db, "users", currentUserDocId), {
+            artistName: artist,
+            artistNameChanges: newCount
+          });
+
+          currentArtistName = artist;
+          currentArtistNameChanges = newCount;
+          updateArtistNameLimitUI();
+        }
+
+        let finalCoverUrl = existingCoverUrl;
+        let finalAudioUrl = existingAudioUrl;
+        let finalCoverPublicId = existingCoverPublicId;
+        let finalAudioPublicId = existingAudioPublicId;
+        let finalCoverFileName = existingCoverFileName;
+        let finalAudioFileName = existingAudioFileName;
+
+        if (coverFile) {
+          const coverUpload = await uploadToCloudinary(coverFile, "pandisha/covers");
+          finalCoverUrl = coverUpload.secure_url || "";
+          finalCoverPublicId = coverUpload.public_id || "";
+          finalCoverFileName = coverFile.name;
+        }
+
+        if (audioFile) {
+          const audioUpload = await uploadToCloudinary(audioFile, "pandisha/audio");
+          finalAudioUrl = audioUpload.secure_url || "";
+          finalAudioPublicId = audioUpload.public_id || "";
+          finalAudioFileName = audioFile.name;
+        }
+
+        if (editingReleaseId) {
+          await updateDoc(doc(db, "releases", editingReleaseId), {
+            title,
+            artist,
+            releaseDate,
+            genre,
+            notes,
+            coverUrl: finalCoverUrl,
+            audioUrl: finalAudioUrl,
+            coverPublicId: finalCoverPublicId,
+            audioPublicId: finalAudioPublicId,
+            coverFileName: finalCoverFileName,
+            audioFileName: finalAudioFileName,
+            status: "Pending Review",
+            reviewReason: "",
+            scheduledReleaseDate: "",
+            updatedAt: serverTimestamp()
+          });
+
+          setMessage("Corrected release has been resubmitted 🔥", "success");
+        } else {
+          await addDoc(collection(db, "releases"), {
+            userId: currentUser.uid,
+            username: currentUsername,
+            artist,
+            title,
+            releaseDate,
+            genre,
+            notes,
+            coverUrl: finalCoverUrl,
+            audioUrl: finalAudioUrl,
+            coverPublicId: finalCoverPublicId,
+            audioPublicId: finalAudioPublicId,
+            coverFileName: finalCoverFileName,
+            audioFileName: finalAudioFileName,
+            status: "Pending Review",
+            reviewReason: "",
+            scheduledReleaseDate: "",
+            createdAt: serverTimestamp()
+          });
+
+          setMessage("Release uploaded successfully 🔥", "success");
+        }
+
+        resetEditState();
+        clearForm();
+        document.getElementById("artist-name").value = currentArtistName || "";
+        await autoPublishScheduledReleasesForCurrentUser();
+        await loadDiscography();
+        showSection("discography");
+      } catch (error) {
+        setMessage(error.message || "Upload failed", "error");
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = wasEditing ? "Resubmit Corrected Release" : "Submit Release";
+      }
+    };
+
+    async function loadDiscography() {
+      if (!currentUser) return;
+
+      const discographyList = document.getElementById("discography-list");
+      const totalReleases = document.getElementById("total-releases");
+      const pendingReleases = document.getElementById("pending-releases");
+      const liveReleases = document.getElementById("live-releases");
+
+      const q = query(collection(db, "releases"), where("userId", "==", currentUser.uid));
+      const snapshot = await getDocs(q);
+
+      totalReleases.textContent = snapshot.size;
+
+      let pendingCount = 0;
+      let liveCount = 0;
+      let releases = [];
+
+      snapshot.forEach((docSnap) => {
+        releases.push({ id: docSnap.id, ...docSnap.data() });
+      });
+
+      releases.sort((a, b) => {
+        const aTime = a?.updatedAt?.seconds || a?.createdAt?.seconds || 0;
+        const bTime = b?.updatedAt?.seconds || b?.createdAt?.seconds || 0;
+        return bTime - aTime;
+      });
+
+      if (!releases.length) {
+        discographyList.innerHTML = `
+          <div class="release-item">
+            <h3>No releases yet</h3>
+            <p>Ukishapandisha wimbo, utaonekana hapa.</p>
+            <span class="status pending">Waiting</span>
+          </div>
+        `;
+        pendingReleases.textContent = "0";
+        liveReleases.textContent = "0";
+        return;
+      }
+
+      let html = "";
+
+      releases.forEach((data) => {
+        const statusText = data.status || "Pending Review";
+        const statusLower = statusText.toLowerCase();
+        const reviewReason = data.reviewReason || "";
+        const scheduledReleaseDate = data.scheduledReleaseDate || "";
+
+        if (statusLower.includes("pending") || statusLower.includes("correction") || statusLower.includes("scheduled")) pendingCount++;
+        if (statusLower.includes("live") || statusLower.includes("approved")) liveCount++;
+
+        const safePayload = encodeURIComponent(JSON.stringify({
+          title: data.title || "",
+          artist: data.artist || "",
+          releaseDate: data.releaseDate || "",
+          genre: data.genre || "",
+          notes: data.notes || "",
+          coverUrl: data.coverUrl || "",
+          audioUrl: data.audioUrl || "",
+          coverPublicId: data.coverPublicId || "",
+          audioPublicId: data.audioPublicId || "",
+          coverFileName: data.coverFileName || "",
+          audioFileName: data.audioFileName || ""
+        }));
+
+        html += `
+          <div class="release-item">
+            <div class="release-top">
+              <div class="cover-box">
+                ${data.coverUrl ? `<img src="${data.coverUrl}" alt="Cover">` : ""}
+              </div>
+              <div>
+                <h3>${data.title || "-"}</h3>
+                <p>Artist: ${data.artist || "-"}</p>
+                <p>Release Date: ${data.releaseDate || "-"}</p>
+                <p>Genre: ${data.genre || "-"}</p>
+                ${scheduledReleaseDate ? `<p>Scheduled Live Date: ${scheduledReleaseDate}</p>` : ""}
+                ${data.notes ? `<p>Notes: ${data.notes}</p>` : ""}
+                ${data.audioUrl ? `<audio class="audio-player" controls src="${data.audioUrl}"></audio>` : ""}
+                ${data.audioUrl ? `<a class="audio-link" href="${data.audioUrl}" target="_blank">Open Audio File</a>` : ""}
+                <br>
+                <span class="status ${statusClass(statusText)}">${statusText}</span>
+
+                ${
+                  reviewReason
+                    ? `
+                      <div class="reason-box">
+                        <div class="reason-title">Admin message</div>
+                        <div class="reason-text">${reviewReason}</div>
+                      </div>
+                    `
+                    : ""
+                }
+
+                ${
+                  statusLower.includes("correction") || statusLower.includes("rejected")
+                    ? `
+                      <div class="release-actions">
+                        <button class="btn btn-warning" onclick="editRelease('${data.id}', JSON.parse(decodeURIComponent('${safePayload}')))">
+                          Edit & Resubmit
+                        </button>
+                      </div>
+                    `
+                    : ""
+                }
+              </div>
             </div>
           </div>
         `;
-        return;
-      }
+      });
 
-      currentAdmin = user;
-      document.getElementById("admin-email").textContent = user.email || "Admin";
-      await loadReleases();
-    });
-
-    window.logout = async function() {
-      await signOut(auth);
-      window.location.href = "index.html";
-    };
-
-    window.resetArtistNameLimit = async function () {
-      const email = document.getElementById("reset-artist-email").value.trim();
-
-      setResetMessage("");
-
-      if (!email) {
-        setResetMessage("Weka email ya artist kwanza.", "error");
-        return;
-      }
-
-      try {
-        const q = query(collection(db, "users"), where("email", "==", email));
-        const snapshot = await getDocs(q);
-
-        if (snapshot.empty) {
-          setResetMessage("Hakuna user mwenye email hiyo.", "error");
-          return;
-        }
-
-        const userDoc = snapshot.docs[0];
-
-        await updateDoc(doc(db, "users", userDoc.id), {
-          artistNameChanges: 0,
-          artistNameChangesResetAt: new Date().toISOString(),
-          artistNameChangesResetBy: currentAdmin?.email || "admin"
-        });
-
-        setResetMessage("Artist name limit imereset successfully.");
-        document.getElementById("reset-artist-email").value = "";
-      } catch (error) {
-        setResetMessage(error.message || "Reset imeshindikana.", "error");
-      }
-    };
-
-    window.approveRelease = async function(releaseId) {
-      try {
-        await updateDoc(doc(db, "releases", releaseId), {
-          status: "Approved",
-          reviewReason: "",
-          scheduledReleaseDate: ""
-        });
-        await loadReleases();
-      } catch (error) {
-        alert(error.message || "Imeshindikana kuapprove.");
-      }
-    };
-
-    window.makeLive = async function(releaseId) {
-      try {
-        await updateDoc(doc(db, "releases", releaseId), {
-          status: "Live",
-          reviewReason: "",
-          scheduledReleaseDate: ""
-        });
-        await loadReleases();
-      } catch (error) {
-        alert(error.message || "Imeshindikana kuweka live.");
-      }
-    };
-
-    window.rejectRelease = async function(releaseId) {
-      const reason = prompt("Weka reason ya kukataa release:");
-      if (reason === null) return;
-
-      if (!reason.trim()) {
-        alert("Weka reason kwanza.");
-        return;
-      }
-
-      try {
-        await updateDoc(doc(db, "releases", releaseId), {
-          status: "Rejected",
-          reviewReason: reason.trim(),
-          scheduledReleaseDate: ""
-        });
-        await loadReleases();
-      } catch (error) {
-        alert(error.message || "Imeshindikana kukataa release.");
-      }
-    };
-
-    window.requestCorrection = async function(releaseId) {
-      const reason = prompt("Weka correction reason / message kwa artist:");
-      if (reason === null) return;
-
-      if (!reason.trim()) {
-        alert("Weka correction reason kwanza.");
-        return;
-      }
-
-      try {
-        await updateDoc(doc(db, "releases", releaseId), {
-          status: "Needs Correction",
-          reviewReason: reason.trim(),
-          scheduledReleaseDate: ""
-        });
-        await loadReleases();
-      } catch (error) {
-        alert(error.message || "Imeshindikana kutuma correction request.");
-      }
-    };
-
-    window.scheduleRelease = async function(releaseId) {
-      const date = prompt("Weka tarehe ya release (YYYY-MM-DD):");
-      if (date === null) return;
-
-      if (!date.trim()) {
-        alert("Weka tarehe kwanza.");
-        return;
-      }
-
-      try {
-        await updateDoc(doc(db, "releases", releaseId), {
-          status: "Scheduled",
-          scheduledReleaseDate: date.trim(),
-          reviewReason: ""
-        });
-        await loadReleases();
-      } catch (error) {
-        alert(error.message || "Imeshindikana kuschedule release.");
-      }
-    };
-
-    async function loadReleases() {
-      const releaseList = document.getElementById("release-list");
-      const totalReleases = document.getElementById("total-releases");
-      const pendingReleases = document.getElementById("pending-releases");
-      const scheduledReleases = document.getElementById("scheduled-releases");
-      const liveReleases = document.getElementById("live-releases");
-
-      releaseList.innerHTML = `<div class="empty-box">Loading releases...</div>`;
-
-      try {
-        const snapshot = await getDocs(collection(db, "releases"));
-        const releases = [];
-
-        snapshot.forEach((docSnap) => {
-          releases.push({ id: docSnap.id, ...docSnap.data() });
-        });
-
-        releases.sort((a, b) => {
-          const aTime = a?.updatedAt?.seconds || a?.createdAt?.seconds || 0;
-          const bTime = b?.updatedAt?.seconds || b?.createdAt?.seconds || 0;
-          return bTime - aTime;
-        });
-
-        totalReleases.textContent = releases.length;
-
-        let pendingCount = 0;
-        let scheduledCount = 0;
-        let liveCount = 0;
-
-        releases.forEach((item) => {
-          const s = (item.status || "").toLowerCase();
-          if (s.includes("pending") || s.includes("correction")) pendingCount++;
-          if (s.includes("scheduled")) scheduledCount++;
-          if (s.includes("live") || s.includes("approved")) liveCount++;
-        });
-
-        pendingReleases.textContent = pendingCount;
-        scheduledReleases.textContent = scheduledCount;
-        liveReleases.textContent = liveCount;
-
-        if (!releases.length) {
-          releaseList.innerHTML = `<div class="empty-box">Hakuna releases bado.</div>`;
-          return;
-        }
-
-        let html = "";
-
-        releases.forEach((data) => {
-          const statusText = data.status || "Pending Review";
-          const reviewReason = data.reviewReason || "";
-          const scheduledReleaseDate = data.scheduledReleaseDate || "";
-
-          html += `
-            <div class="release-item">
-              <div class="release-top">
-                <div class="cover-box">
-                  ${data.coverUrl ? `<img src="${data.coverUrl}" alt="Cover">` : ``}
-                </div>
-
-                <div class="release-content">
-                  <h3>${escapeHtml(data.title || "-")}</h3>
-                  <p><strong>Artist:</strong> ${escapeHtml(data.artist || "-")}</p>
-                  <p><strong>Username:</strong> ${escapeHtml(data.username || "-")}</p>
-                  <p><strong>User ID:</strong> ${escapeHtml(data.userId || "-")}</p>
-                  <p><strong>Release Date:</strong> ${escapeHtml(formatDateValue(data.releaseDate))}</p>
-                  <p><strong>Genre:</strong> ${escapeHtml(data.genre || "-")}</p>
-                  ${data.notes ? `<p><strong>Notes:</strong> ${escapeHtml(data.notes)}</p>` : ``}
-                  ${scheduledReleaseDate ? `<p><strong>Scheduled Live Date:</strong> ${escapeHtml(scheduledReleaseDate)}</p>` : ``}
-                  <span class="status ${statusClass(statusText)}">${escapeHtml(statusText)}</span>
-
-                  ${
-                    reviewReason
-                      ? `
-                        <div class="reason-box">
-                          <div class="reason-title">Admin Message</div>
-                          <div class="reason-text">${escapeHtml(reviewReason)}</div>
-                        </div>
-                      `
-                      : ``
-                  }
-
-                  ${data.audioUrl ? `<audio class="audio-player" controls src="${data.audioUrl}"></audio>` : ``}
-                  ${data.audioUrl ? `<a class="audio-link" href="${data.audioUrl}" target="_blank">Open Audio File</a>` : ``}
-
-                  <div class="inline-actions">
-                    <button class="btn btn-success" onclick="approveRelease('${data.id}')">Approve</button>
-                    <button class="btn btn-info" onclick="makeLive('${data.id}')">Make Live</button>
-                    <button class="btn btn-warning" onclick="scheduleRelease('${data.id}')">Schedule</button>
-                    <button class="btn btn-primary" onclick="requestCorrection('${data.id}')">Need Correction</button>
-                    <button class="btn btn-danger" onclick="rejectRelease('${data.id}')">Reject</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          `;
-        });
-
-        releaseList.innerHTML = html;
-      } catch (error) {
-        releaseList.innerHTML = `<div class="empty-box">Failed to load releases: ${escapeHtml(error.message || "Unknown error")}</div>`;
-      }
+      discographyList.innerHTML = html;
+      pendingReleases.textContent = pendingCount;
+      liveReleases.textContent = liveCount;
     }
-
-    window.loadReleases = loadReleases;
   </script>
 </body>
 </html>
