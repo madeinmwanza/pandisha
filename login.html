@@ -85,21 +85,7 @@ window.login = async function(){
 
 </body>
 </html>
-onAuthStateChanged(auth, async (user) => {
-  if(user){
 
-    const userRef = doc(db, "users", user.uid);
-    const userSnap = await getDoc(userRef);
-
-    if(userSnap.exists()){
-      const data = userSnap.data();
-
-      if(data.role === "admin"){
-        window.location.href = "admin.html";
-      } else {
-        window.location.href = "artist-dashboard.html";
-      }
-    }
 
   }
 });
