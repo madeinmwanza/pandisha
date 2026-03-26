@@ -191,55 +191,6 @@
       margin-bottom: 18px;
     }
 
-    .mini-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 14px;
-    }
-
-    .mini-card {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 18px;
-      padding: 18px;
-    }
-
-    .mini-card span {
-      font-size: 13px;
-      color: rgba(255,255,255,0.62);
-    }
-
-    .mini-card strong {
-      display: block;
-      margin-top: 8px;
-      font-size: 30px;
-    }
-
-    .release-box {
-      margin-top: 14px;
-      padding: 18px;
-      border-radius: 18px;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .release-box .label {
-      color: rgba(255,255,255,0.6);
-      font-size: 13px;
-    }
-
-    .release-box .title {
-      margin-top: 8px;
-      font-size: 24px;
-      font-weight: 800;
-    }
-
-    .release-box .meta {
-      margin-top: 8px;
-      color: rgba(255,255,255,0.72);
-      font-size: 14px;
-    }
-
     .section {
       padding: 72px 0;
     }
@@ -434,23 +385,6 @@
       margin-bottom: 24px;
     }
 
-    .store-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-    }
-
-    .store-item {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 16px;
-      padding: 14px 10px;
-      text-align: center;
-      font-size: 14px;
-      color: rgba(255,255,255,0.9);
-      font-weight: 600;
-    }
-
     .footer {
       border-top: 1px solid rgba(255,255,255,0.08);
       padding: 26px 0;
@@ -490,11 +424,6 @@
 
       .hero h1 {
         font-size: 34px;
-      }
-
-      .mini-grid,
-      .store-grid {
-        grid-template-columns: 1fr 1fr;
       }
 
       .section-title {
@@ -563,36 +492,17 @@
           Reach major streaming and social platforms with one clean distribution system.
         </div>
 
-<div style="display:flex; flex-wrap:wrap; justify-content:center; gap:20px; align-items:center; margin-top:15px;">
-
-  <!-- Spotify -->
-  <img src="https://cdn.simpleicons.org/spotify/ffffff" style="height:32px;">
-
-  <!-- Apple Music -->
-  <img src="https://cdn.simpleicons.org/applemusic/ffffff" style="height:32px;">
-
-  <!-- YouTube -->
-  <img src="https://cdn.simpleicons.org/youtube/ffffff" style="height:32px;">
-
-  <!-- TikTok -->
-  <img src="https://cdn.simpleicons.org/tiktok/ffffff" style="height:32px;">
-
-  <!-- Meta -->
-  <img src="https://cdn.simpleicons.org/facebook/ffffff" style="height:32px;">
-
-  <!-- Audiomack (FIXED SVG) -->
-  <img src="https://upload.wikimedia.org/wikipedia/commons/2/26/Audiomack_logo.svg" style="height:32px; filter:invert(1);">
-
-  <!-- Deezer -->
-  <img src="https://cdn.simpleicons.org/deezer/ffffff" style="height:32px;">
-
-  <!-- Tidal -->
-  <img src="https://cdn.simpleicons.org/tidal/ffffff" style="height:32px;">
-
-  <!-- Boomplay (SAFE ICON) -->
-  <img src="https://cdn-icons-png.flaticon.com/512/727/727245.png" style="height:32px; border-radius:6px;">
-
-</div>
+        <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:20px; align-items:center; margin-top:15px;">
+          <img src="https://cdn.simpleicons.org/spotify/ffffff" style="height:32px;">
+          <img src="https://cdn.simpleicons.org/applemusic/ffffff" style="height:32px;">
+          <img src="https://cdn.simpleicons.org/youtube/ffffff" style="height:32px;">
+          <img src="https://cdn.simpleicons.org/tiktok/ffffff" style="height:32px;">
+          <img src="https://cdn.simpleicons.org/facebook/ffffff" style="height:32px;">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/2/26/Audiomack_logo.svg" style="height:32px; filter:invert(1);">
+          <img src="https://cdn.simpleicons.org/deezer/ffffff" style="height:32px;">
+          <img src="https://cdn.simpleicons.org/tidal/ffffff" style="height:32px;">
+          <img src="https://cdn-icons-png.flaticon.com/512/727/727245.png" style="height:32px; border-radius:6px;">
+        </div>
       </div>
     </div>
   </section>
@@ -906,17 +816,17 @@
         const user = userCredential.user;
 
         await addDoc(collection(db, "users"), {
-  userId: user.uid,
-  username: username,
-  email: email,
-  artistName: "",
-  artistNameChanges: 0,
-  plan: "Starter",
-  role: "artist",
-  isDisabled: false,
-  securityQuestion: securityQuestion,
-  securityAnswer: securityAnswer
-});
+          userId: user.uid,
+          username: username,
+          email: email,
+          artistName: "",
+          artistNameChanges: 0,
+          plan: "Starter",
+          role: "artist",
+          isDisabled: false,
+          securityQuestion: securityQuestion,
+          securityAnswer: securityAnswer
+        });
 
         alert("Account created successfully");
         window.location.href = "dashboard.html";
@@ -947,6 +857,12 @@
         }
 
         const userData = userSnapshot.docs[0].data();
+
+        if (userData.isDisabled === true) {
+          alert("Account yako imezuiwa. Wasiliana na admin.");
+          return;
+        }
+
         const email = userData.email;
 
         await signInWithEmailAndPassword(auth, email, password);
